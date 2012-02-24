@@ -28,3 +28,9 @@ div#content {
 
 pre {
   font-size: 10pt;
+}
+
+img {
+  display: block;
+  float: left;
+}
