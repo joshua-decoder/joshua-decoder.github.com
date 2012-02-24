@@ -1,0 +1,30 @@
+html {
+  font-size: 12pt;
+}
+
+div {
+  float: left;
+  // border: 1px solid black;
+}
+
+div#title {
+  padding: 20px;
+  font-size: 36pt;
+  font-weight: bold;
+}
+
+div#navbar {
+  width: 150px;
+}
+
+div#twitterbar {
+
+}
+
+div#content {
+  float: left;
+  width: 600px;
+}
+
+pre {
+  font-size: 10pt;

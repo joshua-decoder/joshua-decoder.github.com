@@ -1,93 +1,162 @@
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<head>
-  <title>Joshua Decoder</title>
-</head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <head>
+    <title>Joshua Decoder</title>
+
+    <link rel="stylesheet" type="text/css" media="screen,print" href="joshua.css" />
+  </head>
 
 <body>
+    
+  <div>
 
-<p>
-  <img src="images/joshua-logo.jpg" width="100px">
-</p>
+    <div>
+      <p>
+        <img src="images/joshua-logo.jpg" width="100px">
+      </p>
+    </div>
 
-<h3>Joshua</h3>
-<p>
-Joshua is an open-source statistical machine translation decoder for
-hierarchical and syntax-based machine translation, written in Java.
-It is developed by <a href="http://www.cs.jhu.edu/~ccb/">Chris
-Callison-Burch</a>'s research group at
-the <a href="http://clsp.jhu.edu">Center for Language and Speech
-Processing</a> and the <a href="http://web.jhu.edu/hltcoe">Human
-Language Technology Center of Excellence</a> at Johns Hopkins
-University.  For a high-level description, see the following
-publication describing Joshua
-3.0: <a href="http://www.statmt.org/wmt11/pdf/WMT60.pdf">Joshua 3.0:
-Syntax-based Machine Translation with the Thrax Grammar Extractor</a>
-[PDF link].
-</p>
+    <div id="title">
+      Joshua decoder
+    </div>
 
-<h3>Download</h3>
+    <div style="clear: both;">
+    </div>
 
-<p>
-Joshua's source code is available
-at <a href="https://github.com/joshua-decoder/joshua">https://github.com/joshua-decoder/joshua</a>.
-To clone the repository (which downloads the complete source code),
-you can type:
-</p>
+    <div id="navbar">
+      <p>
+        <b>Current version</b>: 3.2
+      </p>
+      <p>
+        <b>Release date</b>: 17 Feb. 2012
+      </p>
+    </div>
 
-<pre>
-  git clone https://joshua-decoder@github.com/joshua-decoder/joshua.git
-</pre>
+    <div id="content">
+      <p>
+        Joshua is an open-source statistical machine translation decoder for
+        hierarchical and syntax-based machine translation, written in Java.
+        It is developed by <a href="http://www.cs.jhu.edu/~ccb/">Chris
+          Callison-Burch</a>'s research group at
+        the <a href="http://clsp.jhu.edu">Center for Language and Speech
+          Processing</a> and the <a href="http://web.jhu.edu/hltcoe">Human
+          Language Technology Center of Excellence</a> at Johns Hopkins
+        University.  For a high-level description, see the following
+        publication describing Joshua
+        3.0: <a href="http://www.statmt.org/wmt11/pdf/WMT60.pdf">Joshua 3.0:
+          Syntax-based Machine Translation with the Thrax Grammar Extractor</a>
+        [PDF link].
+      </p>
 
-Doing this will enable you to easily pull down bugfixes as they are
-discovered and fixed.  If you prefer, you can also download a ZIP file
-archive by following the code link above and clicking the "ZIP" button.
+      <h3>Download</h3>
 
-<h3>Usage</h3>
+      <p>
+        Joshua's source code is available
+        at <a href="https://github.com/joshua-decoder/joshua">https://github.com/joshua-decoder/joshua</a>.
+        To clone the repository (which downloads the complete source code),
+        you can type:
+      </p>
 
-<p>
-The easiest way to use Joshua is to use
-<a href="https://github.com/joshua-decoder/joshua/wiki/Joshua-Pipeline">the
-  pipeline script</a> which is included with the source code.  This
-  script supports multiple use cases; see the documentation for more
-  information.
-For more detail, Chris Callison-Burch
-describes <a href="http://www.cs.jhu.edu/~ccb/joshua/">how to manually
-run the steps of the machine translation pipeline</a>.  
+      <pre>
+  git clone git@github.com:joshua-decoder/joshua.git
+  ant jar
+      </pre>
 
-<p>
-If you run into difficulty, feel free to email
-the <a href="https://groups.google.com/forum/#!forum/joshua_support">Joshua
-Technical Support Group</a>, or search its archives.
-</p>
+      <p>
+        Downloading this way will enable you to easily pull in
+        bugfixes as they are published.  If you prefer, you can also
+        download a ZIP file archive by following the code link above
+        and clicking the "ZIP" button.
+      </p>
 
-<h3>Mailing lists</h3>
+      <h3>Usage</h3>
 
-<ul>
-  <li>Technical support (for end users with questions and technical
-difficulties): <a href="joshua_support@googlegroups.com">joshua_support@googlegroups.com</a>
-  <li>Developers: <a href="joshua_developers@googlegroups.com">joshua_developers@googlegroups.com</a>
-</ul>
+      <p>
+        The easiest way to use Joshua is to use
+        <a href="https://github.com/joshua-decoder/joshua/wiki/Joshua-Pipeline">the
+          pipeline script</a> which is included with the source code.  This
+        script supports multiple use cases; see the documentation for more
+        information.
+        For more detail, Chris Callison-Burch
+        describes <a href="http://www.cs.jhu.edu/~ccb/joshua/">how to manually
+          run the steps of the machine translation pipeline</a>.
+          (This information is a bit outdated and much of it is
+          automated by the pipeline, but the broad steps still apply).
+      </p>
 
-<h3>Contributors</h3>
-<p>
-The following people have contributed to Joshua.
-<ul>
-  <li>Zhifei Li</li>
-  <li>Chris Callison-Burch</li>
-  <li>Wren Ng Thornton</li>
-  <li>Lane Schwartz</li>
-  <li>Juri Ganitkevitch</li>
-  <li>Jonathan Weese</li>
-  <li>Josh Schroeder</li>
-  <li>Colin Bannard</li>
-  <li>Chris Dyer</li>
-  <li>Aaron Phillips</li>
-  <li>Ken Heafield</li>
-  <li>Matt Post</li>
-</ul>
-Please email if you know of anyone who has been left off this list.
-</p>
+      <p>
+        If you run into difficulty, feel free to email
+        the <a href="https://groups.google.com/forum/#!forum/joshua_support">Joshua
+          Technical Support Group</a>, or search its archives.
+      </p>
+
+      <h3>Mailing lists</h3>
+
+      <ul>
+        <li>Technical support (for end users with questions and technical
+          difficulties): <a href="joshua_support@googlegroups.com">joshua_support@googlegroups.com</a>
+        <li>Developers: <a href="joshua_developers@googlegroups.com">joshua_developers@googlegroups.com</a>
+      </ul>
+
+      <h3>Contributors</h3>
+      <p>
+        The following people have contributed to Joshua.
+        <ul>
+          <li>Zhifei Li</li>
+          <li>Chris Callison-Burch</li>
+          <li>Wren Ng Thornton</li>
+          <li>Lane Schwartz</li>
+          <li>Juri Ganitkevitch</li>
+          <li>Jonathan Weese</li>
+          <li>Josh Schroeder</li>
+          <li>Colin Bannard</li>
+          <li>Chris Dyer</li>
+          <li>Aaron Phillips</li>
+          <li>Ken Heafield</li>
+          <li>Matt Post</li>
+        </ul>
+        Please email if you know of anyone who has been left off this list.
+      </p>
+    </div>
+
+  <div>
+    <div id="twitterbar">
+      <b>Twitter feed</b>:
+      <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+      <script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 30000,
+  width: 200,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#ffffff',
+      color: '#000000'
+    },
+    tweets: {
+      background: '#ffffff',
+      color: '#000000',
+      links: '#072deb'
+    }
+  },
+  features: {
+    scrollbar: true,
+    loop: false,
+    live: true,
+    behavior: 'all'
+  }
+}).render().setUser('joshuadecoder').start();
+      </script>
+    </div>
+  </div>
 
 </body>
 
