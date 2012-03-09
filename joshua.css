@@ -17,13 +17,23 @@ div#navbar {
   width: 150px;
 }
 
-div#twitterbar {
+div#navbar p {
+  border-radius: 5px;
+  background-color: LightBlue;
+  padding: 5px;
+}
 
+div#twitterbar {
+  border-radius: 5px;
+  background-color: LightBlue;
+  padding: 5px;
+  width: 200px;
 }
 
 div#content {
   float: left;
   width: 600px;
+  margin: 10px;
 }
 
 pre {
@@ -33,4 +43,14 @@ pre {
 img {
   display: block;
   float: left;
+}
+
+a:link { 
+  text-decoration: none;
+  color: MediumBlue;
+}
+
+a:visited { 
+  text-decoration: none;
+  color: Gray;
 }
