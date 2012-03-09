@@ -55,6 +55,15 @@ img {
   float: left;
 }
 
+img.sponsor {
+  height: 120px;
+}
+
+img.hltcoe {
+  position: relative;
+  top: 40px;
+}
+
 a:link { 
   text-decoration: none;
   color: MediumBlue;
