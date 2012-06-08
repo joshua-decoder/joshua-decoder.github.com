@@ -1,13 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
 <html>
-  <head>
-    <meta http-equiv="Refresh" content="0;url=https://github.com/joshua-decoder/indian-parallel-corpora" />
-  </head>
 
-  <body>
-    <h1>Indian Parallel Corpora</h1>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" type="text/css" media="screen,print" href="../joshua.css" />
+  <title>Indian Languages Parallel Corpora</title>
+</head>
 
-    The Indian parallel corpora can
-    be <a href="https://github.com/joshua-decoder/indian-parallel-corpora">downloaded from
-    Github</a>.  You should be redirected automatically.
-  </body>
+<body>
+
+  <div id="content">
+
+    <h1>Indian Parallel Corpora <span id="download"><a href="https://github.com/joshua-decoder/indian-parallel-corpora/zipball/master">Download</a></span></h1>
+    <hr />
+
+    <h2>Description</h2>
+    <a name="Description"/>
+
+    This page describes a set of parallel corpora between English and six languages from the Indian
+    sub-continent:
+
+    <ul>
+      <li>Bengali</li>
+      <li>Hindi</li>
+      <li>Malayalam</li>
+      <li>Tamil</li>
+      <li>Telugu</li>
+      <li>Urdu</li>
+    </ul>
+
+    These parallel corpora were collecting by translating Indian Wikipedia articles into English
+    using Amazon's Mechanical Turk.  Their collection and release are described in the paper:
+
+    <blockquote>
+      <i>Constructing Parallel Corpora for Six Indian Languages via Crowdsourcing</i> <br/>
+      <a href="http://cs.jhu.edu/~post">Matt Post</a>, <a href="http://cs.jhu.edu/~ccb">Chris
+        Callison-Burch</a>, and <a href="http://homepages.inf.ed.ac.uk/miles/">Miles Osborne</a> <br/>
+      <a href="http://statmt.org/wmt12">WMT 2012</a> <br/>
+      <a class="pdf" href="http://aclweb.org/anthology-new/W/W12/W12-3152.pdf">PDF</a>
+      <a class="bibtex" href="http://aclweb.org/anthology-new/W/W12/W12-3152.bib">BIB</a>
+    </blockquote>
+
+    <h2>Download & License</h2>
+
+    The Indian parallel corpora dataset
+    is <a href="https://github.com/joshua-decoder/indian-parallel-corpora">hosted on Github</a>.
+    You can download a tarball directly
+    by <a href="https://github.com/joshua-decoder/indian-parallel-corpora/zipball/master">clicking
+    here</a>.  The corpus is licensed under the <a href="http://creativecommons.org/">Creative
+    Commons</a> <a href="http://creativecommons.org/licenses/by-sa/3.0/">Attribution-Sharealike 3.0
+    Unported License</a> (CC BY-SA 3.0).
+
+    <h2>Citations</h2>
+    
+    <p>
+      The following publications have made use of this dataset.
+    </p>
+
+    <ol>
+      <li><b>Post, Callison-Burch, and Osborne (2012)</b> This paper introduced the parallel
+      corpora, describing how the data was collected, reporting the results of prelimary
+      experiments, and suggesting some potential research directions.
+    </ol>
+
+    <h2>Scores</h2>
+
+    <p>
+      Below are the best translation scores (case-insensitive BLEU-4) that have been reported on the
+      provided test sets.  The Google results were recorded in the fall of 2011 (and are described
+      in Post et al. (2012)).  Google does not have a Malayalam system.
+    </p>
+
+    <div>
+    <table id=results>
+      <tr>
+        <th style="width:150px">Citation</th>
+        <th>BN</th>
+        <th>HI</th>
+        <th>ML</th>
+        <th>TA</th>
+        <th>TE</th>
+        <th>UR</th>
+      </tr>
+      <tr>
+        <td colspan=7><hr/></td>
+      </tr>
+      <tr>
+        <td class="system">Google</td>
+        <td>20.01</td>
+        <td>25.21</td>
+        <td>&ndash;</td>
+        <td>13.51</td>
+        <td>16.03</td>
+        <td>23.09</td>
+      </tr>
+      <tr>
+        <td class="system">Post et al. (2012)</td>
+        <td>13.53</td>
+        <td>17.29</td>
+        <td>13.72</td>
+        <td> 9.81</td>
+        <td>12.46</td>
+        <td>19.53</td>
+      </tr>
+    </table>
+    </div>
+  </div>
+  <div style="width: 250px; margin-top: 100px">
+    <img width="250px" src="images/map1.png"/>
+    <p style="clear: both; text-align: center"><b>Indo-Aryan languages</b></p>
+
+    <img width="250px" src="images/map2.png"/>
+    <p style="clear: both; text-align: center"><b>Dravidian languages</b></p>
+  </div>
+
+</body>
 </html>

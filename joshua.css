@@ -73,3 +73,51 @@ a:visited {
   text-decoration: none;
   color: Gray;
 }
+
+table {
+    border: 1px solid black;
+}
+
+table#results td {
+    padding: 3px;
+    text-align: right;
+}
+
+table#results td.system {
+    text-align: left;
+}
+
+span#download {
+    background-color: green;
+    font-size: 14pt;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+span#download a:link {
+    color: white;
+}
+
+span#download a:hover {
+    color: lightgrey;
+}
+
+a.pdf {
+    font-variant: small-caps;
+    /* font-weight: bold; */
+    font-size: 10pt;
+    color: white;
+    background: brown;
+    padding: 2px;
+}
+
+a.bibtex {
+    font-variant: small-caps;
+    /* font-weight: bold; */
+    font-size: 10pt;
+    color: white;
+    background: orange;
+    padding: 2px;
+}
