@@ -27,7 +27,7 @@ div#navbar {
   width: 150px;
 }
 
-div#navbar p {
+p.infobox {
   border-radius: 5px;
   background-color: LightBlue;
   padding: 5px;
@@ -120,4 +120,9 @@ a.bibtex {
     color: white;
     background: orange;
     padding: 2px;
+}
+
+div#content p {
+    padding: 0px;
+    margin: 0px;
 }
