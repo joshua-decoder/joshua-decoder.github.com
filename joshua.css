@@ -1,4 +1,5 @@
 html {
+    font-family: George, sans-serif;
   font-size: 12pt;
 }
 
@@ -18,19 +19,22 @@ div {
 }
 
 div#title {
-  padding: 20px;
   font-size: 36pt;
   font-weight: bold;
+  padding-top: 40px;
+  vertical-align: text-bottom;
 }
 
 div#navbar {
   width: 150px;
+  clear: both;
 }
 
-p.infobox {
+.infobox {
   border-radius: 5px;
   background-color: LightBlue;
   padding: 5px;
+  margin-bottom: 10px;
 }
 
 div#twitterbar {
@@ -52,7 +56,8 @@ pre {
 
 img {
   display: block;
-  float: left;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 img.sponsor {
@@ -88,20 +93,21 @@ table#results td.system {
     text-align: left;
 }
 
-span#download {
+#download {
     background-color: green;
     font-size: 14pt;
     font-weight: bold;
+    text-align: center;
     color: white;
     border-radius: 5px;
     padding: 10px;
 }
 
-span#download a:link {
+#download a:link {
     color: white;
 }
 
-span#download a:hover {
+#download a:hover {
     color: lightgrey;
 }
 
@@ -125,5 +131,13 @@ a.bibtex {
 
 div#content p {
     padding: 0px;
+    padding-bottom: 10px; 
     margin: 0px;
+}
+
+ul {
+    list-style-type: square;
+    list-style-position: inside;
+    margin: 1px;
+    padding: 1px;
 }
