@@ -15,14 +15,18 @@ body {
 
 div {
   float: left;
-  // border: 1px solid black;
+
 }
 
-div#title {
-  font-size: 36pt;
-  font-weight: bold;
-  padding-top: 40px;
-  vertical-align: text-bottom;
+h1 {
+    font-family: Verdana;
+    font-weight: bold;
+    font-size: 24pt;
+}
+
+#title {
+    padding: 5px;
+    margin: 5px;
 }
 
 div#navbar {
@@ -31,23 +35,27 @@ div#navbar {
 }
 
 .infobox {
-  border-radius: 5px;
+  /* border-radius: 5px; */
   background-color: LightBlue;
   padding: 5px;
   margin-bottom: 10px;
+  width: 140px;
 }
 
 div#twitterbar {
-  border-radius: 5px;
+  /* border-radius: 5px; */
   background-color: LightBlue;
   padding: 5px;
   width: 250px;
+  margin-top: 5px;
 }
 
 div#content {
   float: left;
   width: 600px;
-  margin: 10px;
+  margin: 5px;
+  padding: 5px;
+  clear: both;
 }
 
 pre {
@@ -99,8 +107,11 @@ table#results td.system {
     font-weight: bold;
     text-align: center;
     color: white;
-    border-radius: 5px;
-    padding: 10px;
+    /* border-radius: 5px; */
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 140px;
 }
 
 #download a:link {
@@ -109,6 +120,10 @@ table#results td.system {
 
 #download a:hover {
     color: lightgrey;
+}
+
+#download a:visited {
+    color: white;
 }
 
 a.pdf {
@@ -141,3 +156,12 @@ ul {
     margin: 1px;
     padding: 1px;
 }
+
+.footer {
+    font-size: 80%;
+    color: #666;
+    border-top: 4px solid #eee;
+    margin-top: 2em;
+    overflow: hidden;
+    clear: both;
+  }

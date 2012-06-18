@@ -9,38 +9,44 @@
   </head>
 
 <body>
-  <div>
-    <div id=navbar>
-      <img src="images/joshua-logo-small.png" width="130px" 
-           alt="Joshua logo (picture of a Joshua tree)" />
+
+  <div id="navbar">
+    <img src="images/joshua-logo-small.png" width="130px" 
+         alt="Joshua logo (picture of a Joshua tree)" />
+
+    <p class="infobox">
+      <b>Stable version</b><br />
+      4.0<br/><br/>
+      <b>Release date</b><br />
+      25 June 2012
+    </p>
+
+    <div id="download" class="infobox">
+      <a href="https://github.com/joshua-decoder/joshua/zipball/4.0">Download</a>
     </div>
 
+    <div class="infobox">
+      <b>Documentation</b><br />
+      <ul>
+        <li> <a href="userdocs/index.html">End user</a> </li>
+        <li> <a href="http://cs.jhu.edu/~post/joshua-docs/index.html">Developer</a> </li>
+      </ul>
+    </div>
+
+    <div class="infobox">
+      <b>Links</b><br />
+      <ul>
+        <li> <a href="#lists">Mailing lists</a> </li>
+        <li> <a href="#contributors">Contributors</a> </li>
+        <li> <a href="#acks">Support</a> </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div id="main">
     <div id="title">
-      Joshua decoder
-    </div>
-
-    <div style="clear: both;">
-    </div>
-
-    <div id="navbar">
-      <p class="infobox">
-          <b>Stable version</b><br />
-          4.0<br/><br/>
-          <b>Release date</b><br />
-          22 June 2012
-      </p>
-
-      <p id="download">
-        <a href="https://github.com/joshua-decoder/joshua/zipball/4.0">Download</a>
-      </p>
-
-      <div class="infobox">
-        <b>Links</b><br />
-        <ul>
-          <li> <a href="userdocs/index.html">User documentation</a> </li>
-          <li> <a href="http://cs.jhu.edu/~post/joshua-docs/index.html">Developers</a> </li>
-        </ul>
-      </div>
+      <h1>Joshua Decoder</h1>
     </div>
 
     <div id="content">
@@ -55,18 +61,20 @@
         University.
       </p>
 
+      <a name="download"/>
       <h3>Download</h3>
 
       <p>
         To download, click the big green download button to the left.  This will deliver to you a
         tarball of our latest release, version 4.0.
       </p>
-        
+      
+      <a name="usage"/>
       <h3>Usage</h3>
 
       <p>
         We are in the process of putting together a <a href="userdocs/index.html">large collection
-        of user documentation</a>.  You should check there for quick start guides, common problems,
+          of user documentation</a>.  You should check there for quick start guides, common problems,
         and other issues.
       </p>
 
@@ -79,8 +87,8 @@
         For more detail, Chris Callison-Burch
         describes <a href="http://www.cs.jhu.edu/~ccb/joshua/">how to manually
           run the steps of the machine translation pipeline</a>.
-          (This information is a bit outdated and much of it is
-          automated by the pipeline, but the broad steps still apply).
+        (This information is a bit outdated and much of it is
+        automated by the pipeline, but the broad steps still apply).
       </p>
 
       <p>
@@ -89,15 +97,20 @@
           Technical Support Group</a>, or search its archives.
       </p>
 
+      <a name="lists" />
       <h3>Mailing lists</h3>
 
       <ul>
         <li>Technical support (for end users with questions and technical
           difficulties): <a href="mailto:joshua_support@googlegroups.com">joshua_support@googlegroups.com</a>
+        </li>
         <li>Developers: <a href="mailto:joshua_developers@googlegroups.com">joshua_developers@googlegroups.com</a>
+        </li>
       </ul>
 
+      <a name="contributors" />
       <h3>Contributors</h3>
+
       <p>
         Joshua was originally ported
         from <a href="http://www.isi.edu/~chiang/">David Chiang's</a>
@@ -125,34 +138,35 @@
         Please email if you know of anyone who has been left off this list.
       </p>
 
-        <h3>Acknowledgements</h3>
-        <div>
-          We gratefully acknowledge support provided by the following institutions.
+      <a name="acks" />
+      <h3>Acknowledgements</h3>
 
-          <div>
-            <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
-          </div>
-          <div>
-            <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
-          </div>
-          <div>
-            <a href="http://www.euromatrixplus.org/">
-              <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
-            </a> 
-            <br/>
-            Joshua has received funding from the European Community's Seventh Framework Programme
-            (FP7/2007-2013) under grant agreement n° 231720.
-          </div>
+      <div>
+        We gratefully acknowledge support provided by the following institutions.
+
+        <div>
+          <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
+        </div>
+        <div>
+          <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
+        </div>
+        <div>
+          <a href="http://www.euromatrixplus.org/">
+            <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
+          </a> 
           <br/>
-          <div>
+          Joshua has received funding from the European Community's Seventh Framework Programme
+          (FP7/2007-2013) under grant agreement n° 231720.
+        </div>
+        <br/>
+        <div>
           <img class="sponsor" alt="HLTCOE logo" src="images/sponsors/hltcoe-logo1.png" />
           <img class="hltcoe" alt="Human Language Technology Center of Excellence (logo)"
                src="images/sponsors/hltcoe-logo2.png" />
-          </div>
         </div>
+      </div>
     </div>
 
-  <div>
     <div id="twitterbar">
       <b>Twitter feed</b>:
       <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
@@ -185,7 +199,5 @@ new TWTR.Widget({
       </script>
     </div>
   </div>
-
 </body>
-
 </html>
