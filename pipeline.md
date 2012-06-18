@@ -1,7 +1,3 @@
---
-layout: default
-title: The Joshua Pipeline
---
 This page describes the Joshua pipeline script, which runs the complete machine translation pipeline
 for Joshua, from data preparation to testing and evaluation with BLEU.
 
