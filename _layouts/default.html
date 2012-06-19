@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" media="screen,print" href="../joshua.css" />
-    <title>Joshua user documentation</title>
+    <title>Joshua | {{ page.title }}</title>
   </head>
 
 <body>
@@ -51,36 +51,18 @@
 
   <div id="main">
     <div id="title">
-      <h1>Joshua User Documentation</h1>
+      <h1>{{ page.title }}</h1>
     </div>
 
     <div id="content">
-      <p>
-        This page contains end-user-oriented documentation for
-        the <a href="http://joshua-decoder.org/">Joshua decoder</a>.
-      </p>
 
-      <p>
-        If you just want to run the complete machine translation pipeline (beginning with data
-        preparation, through alignment, hierarchical model building, tuning, testing, and
-        reporting), we recommend you use our <a href="pipeline.html">pipeline script</a>.  You might
-        also be interested in <a href="http://cs.jhu.edu/~ccb/joshua/">Chris' old walkthrough</a>.
-      </p>
+      {{ content }}
 
-      <p>
-        For more detail on the decoder itself, including its command-line options,
-        see <a href="decoder.html">the Joshua decoder page</a>.  You can also learn more about other
-        steps of the Joshua MT pipeline, including <a href="thrax.html">grammar extraction</a> (with
-        <a href="">Thrax</a>) and Joshua's <a href="packer.html">efficient grammar
-        representation</a> (new with version 4.0). 
-      </p>
-
-      <p>
-        If you have problems or issues, you might find some help <a href="faq.html">on our answers
-        page</a> or <a href="https://groups.google.com/forum/?fromgroups#!forum/joshua_support">in
-        the mailing list archives</a>.
-      </p>
     </div>
+  </div>
+
+  <div class="footer">
+    Last updated on {{ site.time | date: "%B %d, %Y" }}
   </div>
 
 </body>
