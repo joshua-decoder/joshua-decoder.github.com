@@ -23,8 +23,11 @@ To use it:
    (see examples in `example/packer_integration` and `test/bn-en/hiero`).
 
 1. Write a dense_map file and put it into the packed grammar directory. The file maps feature names
-   to Joshua's dense phrasal feature indices. Format is "<feature index> <feature name>", one per
-   line. Again, examples are in the repository.
+   to Joshua's dense phrasal feature indices. Format is 
+   
+    feature-index feature-name
+    
+   one per line. Again, examples are in the repository.
 
 1. In your joshua.config, change `tm_file` to the packed directory name and the format to packed.
 
