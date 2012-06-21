@@ -3,18 +3,16 @@ layout: default
 title: Grammar Packing
 ---
 
-One day, we hope that Juri will write up nice instructions.  Until then:
+Grammar packing refers to the process of taking a textual grammar output by [Thrax](thrax.html) and
+efficiently encoding it for use by Joshua.  Packing the grammar results in significantly faster load
+times for very large grammars.
 
-From a February 22 email
-------------------------
-Hey,
-
-Quick note: the packing code is working and pushed to my packed branch.
-
-To use it:
+Soon, the [Joshua pipeline script](pipeline.html) will add support for grammar packing
+automatically, and we will provide a script that automates these steps for you.
 
 1. Make sure the grammar is labeled.  A labeled grammar is one that has feature names attached to
-each of the feature values in each row of the grammar file.  Here is a line from a labeled grammar:
+each of the feature values in each row of the grammar file.  Here is a line from an unlabeled
+grammar:
 
         [X] ||| [X,1] অন্যান্য [X,2] ||| [X,1] other [X,2] ||| 0 0 1 0 0 1.02184
 
@@ -46,23 +44,23 @@ each of the feature values in each row of the grammar file.  Here is a line from
       pieces) and the quantization classes and types for each feature name.  Examples can be found
       at
    
-        $JOSHUA/test/packed/packer.config
-        $JOSHUA/test/bn-en/packed/packer.quantized
-        $JOSHUA/test/bn-en/packed/packer.uncompressed
+            $JOSHUA/test/packed/packer.config
+            $JOSHUA/test/bn-en/packed/packer.quantized
+            $JOSHUA/test/bn-en/packed/packer.uncompressed
        
-    The quantizer lines in the packer config file have the following format:
+      The quantizer lines in the packer config file have the following format:
    
-        quantizer TYPE FEATURES
+            quantizer TYPE FEATURES
        
-    where `TYPE` is one of `boolean`, `float`, `byte`, or `8bit`, and `FEATURES` is a
-    space-delimited list of feature names that have that quantization type.
+       where `TYPE` is one of `boolean`, `float`, `byte`, or `8bit`, and `FEATURES` is a
+       space-delimited list of feature names that have that quantization type.
    
    1. Write a dense_map file.  If you labeled an unlabeled grammar, this was produced for you as a
       side product of the `label_grammar.py` script you called in Step 1.  Otherwise, you need to
       create a file that lists the mapping between feature names and (0-indexed) columns in the
       grammar, one per line, in the following format:
    
-        feature-index feature-name
+            feature-index feature-name
     
 1. To pack the grammar, type the following command:
 
