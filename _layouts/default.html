@@ -8,30 +8,32 @@
     <title>Joshua | {{ page.title }}</title>
   </head>
 
-<body>
+  <body>
 
-  <div id="navbar">
-    <a href="http://joshua-decoder.org/">
-      <img src="../images/joshua-logo-small.png" width="130px" 
-           alt="Joshua logo (picture of a Joshua tree)" />
-    </a>
+    <div id="navbar">
+      <a href="http://joshua-decoder.org/">
+        <img src="../images/joshua-logo-small.png" width="130px" 
+             alt="Joshua logo (picture of a Joshua tree)" />
+      </a>
 
-    <p class="infobox">
-      <b>Stable version</b><br />
-      4.0<br/><br/>
-      <b>Release date</b><br />
-      25 June 2012
-    </p>
+      <p class="infobox">
+        <b>Stable version</b><br />
+        4.0<br/><br/>
+        <b>Release date</b><br />
+        25 June 2012
+      </p>
 
-    <div class="infobox">
-      <b>AUTO LINKS</b><br/>
-      <ul>
-       {% for page in site.categories.links %}
-        <li> {{ page.title }} </li>
-       {% endfor
-      </ul>
-     </div>  
       <div class="infobox">
+        <b>AUTO LINKS</b><br/>
+        <ul>
+          {% for page in site.categories.links %}
+          <li> {{ page.title }} </li>
+          {% endfor
+        </ul>
+      </div>  
+
+      <div class="infobox">
+
         <b>Links</b><br />
         <ul>
           <li> <a href="index.html">Main</a> </li>
@@ -59,25 +61,23 @@
       </div>
     </div>
 
-  </div>
+    <div id="main">
+      <div id="title">
+        <h1>{{ page.title }}</h1>
+      </div>
 
-  <div id="main">
-    <div id="title">
-      <h1>{{ page.title }}</h1>
+      <div id="content">
+        
+        {{ content }}
+
+      </div>
     </div>
 
-    <div id="content">
-
-      {{ content }}
-
+    <div class="footer">
+      Last updated on {{ site.time | date: "%B %d, %Y" }}
     </div>
-  </div>
 
-  <div class="footer">
-    Last updated on {{ site.time | date: "%B %d, %Y" }}
-  </div>
-
-</body>
+  </body>
 </html>
 
 
