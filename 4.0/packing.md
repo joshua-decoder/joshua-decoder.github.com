@@ -1,5 +1,6 @@
 ---
 layout: default
+category: advanced
 title: Grammar Packing
 ---
 
