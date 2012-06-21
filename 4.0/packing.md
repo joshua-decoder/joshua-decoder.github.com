@@ -13,14 +13,29 @@ Quick note: the packing code is working and pushed to my packed branch.
 
 To use it:
 
-1. Make sure the grammar is labeled.
+1. Make sure the grammar is labeled.  A labeled grammar is one that has feature names attached to
+each of the feature values in each row of the grammar file.  Here is a line from a labeled grammar:
 
-1. Sort the grammar by first source word (i.e., 
+    [X] ||| [X,1] অন্যান্য [X,2] ||| [X,1] other [X,2] ||| 0 0 1 0 0 1.02184
 
-    zcat grammar_labeled.gz | sort -k3,3 | gzip > grammar_sorted.gz
+   and here is one from an labeled grammar (note that the labels are not very useful):
+
+    [X] ||| [X,1] অন্যান্য [X,2] ||| [X,1] other [X,2] ||| f1=0 f2=0 f3=1 f4=0 f5=0 f6=1.02184
+
+   If your grammar is not labeled, you can use the script `$JOSHUA/scripts/label_grammar.py`:
+   
+    zcat grammar.gz | $JOSHUA/scripts/label_grammar.py > grammar-labeled.gz
+
+   As a side-effect of this step is to produce a file 'dense_map' in the current directory,
+   containing the mapping between feature names and feature columns.  This file is needed in later
+   steps.
+
+1. The packer needs a sorted grammar.  It is sufficient to sort by the first word:
+
+    zcat grammar-labeled.gz | sort -k3,3 | gzip > grammar-sorted.gz
     
-   This is both necessary and sufficient. No full sorting required.  . Write a packer config file
-   (see examples in `example/packer_integration` and `test/bn-en/hiero`).
+1. Write a packer config file.  Examples can be found in `example/packed-grammar` and
+`test/bn-en/hiero`
 
 1. Write a dense_map file and put it into the packed grammar directory. The file maps feature names
    to Joshua's dense phrasal feature indices. Format is 
