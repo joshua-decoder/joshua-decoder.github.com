@@ -1,4 +1,5 @@
 html {
+    font-family: George, sans-serif;
   font-size: 12pt;
 }
 
@@ -14,36 +15,47 @@ body {
 
 div {
   float: left;
-  // border: 1px solid black;
+
 }
 
-div#title {
-  padding: 20px;
-  font-size: 36pt;
-  font-weight: bold;
+h1 {
+    font-family: Verdana;
+    font-weight: bold;
+    font-size: 24pt;
+}
+
+#title {
+    padding: 5px;
+    margin: 5px;
 }
 
 div#navbar {
   width: 150px;
+  clear: both;
 }
 
-p.infobox {
-  border-radius: 5px;
+.infobox {
+  /* border-radius: 5px; */
   background-color: LightBlue;
   padding: 5px;
+  margin-bottom: 10px;
+  width: 140px;
 }
 
 div#twitterbar {
-  border-radius: 5px;
+  /* border-radius: 5px; */
   background-color: LightBlue;
   padding: 5px;
   width: 250px;
+  margin-top: 5px;
 }
 
 div#content {
   float: left;
   width: 600px;
-  margin: 10px;
+  margin: 5px;
+  padding: 5px;
+  clear: both;
 }
 
 pre {
@@ -52,7 +64,8 @@ pre {
 
 img {
   display: block;
-  float: left;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 img.sponsor {
@@ -88,21 +101,29 @@ table#results td.system {
     text-align: left;
 }
 
-span#download {
+#download {
     background-color: green;
     font-size: 14pt;
     font-weight: bold;
+    text-align: center;
     color: white;
-    border-radius: 5px;
-    padding: 10px;
+    /* border-radius: 5px; */
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 140px;
 }
 
-span#download a:link {
+#download a:link {
     color: white;
 }
 
-span#download a:hover {
+#download a:hover {
     color: lightgrey;
+}
+
+#download a:visited {
+    color: white;
 }
 
 a.pdf {
@@ -125,5 +146,22 @@ a.bibtex {
 
 div#content p {
     padding: 0px;
+    padding-bottom: 10px; 
     margin: 0px;
 }
+
+ul {
+    list-style-type: square;
+    list-style-position: inside;
+    margin: 1px;
+    padding: 1px;
+}
+
+.footer {
+    font-size: 80%;
+    color: #666;
+    border-top: 4px solid #eee;
+    margin-top: 2em;
+    overflow: hidden;
+    clear: both;
+  }
