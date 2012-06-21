@@ -40,37 +40,38 @@ each of the feature values in each row of the grammar file.  Here is a line from
    lookup).
     
 1. In order to pack the grammar, we need two pieces of information: (1) a packer configuration file,
-and (2) a dense map file.
+   and (2) a dense map file.
 
    1. Write a packer config file.  This file specifies items such as the chunk size (for the packed
-   pieces) and the quantization classes and types for each feature name.  Examples can be found at
+      pieces) and the quantization classes and types for each feature name.  Examples can be found
+      at
    
-       $JOSHUA/test/packed/packer.config
-       $JOSHUA/test/bn-en/packed/packer.quantized
-       $JOSHUA/test/bn-en/packed/packer.uncompressed
+        $JOSHUA/test/packed/packer.config
+        $JOSHUA/test/bn-en/packed/packer.quantized
+        $JOSHUA/test/bn-en/packed/packer.uncompressed
        
-   The quantizer lines in the packer config file have the following format:
+    The quantizer lines in the packer config file have the following format:
    
-       quantizer TYPE FEATURES
+        quantizer TYPE FEATURES
        
-   where `TYPE` is one of `boolean`, `float`, `byte`, or `8bit`, and `FEATURES` is a space-delimited
-   list of feature names that have that quantization type.
+    where `TYPE` is one of `boolean`, `float`, `byte`, or `8bit`, and `FEATURES` is a
+    space-delimited list of feature names that have that quantization type.
    
    1. Write a dense_map file.  If you labeled an unlabeled grammar, this was produced for you as a
-   side product of the `label_grammar.py` script you called in Step 1.  Otherwise, you need to
-   create a file that lists the mapping between feature names and (0-indexed) columns in the
-   grammar, one per line, in the following format:
+      side product of the `label_grammar.py` script you called in Step 1.  Otherwise, you need to
+      create a file that lists the mapping between feature names and (0-indexed) columns in the
+      grammar, one per line, in the following format:
    
-      feature-index feature-name
+        feature-index feature-name
     
 1. To pack the grammar, type the following command:
 
-      java -cp $JOSHUA/bin joshua.tools.GrammarPacker -c PACKER_CONFIG_FILE -p OUTPUT_DIR -g GRAMMAR_FILE
+        java -cp $JOSHUA/bin joshua.tools.GrammarPacker -c PACKER_CONFIG_FILE -p OUTPUT_DIR -g GRAMMAR_FILE
 
-   This will read in your packer configuration file and your grammar, and produced a packed grammar
-   in the output directory.
+    This will read in your packer configuration file and your grammar, and produced a packed grammar
+    in the output directory.
 
 1. To use the packed grammar, just point to the packed directory in your Joshua configuration file.
 
-      tm-file = packed-grammar/
-      tm-format = packed
+        tm-file = packed-grammar/
+        tm-format = packed
