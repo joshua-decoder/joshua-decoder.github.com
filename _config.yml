@@ -15,7 +15,7 @@ pygments:    true
 markdown:    maruku
 permalink:   /:title.html
 
-exclude:  index.html,docs.html,images,indian-parallel-corpora,joshua.bib,publications,style.css,CNAME,joshua.css
+#exclude:  index.html,docs.html,images,indian-parallel-corpora,joshua.bib,publications,style.css,CNAME,joshua.css
 
 maruku:
   use_tex:    false
