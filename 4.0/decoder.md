@@ -1,8 +1,5 @@
---
-layout: default
-category: links
-title: The Joshua decoder
---
+-
+
 ## Joshua command-line options and arguments
 
 <table border="0">
