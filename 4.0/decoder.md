@@ -267,17 +267,17 @@ The main translation grammar is specified with the following set of parameters:
 Joshua supports the incorporation of an arbitrary number of language models.  To add a language
 model, add a line of the following format to the configuration file:
 
-    lm = lm-type lm-order 0 0 lm-ceiling-cost lm-file
+    lm = lm-type order 0 0 lm-ceiling-cost lm-file
 
 where the six fields correspond to the following values:
 
-* *TYPE*: one of "kenlm", "berkeleylm", "javalm" (not recommended), or "none"
-* *ORDER*: the N of the N-gram language model
+* *lm-type*: one of "kenlm", "berkeleylm", "javalm" (not recommended), or "none"
+* *order*: the N of the N-gram language model
 * *0*: whether to use left equivalent state (currently not supported)
 * *0*: whether to use right equivalent state (currently not supported)
-* *0*: the LM-specific ceiling cost of any n-gram (currently ignored; `lm-ceiling-cost` applies to
-   all language models)
-* *FILE*: the path to the language model file.  All types support the standard ARPA format.
+* *lm-ceiling-cost*: the LM-specific ceiling cost of any n-gram (currently ignored;
+   `lm-ceiling-cost` applies to all language models)
+* *lm-file*: the path to the language model file.  All types support the standard ARPA format.
    Additionally, if the LM type is "kenlm", this file can be compiled into KenLM's compiled format
    (using the program at `$JOSHUA/src/joshua/decoder/ff/lm/kenlm/build_binary`), and if the LM type
    is "berkeleylm", it can be compiled by following the directions in
