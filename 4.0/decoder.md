@@ -175,7 +175,7 @@ If parsing is enabled, the following features become relevant:
 <a name="pruning" />
 ### Pruning options
   
-There are three different approaches to pruning in Joshua.  
+There are three different approaches to pruning in Joshua.
 
 1. No pruning.  Exhaustive decoding is triggered by setting `pop-limit = 0` and
 `use-beam-and-threshold-prune = false`.
@@ -189,21 +189,26 @@ setting `pop-limit = 0` and `use-beam-and-threshold-prune = true`.
   approach is that it provides a single value to control the size of the search space that is
   explored (and therefore runtime).
 
-Pop-limit pruning is enabled by default, and it is the recommended approach.
+Selecting among these pruning methods could be made easier via a single parameter with enumerated
+values, but currently, we are stuck with this slightly more cumbersome way.  The defaults ensure
+that you don't have to worry about them too much.  Pop-limit pruning is enabled by default, and it
+is the recommended approach; if you want to control the speed / accuracy tradeoff, you should change
+the pop limit.
 
 - `pop-limit` --- *100*
 
-  The number of hypotheses to examine for each span of the input.
+  The number of hypotheses to examine for each span of the input.  Higher values result in a larger
+  portion of the search space being explored at the cost of an increased search time.
 
 - `use-beam-and-threshold-pruning` --- *false*
 
   Enables the use of beam-and-threshold pruning, and makes the following five features relevant.
   
-  - `fuzz1` --- *0.1*
-  - `fuzz2` --- *0.2*
-  - `max-n-items` --- *30*
-  - `relative-threshold` --- *10.0*
-  - `max-n-rules` --- *50*
+      - `fuzz1` --- *0.1*
+      - `fuzz2` --- *0.2*
+      - `max-n-items` --- *30*
+      - `relative-threshold` --- *10.0*
+      - `max-n-rules` --- *50*
 
 - `constrain-parse` --- *false*
 - `use_pos_labels` --- *false*
@@ -281,15 +286,42 @@ by separately specifying each of `lm-file` (NULL), `lm-type` (kenlm), `order` (5
 <a name="output" />
 ### Output options
 
-- top-n
-- use-unique-nbest
-- add-combined-cost
-- use-tree-nbest
-- escape-trees
-- include-align-index
+These parameters largely determine what is output by Joshua.
+
+- `top-n` --- *300*
+
+  The number of translation hypotheses to output, sorted in reverse order of model score (i.e.,
+  highest first).
+
+- `use-unique-nbest` --- *true*
+
+  When constructing the n-best list for a sentence, skip hypotheses whose string has already been
+  output.  This increases the amount of diversity in the n-best list by removing spurious ambiguity
+  in the derivation structures.
+
+- `add-combined-cost` --- *true*
+
+  In addition to outputting the hypothesis number, the translation, and the individual feature
+  weights, output the combined model cost.
+
+- `use-tree-nbest` --- *false* 
+
+  Output the synchronous derivation tree in addition to the output string, for each candidate in the
+  n-best list.
+
+- `escape-trees` --- *false*
+
+
+- `include-align-index` --- *false*
+
+  Output the source words indices that each target word aligns to.
+
+- `mark-oovs` --- *false*
+
+  This causes the text "_OOV" to be appended to each OOV in the output.
+
 - save-disk-hg
 - use-kbest-hg
 - visualize-hypergraph
-- mark-oovs
 
 
