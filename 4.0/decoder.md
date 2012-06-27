@@ -124,8 +124,13 @@ them.
    Specifies the configuration file from which Joshua options are loaded.  This feature is unique in
    that it must be specified from the command line.
 
-- `oracle-file`
+- `oracle-file` --- *NULL*
 
+  The location of a set of oracle reference translations, parallel to the input.  When present,
+  after producing the hypergraph by decoding the input sentence, the oracle is used to rescore the
+  translation forest with a BLEU approximation in order to extract the oracle-translation from the
+  forest.  This is useful for obtaining an (approximation to an) upper bound on your translation
+  model under particular search settings.
 
 - `default-nonterminal` --- *"X"*
 
