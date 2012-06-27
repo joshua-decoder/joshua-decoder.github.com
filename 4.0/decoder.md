@@ -111,37 +111,33 @@ If parsing is enabled, the following features become relevant:
 <a name="general" />
 ### General decoder options
 
-- `c STRING`, `config STRING`
+- `c`, `config` --- *NULL*
 
    Specifies the configuration file from which Joshua options are loaded.  This feature is unique in
    that it must be specified from the command line.
 
-- `oracle-file `
+- `oracle-file`
 
 
-- `default-nonterminal STRING` (*X*)
+- `default-nonterminal` --- *"X"*
 
    This is the nonterminal symbol assigned to out-of-vocabulary (OOV) items.  
 
-- `goal-symbol` (*GOAL*)
+- `goal-symbol` --- *"GOAL"*
 
    This is the symbol whose presence in the chart over the whole input span denotes a successful
    parse (translation).  It should match the LHS nonterminal in your glue grammar.  Internally,
    Joshua represents nonterminals enclosed in square brackets (e.g., "[GOAL]"), which you can
    optionally supply in the configuration file.
 
-- `true-oovs-only` (*false*)
+- `true-oovs-only` --- *false*
 
   By default, Joshua creates an OOV entry for every word in the source sentence, regardless of
   whether it is found in the grammar.  This allows every word to be pushed through untranslated
   (although potentially incurring a high cost based on the `oovPenalty` feature).  If this option is
   set, then only true OOVs are entered into the chart as OOVs.
 
-- `use-pos-labels`
-
-  [TODO: I don't know what this feature does.]
-
-- `use-sent-specific-tm` (*false*)
+- `use-sent-specific-tm` --- *false*
 
   If set to true, Joshua will look for sentence-specific filtered grammars.  The location is
   determined by taking the supplied translation model (`tm-file`) and looking for a `filtered/`
@@ -157,7 +153,7 @@ If parsing is enabled, the following features become relevant:
       /path/to/filtered/grammar.2.gz      
       ...
       
-- `threads`, `num-parallel-decoders` (1)
+- `threads`, `num-parallel-decoders` --- *1*
 
   This determines how many simultaneous decoding threads to launch.  
   
@@ -167,7 +163,7 @@ If parsing is enabled, the following features become relevant:
   with as many as 48 threads without any problems of this kind, but it's useful to keep in the back
   of your mind.
 
-- `oov-feature-cost` (100)
+- `oov-feature-cost` --- *100*
 
   Each OOV word incurs this cost, which is multiplied against the `oovPenalty` feature (which is
   tuned but can be held fixed).
@@ -195,7 +191,7 @@ setting `pop-limit = 0` and `use-beam-and-threshold-prune = true`.
 
 Pop-limit pruning is enabled by default, and it is the recommended approach.
 
-- `pop-limit` --- 100
+- `pop-limit` --- *100*
 
   The number of hypotheses to examine for each span of the input.
 
@@ -211,6 +207,7 @@ Pop-limit pruning is enabled by default, and it is the recommended approach.
 
 - `constrain-parse` --- *false*
 - `use_pos_labels` --- *false*
+
 
 <a name="tm" />
 ### Translation model options
@@ -241,7 +238,7 @@ The main translation grammar is specified with the following set of parameters:
   grammar.  See the [page on features](features.html) for more information.  By default, these
   parameters have the same value, meaning the grammars share a set of features.
 
-- `span-limit` (10)
+- `span-limit` --- *10*
 
   This controls the maximum span of the input that grammar rules loaded from `tm-file` are allowed
   to apply.  The span limit is ignored for glue grammars.
@@ -249,21 +246,40 @@ The main translation grammar is specified with the following set of parameters:
 <a name="lm" />
 ### Language model options
 
-- `lm`
-- `lm-file`
-- `lm-type`
+Joshua supports the incorporation of an arbitrary number of language models.  To add a language
+model, add a line of the following format to the configuration file:
 
-  kenlm berkeleylm javalm
+    lm = lm-type lm-order 0 0 lm-ceiling-cost lm-file
 
-- `order`
-- `lm-ceiling-cost`
-- `use-left-equivalent-state`
-- `use-right-equivalent-state`
-- use-sent-specific-lm
+where the six fields correspond to the following values:
+
+* *TYPE*: one of "kenlm", "berkeleylm", "javalm" (not recommended), or "none"
+* *ORDER*: the N of the N-gram language model
+* *0*: whether to use left equivalent state (currently not supported)
+* *0*: whether to use right equivalent state (currently not supported)
+* *0*: the LM-specific ceiling cost of any n-gram (currently ignored; `lm-ceiling-cost` applies to
+   all language models)
+* *FILE*: the path to the language model file.  All types support the standard ARPA format.
+   Additionally, if the LM type is "kenlm", this file can be compiled into KenLM's compiled format
+   (using the program at `$JOSHUA/src/joshua/decoder/ff/lm/kenlm/build_binary`), and if the LM type
+   is "berkeleylm", it can be compiled by following the directions in
+   `$JOSHUA/src/joshua/decoder/ff/lm/berkeley_lm/README`.
+
+For each language model, you need to specify a feature weight in the following format:
+
+    lm 0 WEIGHT
+    lm 1 WEIGHT
+    ...
+    
+where the indices correspond to the language model declaration lines in order.
+
+For backwards compatibility, Joshua also supports a separate means of specifying the language model,
+by separately specifying each of `lm-file` (NULL), `lm-type` (kenlm), `order` (5), and
+`lm-ceiling-cost` (100).
+
 
 <a name="output" />
 ### Output options
-<a name="#output" />
 
 - top-n
 - use-unique-nbest
@@ -275,135 +291,5 @@ The main translation grammar is specified with the following set of parameters:
 - use-kbest-hg
 - visualize-hypergraph
 - mark-oovs
-
-
-
-###
-
-<table border="0">
-  <tr>
-    <th>
-      option
-    </th>
-    <th>
-      value
-    </th>
-    <th>
-      description
-    </th>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--lm</code>
-    </td>
-    <td>
-      String, e.g. <n /> <code>TYPE 5 false false 100 FILE</code>
-    </td>
-    <td markdown="1">
-      Use once for each of one or language models.
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--lm_file</code>
-    </td>
-    <td>
-      String: path the the language model file
-    </td>
-    <td>
-      ???
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--parse</code>
-    </td>
-    <td>
-      None
-    </td>
-    <td>
-      whether to parse (if not then decode)
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--tm_file</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-       path to the the translation model
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--glue_file</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      ???
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--tm_format</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--glue_format</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>--lm_type</code>
-    </td>
-    <td>
-      value
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-</table>
-
-### `--lm`
-
-multiple language models. The value should be a string named <code>lm.gz</code>
-(I seem to have had a failure when it was named something else and/or was an
-absolute path. Specify multiple attributes of the language model(s) at once.
-*test*
-
-where the six fields correspond to the following values:
-* LM type: one of "kenlm", "berkeleylm", "javalm" (not recommended), or "none"
-* LM order: the N of the N-gram language model
-* whether to use left equivalent state (currently not supported)
-* whether to use right equivalent state (currently not supported
-* the ceiling cost of any n-gram (currently ignored)
-* LM file: the location of the language model file
 
 
