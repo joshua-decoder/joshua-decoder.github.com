@@ -74,7 +74,7 @@ remember the exact format of each parameter.
 
 In what follows, we group the configuration parameters in the following groups:
 
-- [Altenrate modes of operation](#modes)
+- [Alternate modes of operation](#modes)
 - [General options](#general)
 - [Pruning](#pruning)
 - [Translation model options](#tm)
@@ -97,6 +97,16 @@ You may also wish to display the synchronouse parse tree (`-use-tree-nbest`) and
 (`-show-align-index`).
 
 The synchronous parsing implementation is that of [Dyer (2010)]().  
+
+If parsing is enabled, the following features become relevant:
+
+- `forest-pruning` --- *false*
+
+  If true, the synchronous forest will be pruned.
+
+- `forest-pruning-threshold` --- *10*
+
+  The threshold used for pruning.
 
 <a name="general" />
 ### General decoder options
@@ -122,68 +132,119 @@ The synchronous parsing implementation is that of [Dyer (2010)]().
 
 - `true-oovs-only` (*false*)
 
-   By default, Joshua creates an OOV entry for every word in the source sentence, regardless of
-   whether it is found in the grammar.  This allows every word to be pushed through untranslated
-   (although potentially incurring a high cost based on the `oovPenalty` feature).  If this option
-   is set, then only true OOVs are entered into the chart as OOVs.
+  By default, Joshua creates an OOV entry for every word in the source sentence, regardless of
+  whether it is found in the grammar.  This allows every word to be pushed through untranslated
+  (although potentially incurring a high cost based on the `oovPenalty` feature).  If this option is
+  set, then only true OOVs are entered into the chart as OOVs.
 
 - `use-pos-labels`
-- `use-sent-specific-tm`
-- `threads`, `num-parallel-decoders`
-- `oov-feature-cost`
+
+  [TODO: I don't know what this feature does.]
+
+- `use-sent-specific-tm` (*false*)
+
+  If set to true, Joshua will look for sentence-specific filtered grammars.  The location is
+  determined by taking the supplied translation model (`tm-file`) and looking for a `filtered/`
+  subdirectory for a file with the same name but with the (0-indexed) sentence number appended to
+  it.  For example, if 
+  
+      tm-file = /path/to/grammar.gz
+  
+  then the sentence-filtered grammars should be found at
+  
+      /path/to/filtered/grammar.0.gz
+      /path/to/filtered/grammar.1.gz
+      /path/to/filtered/grammar.2.gz      
+      ...
+      
+- `threads`, `num-parallel-decoders` (1)
+
+  This determines how many simultaneous decoding threads to launch.  
+  
+  Outputs are assembled in order and Joshua has to hold on to the complete target hypergraph until
+  it is ready to be processed for output, so too many simultaneous threads could result in lots of
+  memory usage if a long sentence results in many sentences being queued up.  We have run Joshua
+  with as many as 48 threads without any problems of this kind, but it's useful to keep in the back
+  of your mind.
+
+- `oov-feature-cost` (100)
+
+  Each OOV word incurs this cost, which is multiplied against the `oovPenalty` feature (which is
+  tuned but can be held fixed).
+
 - `use-google-linear-corpus-gain`
 - `google-bleu-weights`
 
 
 <a name="pruning" />
 ### Pruning options
+  
+There are three different approaches to pruning in Joshua.  
 
-- span-limit
-- constrain-parse
-- fuzz1 
-- fuzz2
-- max-n-items
-- relative-threshold
-- max-n-rules
-- forest-pruning
-- forest-pruning-threshold
-- pop-limit
-- use-cube-prune
-- use-beam-and-threshold-pruning
+1. No pruning.  Exhaustive decoding is triggered by setting `pop-limit = 0` and
+`use-beam-and-threshold-prune = false`.
 
+1. The old approach.  This approach uses a handful of pruning parameters whose specific roles are
+hard to understand and whose interaction is even more difficult to quantify.  It is triggered by
+setting `pop-limit = 0` and `use-beam-and-threshold-prune = true`.
+
+1. Pop-limit pruning (the new approach).  The pop limit determines the number of hypotheses that are
+  popped from the candidates list for each of the O(n^2) spans of the input.  A nice feature of this
+  approach is that it provides a single value to control the size of the search space that is
+  explored (and therefore runtime).
+
+Pop-limit pruning is enabled by default, and it is the recommended approach.
+
+- `pop-limit` --- 100
+
+  The number of hypotheses to examine for each span of the input.
+
+- `use-beam-and-threshold-pruning` --- *false*
+
+  Enables the use of beam-and-threshold pruning, and makes the following five features relevant.
+  
+  - `fuzz1` --- *0.1*
+  - `fuzz2` --- *0.2*
+  - `max-n-items` --- *30*
+  - `relative-threshold` --- *10.0*
+  - `max-n-rules` --- *50*
+
+- `constrain-parse` --- *false*
+- `use_pos_labels` --- *false*
 
 <a name="tm" />
 ### Translation model options
 
 At the moment, Joshua supports only two translation models, which are designated as the (main)
-translation model and the glue grammar.  Internally, however, these grammars are not distinguished,
-and in the near future this will be generalized to allow an arbitrary number of translation models.
+translation model and the glue grammar.  Internally, these grammars are distinguished only in that
+the `span-limit` parameter applies only to the glue grammar.  In the near future we plan to
+generalize the grammar specification to permit an unlimited number of translation models.
 
-The glue grammar is specified with the following set of parameters:
+The main translation grammar is specified with the following set of parameters:
 
-- `tm_file STRING`
+- `tm_file STRING` --- *NULL*, `glue_file STRING` --- *NULL*
 
-  This points to the file location of the translation grammar.
+  This points to the file location of the translation grammar for text-based formats or to the
+  directory for the [packed representation](packed.html).
   
-- `tm_format STRING`
+- `tm_format STRING` --- *thrax*, `glue_format STRING` --- *thrax*
 
   The format the file is in.  The permissible formats are `hiero` or `thrax` (which are equivalent),
- `packed` (for [packed grammars](packed.html)), or `samt` (for grammars encoded in the format
- defined by [Venugopal]().  This parameter will be done away with in the near future since it is
- easily inferrable.  See [the formats page](file-formats.html) for more information about file
- formats.  
+  `packed` (for [packed grammars](packed.html)), or `samt` (for grammars encoded in the format
+  defined by [Venugopal]().  This parameter will be done away with in the near future since it is
+  easily inferrable.  See [the formats page](file-formats.html) for more information about file
+  formats.
 
-- `phrase_owner STRING`
+- `phrase_owner STRING` --- *pt*, `glue-owner STRING` --- *pt*
 
-  The "phrase owner" is a string that can be used to 
+  The ownership concept is used to distinguish the set of feature weights that apply to each
+  grammar.  See the [page on features](features.html) for more information.  By default, these
+  parameters have the same value, meaning the grammars share a set of features.
 
-- 
+- `span-limit` (10)
 
-- `glue_file STRING`
-
-- `glue_format STRING`
-
-- `glue_owner STRING`
+  This controls the maximum span of the input that grammar rules loaded from `tm-file` are allowed
+  to apply.  The span limit is ignored for glue grammars.
 
 <a name="lm" />
 ### Language model options
