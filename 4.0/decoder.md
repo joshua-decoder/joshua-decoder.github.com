@@ -1,9 +1,223 @@
 ---
 layout: default
 category: links
-title: The Joshua decoder
+title: Decoder configuration parameters
 ---
-## Joshua command-line options and arguments
+Joshua configuration parameters affect the runtime behavior of the decoder itself.  This page
+describes the complete list of these parameters and describes how to invoke the decoder manually.
+
+To run the decoder, a convenience script is provided that loads the necessary Java libraries.
+Assuming you have set the environment variable `$JOSHUA` to point to the root of your installation,
+its syntax is:
+
+    $JOSHUA/joshua-decoder [-m memory-amount] [-c config-file other-joshua-options ...]
+    
+The `-m` argument, if present, must come first, and the memory specification is in Java format
+(e.g., 400m, 4g, 50g).  Most notably, the suffixes "m" and "g" are used for "megabytes" and
+"gigabytes", and there cannot be a space between the number and the unit.  The value of this
+argument is passed to Java itself in the invocation of the decoder, and the remaining options are
+passed to Joshua.  The `-c` parameter has special import because it specifies the location of the
+configuration file.
+
+The Joshua decoder works by reading from STDIN and printing translations to STDOUT as they are
+received, according to a number of [output options](#output).  If no run-time parameters are
+specified (e.g., no translation model), sentences are simply pushed through untranslated.  Blank
+lines are similarly pushed through as blank lines, so as to maintain parallelism with the input.
+
+Parameters can be provided to Joshua via a configuration file and from the command
+line.  Command-line arguments override values found in the configuration file.  The format for
+configuration file paramters is
+
+    parameter = value
+    
+Command-line options are specified in the following format
+
+    -parameter value    
+
+Values are one of four types (which we list here mostly to call attention to the boolean format):
+
+- STRING, an arbitrary string (no spaces)
+- FLOAT, a floating-point value
+- INT, an integer
+- BOOLEAN, a boolean value.  For booleans, `true` evaluates to true, and all other values evaluate
+  to false.  For command-line options, the value may be omitted, in which case it evaluates to
+  true.  For example, the following are equivalent:
+  
+      $JOSHUA/joshua-decoder -show-align-index true
+      $JOSHUA/joshua-decoder -show-align-index
+
+## Joshua configuration file
+
+Before describing the list of Joshua parameters, we present a note about the configuration file.
+In addition to the decoder parameters described below, the configuration file contains the feature
+weight values for the model.  The weight values are distinguished from runtime parameters in two
+ways: (1) they cannot be overridden on the command line, and (2) they do not have an equals sign
+(=).  Parameters are described in further detail in the [feature file](features.html).  They take
+the following format, and by convention are placed at the end of the configuration file:
+
+    lm 0 4.23
+    phrasement pt 0 -0.2
+    oovpenalty -100
+
+## Joshua decoder parameters
+
+This section contains a list of the Joshua run-time parameters.  An important note about the
+parameters is that they are collapsed to canonical form, in which dashes (-) and underscores (-) are
+removed and case is converted to lowercase.  For example, the following parameter forms are
+equivalent (either in the configuration file or from the command line):
+
+    {top-n, topN, top_n, TOP_N, t-o-p-N}
+    {poplimit, pop-limit, pop-limit, popLimit}
+
+This basically defines equivalence classes of parameters, and relieves you of the task of having to
+remember the exact format of each parameter.
+
+In what follows, we group the configuration parameters in the following groups:
+
+- [Altenrate modes of operation](#modes)
+- [General options](#general)
+- [Pruning](#pruning)
+- [Translation model options](#tm)
+- [Language model options](#lm)
+- [Output options](#output)
+
+<a name="modes" />
+### Alternate modes of operation
+
+In addition to decoding (which is the default mode), Joshua can also produce synchronous parses of a
+(source,target) pair of sentences.  This mode disables the language model (since no generation is
+required) but still requires a translation model.  To enable it, you must do two things:
+
+1. Set the configuration parameters `parse = true`.
+2. Provide input in the following format:
+   
+       source sentence ||| target sentence
+       
+You may also wish to display the synchronouse parse tree (`-use-tree-nbest`) and the alignment
+(`-show-align-index`).
+
+The synchronous parsing implementation is that of [Dyer (2010)]().  
+
+<a name="general" />
+### General decoder options
+
+- `c STRING`, `config STRING`
+
+   Specifies the configuration file from which Joshua options are loaded.  This feature is unique in
+   that it must be specified from the command line.
+
+- `oracle-file `
+
+
+- `default-nonterminal STRING` (*X*)
+
+   This is the nonterminal symbol assigned to out-of-vocabulary (OOV) items.  
+
+- `goal-symbol` (*GOAL*)
+
+   This is the symbol whose presence in the chart over the whole input span denotes a successful
+   parse (translation).  It should match the LHS nonterminal in your glue grammar.  Internally,
+   Joshua represents nonterminals enclosed in square brackets (e.g., "[GOAL]"), which you can
+   optionally supply in the configuration file.
+
+- `true-oovs-only` (*false*)
+
+   By default, Joshua creates an OOV entry for every word in the source sentence, regardless of
+   whether it is found in the grammar.  This allows every word to be pushed through untranslated
+   (although potentially incurring a high cost based on the `oovPenalty` feature).  If this option
+   is set, then only true OOVs are entered into the chart as OOVs.
+
+- `use-pos-labels`
+- `use-sent-specific-tm`
+- `threads`, `num-parallel-decoders`
+- `oov-feature-cost`
+- `use-google-linear-corpus-gain`
+- `google-bleu-weights`
+
+
+<a name="pruning" />
+### Pruning options
+
+- span-limit
+- constrain-parse
+- fuzz1 
+- fuzz2
+- max-n-items
+- relative-threshold
+- max-n-rules
+- forest-pruning
+- forest-pruning-threshold
+- pop-limit
+- use-cube-prune
+- use-beam-and-threshold-pruning
+
+
+<a name="tm" />
+### Translation model options
+
+At the moment, Joshua supports only two translation models, which are designated as the (main)
+translation model and the glue grammar.  Internally, however, these grammars are not distinguished,
+and in the near future this will be generalized to allow an arbitrary number of translation models.
+
+The glue grammar is specified with the following set of parameters:
+
+- `tm_file STRING`
+
+  This points to the file location of the translation grammar.
+  
+- `tm_format STRING`
+
+  The format the file is in.  The permissible formats are `hiero` or `thrax` (which are equivalent),
+ `packed` (for [packed grammars](packed.html)), or `samt` (for grammars encoded in the format
+ defined by [Venugopal]().  This parameter will be done away with in the near future since it is
+ easily inferrable.  See [the formats page](file-formats.html) for more information about file
+ formats.  
+
+- `phrase_owner STRING`
+
+  The "phrase owner" is a string that can be used to 
+
+- 
+
+- `glue_file STRING`
+
+- `glue_format STRING`
+
+- `glue_owner STRING`
+
+<a name="lm" />
+### Language model options
+
+- `lm`
+- `lm-file`
+- `lm-type`
+
+  kenlm berkeleylm javalm
+
+- `order`
+- `lm-ceiling-cost`
+- `use-left-equivalent-state`
+- `use-right-equivalent-state`
+- use-sent-specific-lm
+
+<a name="output" />
+### Output options
+<a name="#output" />
+
+- top-n
+- use-unique-nbest
+- add-combined-cost
+- use-tree-nbest
+- escape-trees
+- include-align-index
+- save-disk-hg
+- use-kbest-hg
+- visualize-hypergraph
+- mark-oovs
+
+
+
+###
 
 <table border="0">
   <tr>
@@ -132,304 +346,3 @@ where the six fields correspond to the following values:
 * LM file: the location of the language model file
 
 
-### `--lm_file`
-The differences between `lm` and `lm_file` are ... TBD.
-
-### `--parse`
-whether to parse (if not then decode)
-
-### `--tm_file`
-A String argument specifying the file name (Path?) of the translation model.
-
-### `--glue_file`
-
-### `--tm_format`
-
-### `--glue_format`
-
-### `--lm_type`
-lm_type = String.valueOf(fds[1]);
-if (!lm_type.equals("kenlm") && !lm_type.equals("berkeleylm")
-    && !lm_type.equals("none") && !lm_type.equals("javalm")) {
-  System.err.println("* FATAL: lm_type '" + lm_type + "' not supported");
-  System.err
-      .println("* supported types are 'kenlm' (default), 'berkeleylm', and 'javalm' (not recommended), and 'none'");
-  System.exit(1);
-}
-
-`lm_ceiling_cost`
-lm_ceiling_cost = Double.parseDouble(fds[1]);
-`lm_ceiling_cost: %s`
-
-`use_left_equivalent_state`
-use_left_equivalent_state = Boolean.valueOf(fds[1]);
-logger
-`use_left_equivalent_state: %s`
-
-`use_right_equivalent_state`
-use_right_equivalent_state = Boolean.valueOf(fds[1]);
-`use_right_equivalent_state: %s`
-    use_right_equivalent_state));
-
-`order`
-lm_order = Integer.parseInt(fds[1]);
-`g_lm_order: %s`
-
-`use_sent_specific_lm`
-use_sent_specific_lm = Boolean.valueOf(fds[1]);
-`use_sent_specific_lm: %s`
-
-`use_sent_specific_tm`
-use_sent_specific_tm = Boolean.valueOf(fds[1]);
-`use_sent_specific_tm: %s`
-
-`span_limit`
-span_limit = Integer.parseInt(fds[1]);
-`span_limit: %s`
-
-`phrase_owner`
-phrase_owner = fds[1].trim();
-`phrase_owner: %s`
-
-`glue_owner`
-glue_owner = fds[1].trim();
-`glue_owner: %s`
-
-`default_non_terminal`
-default_non_terminal = "[" + fds[1].trim() + "]";
-// default_non_terminal = fds[1].trim();
-`default_non_terminal: %s`
-
-`goalSymbol`
-goal_symbol = "[" + fds[1].trim() + "]";
-// goal_symbol = fds[1].trim();
-`goalSymbol: `
-
-`constrain_parse`
-constrain_parse = Boolean.parseBoolean(fds[1]);
-
-`oov_feature_index`
-oov_feature_index = Integer.parseInt(fds[1]);
-
-`true_oovs_only`
-true_oovs_only = Boolean.parseBoolean(fds[1]);
-
-`use_pos_labels`
-use_pos_labels = Boolean.parseBoolean(fds[1]);
-
-`fuzz1`
-fuzz1 = Double.parseDouble(fds[1]);
-`fuzz1: %s`
-
-`fuzz2`
-fuzz2 = Double.parseDouble(fds[1]);
-`fuzz2: %s`
-
-`max_n_items`
-max_n_items = Integer.parseInt(fds[1]);
-`max_n_items: %s`
-
-`relative_threshold`
-relative_threshold = Double.parseDouble(fds[1]);
-`relative_threshold: %s`
-
-`max_n_rules`
-max_n_rules = Integer.parseInt(fds[1]);
-`max_n_rules: %s`
-
-`use_unique_nbest`
-use_unique_nbest = Boolean.valueOf(fds[1]);
-`use_unique_nbest: %s`
-
-`add_combined_cost`
-add_combined_cost = Boolean.valueOf(fds[1]);
-`add_combined_cost: %s`
-
-`use_tree_nbest`
-use_tree_nbest = Boolean.valueOf(fds[1]);
-`use_tree_nbest: %s`
-
-`escape_trees`
-escape_trees = Boolean.valueOf(fds[1]);
-`escape_trees: %s`
-
-`include_align_index`
-include_align_index = Boolean.valueOf(fds[1]);
-`include_align_index: %s`
-
-`top_n`
-topN = Integer.parseInt(fds[1]);
-`topN: %s`
-
-`parallel_files_prefix`
-Random random = new Random();
-int v = random.nextInt(10000000);// make it random
-parallel_files_prefix = fds[1] + v;
-`parallel_files_prefix: %s`
-
-`num_parallel_decoders`
-`threads`
-num_parallel_decoders = Integer.parseInt(fds[1]);
-if (num_parallel_decoders <= 0) {
-  throw new IllegalArgumentException(
-      "Must specify a positive number for num_parallel_decoders");
-}
-`num_parallel_decoders: %s`
-
-`save_disk_hg`
-save_disk_hg = Boolean.valueOf(fds[1]);
-`save_disk_hg: %s`
-
-`use_kbest_hg`
-use_kbest_hg = Boolean.valueOf(fds[1]);
-`use_kbest_hg: %s`
-
-`forest_pruning`
-forest_pruning = Boolean.valueOf(fds[1]);
-`forest_pruning: %s`
-
-`forest_pruning_threshold`
-forest_pruning_threshold = Double.parseDouble(fds[1]);
-`forest_pruning_threshold: %s`
-
-`visualize_hypergraph`
-visualize_hypergraph = Boolean.valueOf(fds[1]);
-`visualize_hypergraph: %s`
-
-`mark_oovs`
-mark_oovs = Boolean.valueOf(fds[1]);
-`mark_oovs: %s`
-
-`pop-limit`
-pop_limit = Integer.valueOf(fds[1]);
-`pop-limit: %s`
-
-`useCubePrune`
-useCubePrune = Boolean.valueOf(fds[1]);
-if (useCubePrune == false) logger.warning("useCubePrune=false");
-logger.finest(String.format("useCubePrune: %s", useCubePrune));
-else if (parameter.equals(normalize_key("useBeamAndThresholdPrune"))) {
-useBeamAndThresholdPrune = Boolean.valueOf(fds[1]);
-if (useBeamAndThresholdPrune == false)
-  logger.warning("useBeamAndThresholdPrune=false");
-logger.finest(String.format("useBeamAndThresholdPrune: %s", useBeamAndThresholdPrune));
-
-else if (parameter.equals(normalize_key("oovFeatureCost"))) {
-oov_feature_cost = Float.parseFloat(fds[1]);
-logger.finest(String.format("oovFeatureCost: %s", oov_feature_cost));
-
-else if (parameter.equals(normalize_key("useGoogleLinearCorpusGain"))) {
-useGoogleLinearCorpusGain = new Boolean(fds[1].trim());
-logger
-    .finest(String.format("useGoogleLinearCorpusGain: %s", useGoogleLinearCorpusGain));
-
-else if (parameter.equals(normalize_key("googleBLEUWeights"))) {
-String[] googleWeights = fds[1].trim().split(";");
-if (googleWeights.length != 5) {
-  logger.severe("wrong line=" + line);
-  System.exit(1);
-}
-linearCorpusGainThetas = new double[5];
-for (int i = 0; i < 5; i++)
-  linearCorpusGainThetas[i] = new Double(googleWeights[i]);
-
-logger.finest(String.format("googleBLEUWeights: %s", linearCorpusGainThetas));
-
-else if (parameter.equals(normalize_key("oracleFile"))) {
-oracleFile = fds[1].trim();
-logger.info(String.format("oracle file: %s", oracleFile));
-if (!new File(oracleFile).exists()) {
-  logger.warning("FATAL: can't find oracle file '" + oracleFile + "'");
-  System.exit(1);
-}
-
-else if (parameter.equals("c") || parameter.equals("config")) {
-// this was used to send in the config file, just ignore it
-;
-
-else {
-logger.warning("FATAL: unknown configuration parameter '" + fds[0] + "'");
-System.exit(1);
-
-# Build a translation model
-
-I recommend placing each week's model in a new directory, e.g., expts/scale12/model0.
-
-Put the input files in a subdirectory "input".
-
-Concatenate all the training files on each side.  The pipeline script normally does tokenization and normalization, but in this instance we have a custom tokenizer we need to apply to the source side, so we have to do it manually and then skip that step using "--first-step alignment".
-
-* to tokenize the English data, do
-
-      cat fisher.en | $JOSHUA/scripts/training/normalize-punctuation.pl en | $JOSHUA/scripts/training/penn-treebank-tokenizer.perl | $JOSHUA/scripts/lowercase.perl > fisher.norm.tok.lc.en
-
-* to tokenize the Spanish data, you have to write an intermediate file since the Java tokenizer doesn't read from STDIN.
-
-      export JOSHUA=/home/hltcoe/mpost/code/joshua
-      cat fisher.es | $JOSHUA/scripts/training/normalize-punctuation.pl es \
-      | $JOSHUA/scripts/support/twitter-tokenizer | $JOSHUA/scripts/lowercase.perl > fisher.norm.tok.lc.es
-      export JOSHUA=/home/hltcoe/lorland/workspace/joshua
-
-      paste fisher.norm.tok.lc.es fisher.norm.tok.lc.en | grep -Pv "^\t|\t$" \
-      | ./splittabs.pl fisher.norm.tok.lc.noblanks.es fisher.norm.tok.lc.noblanks.en
-
-  contents of `splittabls.pl` by Matt Post:
-
-      #!/usr/bin/perl
-
-      # splits on tab, printing respective chunks to the list of files given
-      # as script arguments
-
-      use FileHandle;
-
-      my @fh;
-      $| = 1;   # don't buffer output
-
-      if (@ARGV < 0) {
-        print "Usage: splittabs.pl < tabbed-file\n";
-        exit;
-      }
-
-      my @fh = map { get_filehandle($_) } @ARGV;
-      @ARGV = ();
-
-      while (my $line = <>) {
-        chomp($line);
-        my (@fields) = split(/\t/,$line,scalar @fh);
-
-        map { print {$fh[$_]} "$fields[$_]\n" } (0..$#fields);
-      }
-
-      sub get_filehandle {
-          my $file = shift;
-
-          if ($file eq "-") {
-              return *STDOUT;
-          } else {
-              local *FH;
-              open FH, ">$file" or die "can't open '$file' for writing";
-              return *FH;
-          }
-      }
-
-* Now you can run the pipeline.  You need the following args:
-
-
-      set -u
-      pair=es-en
-      type=hiero
-      #. ~/.bashrc
-      #basedir=$(pwd)
-      dir=grammar-$pair-$type
-      [[ ! -d $dir ]] && mkdir -p $dir
-      cd $dir                                                                                                                                                                                                                                                                                                                                                                           source=$(echo $pair | cut -d- -f 1)                                                                                                                                                      
-      target=$(echo $pair | cut -d- -f 2)
-      $JOSHUA/scripts/training/pipeline.pl \
-        --source $source \
-        --target $target \
-        --corpus /home/hltcoe/lorland/expts/scale12/model1/input/fisher.norm.tok.lc.noblanks \
-        --type $type \
-        --no-prepare \
-        --first-step align \
-        --last-step thrax \
-        --hadoop $HADOOP
