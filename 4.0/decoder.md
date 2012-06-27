@@ -98,7 +98,9 @@ You may also wish to display the synchronouse parse tree (`-use-tree-nbest`) and
 
 The synchronous parsing implementation is that of [Dyer (2010)]().  
 
-If parsing is enabled, the following features become relevant:
+If parsing is enabled, the following features become relevant.  If you would like more information
+about how to use these features, please ask [Jonny Weese](http://cs.jhu.edu/~jonny/) to document
+them. 
 
 - `forest-pruning` --- *false*
 
@@ -107,6 +109,11 @@ If parsing is enabled, the following features become relevant:
 - `forest-pruning-threshold` --- *10*
 
   The threshold used for pruning.
+  
+- `use-kbest-hg` --- *false*
+
+  The k-best hypergraph to use.
+
 
 <a name="general" />
 ### General decoder options
@@ -320,8 +327,19 @@ These parameters largely determine what is output by Joshua.
 
   This causes the text "_OOV" to be appended to each OOV in the output.
 
-- save-disk-hg
-- use-kbest-hg
-- visualize-hypergraph
+- `visualize-hypergraph` --- *false*
 
+  If set to true, a visualization of the hypergraph will be displayed, though you will have to
+  explicitly include the relevant jar files.  See the example usage in
+  `$JOSHUA/examples/tree_visualizer/`, which contains a demonstration of a source sentence,
+  translation, and synchronous derivation.
 
+- `save-disk-hg` --- *false* [DISABLED]
+
+  This feature directs that the hypergraph should be written to disk.  The code is in
+  
+      $JOSHUA/src/joshua/src/DecoderThread.java
+      
+  but the feature has not been tested in some time, and is thus disabled.  It probably wouldn't take
+  much work to fix it!  If you do, please note the [documentation for a common hypergraph format]() on
+  the ACL Wiki.
