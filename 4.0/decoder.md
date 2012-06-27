@@ -96,7 +96,8 @@ required) but still requires a translation model.  To enable it, you must do two
 You may also wish to display the synchronouse parse tree (`-use-tree-nbest`) and the alignment
 (`-show-align-index`).
 
-The synchronous parsing implementation is that of [Dyer (2010)]().  
+The synchronous parsing implementation is that of Dyer (2010)
+[PDF](http://www.aclweb.org/anthology/N/N10/N10-1033).
 
 If parsing is enabled, the following features become relevant.  If you would like more information
 about how to use these features, please ask [Jonny Weese](http://cs.jhu.edu/~jonny/) to document
@@ -240,9 +241,9 @@ The main translation grammar is specified with the following set of parameters:
 
   The format the file is in.  The permissible formats are `hiero` or `thrax` (which are equivalent),
   `packed` (for [packed grammars](packed.html)), or `samt` (for grammars encoded in the format
-  defined by [Venugopal]().  This parameter will be done away with in the near future since it is
-  easily inferrable.  See [the formats page](file-formats.html) for more information about file
-  formats.
+  defined by [Zollmann & Venugopal]().  This parameter will be done away with in the near future
+  since it is easily inferrable.  See [the formats page](file-formats.html) for more information
+  about file formats.
 
 - `phrase_owner STRING` --- *pt*, `glue-owner STRING` --- *pt*
 
