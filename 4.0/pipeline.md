@@ -3,30 +3,80 @@ layout: default
 category: links
 title: The Joshua Pipeline
 ---
-This page describes the Joshua pipeline script, which runs the complete machine translation pipeline
-for Joshua, from data preparation to testing and evaluation with BLEU.
 
-The entry point for the pipeline is the scripts `$JOSHUA/scripts/training/pipeline.pl`, which is
-designed in the spirit of Moses' `train-model.pl` (formerly `train-factored-phrase-model.perl`).
-The script:
+This page describes the Joshua pipeline script, which manages the complexity of training and
+evaluating machine translation systems.  The pipeline eases the pain of two related tasks in
+statistical machine translation (SMT) research:
 
-- Runs the complete pipeline from start (training corpus normalization and tokenization) to
-  finish (producing a BLEU score on a test set).
+1. Training SMT systems involves a complicated process of interacting steps that are time-consuming
+and prone to failure.
 
-- Caches the results of intermediate steps (based on file contents, not file existence or
-  timestamps), so the pipeline can be debugged or shared across similar runs with (almost) no time
-  spent recomputing expensive steps.
+1. Developing and testing new techniques requires varying parameters at different points in the
+pipeline.  Earlier results (which are often expensive) need not be recomputed.
+
+To facilitate these tasks, the pipeline script:
+
+- Runs the complete SMT pipeline, from corpus normalization and tokenization, through model
+  building, tuning, test-set decoding, and evaluation.
+
+- Caches the results of intermediate steps (using robust SHA-1 checksums on dependencies), so the
+  pipeline can be debugged or shared across similar runs with (almost) no time spent recomputing
+  expensive steps.
  
-- Can jump into the pipeline at any of a set of predefined points.
+- Allows you to jump into and out of the pipeline at a set of predefined places (e.g., the alignment
+  stage), so long as you provide the missing dependencies.
 
-This document describes how to use this pipeline.
+The Joshua pipeline script is designed in the spirit of Moses' `train-model.pl`.
 
-## QUICK START
+## Installation
 
-1. See
-   [the INSTALL file](https://github.com/joshua-decoder/joshua/blob/master/scripts/training/INSTALL)
-   to setup the pipeline.  If Joshua is installed, this is mostly a matter of making sure that a few
-   environment variables are correctly defined.
+The pipeline has no *required* external dependencies.  However, it has support for a number of
+external packages, some of which are included with Joshua.
+
+1. [GIZA++]()
+
+   GIZA++ is the default aligner.  It is included with Joshua, and should compile successfully when
+   you typed `ant all` from the Joshua root directory.
+
+1. [SRILM]()
+
+   By default, the pipeline uses a Java program from the [Berkeley LM]() package that constructs an
+   Kneser-Ney-smoothed language model in ARPA format from the target side of your training data.  If
+   you wish to use SRILM instead, you need to do the following:
+   
+   1. Install SRILM and set the `$SRILM` environment variable to point to its installed location.
+   1. Add the `--lm-gen srilm` flag to your pipeline invocation.
+   
+   More information on this is availabe in the [LM building section of the pipeline](#lm).  SRILM is
+   not used for representing language models during decoding.
+
+1. [Hadoop]()
+
+   The pipeline uses the [Thrax grammar extractor](thrax.html), which is built on Hadoop.  If you
+   have a Hadoop installation, simply ensure that the `$HADOOP` environment variable is defined, and
+   the pipeline will use it automatically at the grammar extraction step.  If you are going to
+   attempt to extract very large grammars, it is best to have a good-sized Hadoop installation.
+   
+   (If you do not have a Hadoop installation, you might consider setting one up.  Hadoop can be
+   installed in a "pseudo-distributed" mode that allows it to use just a few machines or a number of
+   processors on a single machine.  The main issue is to ensure that there are a lot of independent
+   physical disks, since Hadoop (in our experience) starts to exhibit lots of hard-to-trace problems
+   if there is too much demand on the disks.)
+   
+   If you don't have a Hadoop installation, there are still no worries.  The pipeline will unroll a
+   standalone installation and use it to extract your grammar.  This behavior will be triggered if
+   `$HADOOP` is undefined.
+
+Make sure that the environment variable `$JOSHUA` is defined, and you should be all set.
+
+## Quick start
+
+The pipeline takes a set of inputs (training, tuning, and test data), and creates a set of
+intermediate files in the *run directory*.  By default, the run directory is the current directory,
+but it can be changed with the `--rundir` parameter.
+
+The complete pipeline can be run by specifying just five arguments.  For this quick start, we will
+do just that, working with the example that can be found in `$JOSHUA/examples/pipeline`
 
 2. Prepare your data.  The pipeline script needs to be told where to find the raw training, tuning,
    and test data.  A good convention is to place these files in a data/ subdirectory of your run's
