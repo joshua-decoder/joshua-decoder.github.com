@@ -246,9 +246,9 @@ The main translation grammar is specified with the following set of parameters:
 
   The format the file is in.  The permissible formats are `hiero` or `thrax` (which are equivalent),
   `packed` (for [packed grammars](packed.html)), or `samt` (for grammars encoded in the format
-  defined by [Zollmann & Venugopal]().  This parameter will be done away with in the near future
-  since it is easily inferrable.  See [the formats page](file-formats.html) for more information
-  about file formats.
+  defined by [Zollmann & Venugopal](http://www.cs.cmu.edu/~zollmann/samt/).  This parameter will be
+  done away with in the near future since it is easily inferrable.  See
+  [the formats page](file-formats.html) for more information about file formats.
 
 - `phrase_owner STRING` --- *pt*, `glue-owner STRING` --- *pt*
 
@@ -347,5 +347,6 @@ These parameters largely determine what is output by Joshua.
       $JOSHUA/src/joshua/src/DecoderThread.java
       
   but the feature has not been tested in some time, and is thus disabled.  It probably wouldn't take
-  much work to fix it!  If you do, please note the [documentation for a common hypergraph format]() on
-  the ACL Wiki.
+  much work to fix it!  If you do, you might find the
+  [discussion on a common hypergraph format](http://aclweb.org/aclwiki/index.php?title=Hypergraph_Format)
+  on the ACL Wiki to be useful.
