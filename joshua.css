@@ -157,6 +157,19 @@ ul {
     padding: 1px;
 }
 
+.infobox ul {
+    list-style-type: none;
+    list-style-position: outside;
+    margin: 3px;
+    padding: 1px;
+    font-size: 90%;
+}
+
+.infobox a:hover {
+    color: black;
+}
+
+
 .footer {
     font-size: 80%;
     color: #666;
