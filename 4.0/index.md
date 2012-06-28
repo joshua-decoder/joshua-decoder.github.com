@@ -6,6 +6,27 @@ title: Joshua 4.0 User Documentation
 This page contains end-user oriented documentation for the 4.0 release of
 [the Joshua decoder](http://joshua-decoder.org/).
 
+## Download and Setup
+
+1. Follow [this link]() to download Joshua, or do it from the command line:
+
+
+2. Next, unpack it, set the `$JOSHUA` environment variable, and compile everything:
+
+       cd joshua-4.0
+
+       # for bash
+       export JOSHUA=$(pwd)
+       echo "export JOSHUA=$JOSHUA" >> ~/.bashrc
+
+       # for tcsh
+       setenv JOSHUA `pwd`
+       echo "setenv JOSHUA $JOSHUA" >> ~/.profile
+       
+       ant all
+
+3. That's it.
+
 ## Quick start
 
 If you just want to run the complete machine translation pipeline (beginning with data preparation,
