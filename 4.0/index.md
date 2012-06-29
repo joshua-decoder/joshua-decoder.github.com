@@ -8,11 +8,14 @@ This page contains end-user oriented documentation for the 4.0 release of
 
 ## Download and Setup
 
-1. Follow [this link]() to download Joshua, or do it from the command line:
+1. Follow [this link](http://cs.jhu.edu/~post/files/joshua-4.0.tgz) to download Joshua, or do it
+from the command line:
 
+       wget -q http://cs.jhu.edu/~post/files/joshua-4.0.tgz
 
 2. Next, unpack it, set the `$JOSHUA` environment variable, and compile everything:
 
+       tar xzf joshua-4.0.tgz
        cd joshua-4.0
 
        # for bash
