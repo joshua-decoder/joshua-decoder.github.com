@@ -157,7 +157,21 @@ ul {
     padding: 1px;
 }
 
+.infobox ul {
+    list-style-type: none;
+    list-style-position: outside;
+    margin: 3px;
+    padding: 1px;
+    font-size: 90%;
+}
+
+.infobox a:hover {
+    color: black;
+}
+
+
 .footer {
+    font-style: italic;
     font-size: 80%;
     color: #666;
     border-top: 4px solid #eee;
@@ -165,3 +179,11 @@ ul {
     overflow: hidden;
     clear: both;
   }
+
+.warning {
+    background-color: rgba(255,192,203,.5);
+    border: 2px dashed red;
+    margin: 10px;
+    margin-left: 30px;
+    padding: 3px;
+}

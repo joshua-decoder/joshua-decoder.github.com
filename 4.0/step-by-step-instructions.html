@@ -1,14 +1,23 @@
 ---
-template: default
+layout: default
 category: links
-title: HOW-TO GUIDE - Installing and running the Joshua Decoder
+title: Installing and running the Joshua Decoder
 ---
 
 <!-- begin header -->
-<table width=100%>
-<tr>
-<td>
-<h2><a href="http://cs.jhu.edu/~ccb/">by Chris Callison-Burch</a> (Released: January 17, 2012)</h2>
+<h2><a href="http://cs.jhu.edu/~ccb/">by Chris Callison-Burch</a> <br/>(Released: January 17, 2012)</h2>
+
+<div class="warning">
+  <p>
+    Note: this walkthrough describes an older version of Joshua that is different in some ways from
+    the current version.  Some of these differences are: SRILM support has been removed, the
+    Berkeley aligner is now included in <code>$JOSHUA/lib</code> (and therefore doesn't need to be
+    installed separately), and there is no need for you to download the developer version of Joshua
+    if you only want to use the software and not contribute to it.  Please refer to
+    the <a href="pipeline.html">pipeline documentation for the 4.0 release</a>. The pipeline
+    automates these steps.
+  </p>
+</div>
 
 <p>This web page gives instructions on how to install and use the Joshua decoder.  Joshua is an open-source decoder for parsing-based machine translation.    Joshua uses the synchronous context free grammar (SCFG) formalism in its approach to statistical machine translation, and the software implements the algorithms that underly the approach.</p>
 
@@ -105,29 +114,19 @@ export JOSHUA="<b>/path/to/joshua</b>"
 <p>
 To test to make sure that the decoder is installed properly, we'll translate 5 sentences using a small translation model that loads quickly.  The sentences that we will translate are contained in <code>example/example.test.in</code>
 </p>
-</td>
-</tr>
 
-<tr>
-<td bgcolor="#cccccc">
+<pre>
 科学家 为 攸关 初期 失智症 的 染色体 完成 定序<br>
 ( 法新社 巴黎 二日 电 ) 国际 间 的 一 群 科学家 表示 , 他们 已 为 人类 第十四 对 染色体 完成 定序 , 这 对 染色体 与 许多 疾病 有关 , 包括 三十几 岁 者 可能 罹患 的 初期 阿耳滋海默氏症 。<br>
 这 是 到 目前 为止 完成 定序 的 第四 对 染色体 , 它 由 八千七百多万 对 去氧 核糖核酸 ( dna ) 组成 。<br>
 英国 自然 科学 周刊 发表 的 这 项 研究 显示 , 第十四 对 染色体 排序 由 一千零五十 个 基因 和 基因 片段 构成 。<br>
 基因 科学家 的 目标 是 , 提供 诊断 工具 以 发现 致病 的 缺陷 基因 , 终而 提供 可 阻止 这些 基因 产生 障碍 的 疗法 。
-</td>
-</tr>
-<tr>
-<td>
+</pre>
 
 <p>
-The small translation grammar contains 15,939 rules -- you can get the count of the number of rules by running <code>gunzip -c example/example.hiero.tm.gz | wc -l<code> or you can see the first few translation rules with <code>gunzip -c example/example.hiero.tm.gz | head</code>
+The small translation grammar contains 15,939 rules -- you can get the count of the number of rules by running <code>gunzip -c example/example.hiero.tm.gz | wc -l</code> or you can see the first few translation rules with <code>gunzip -c example/example.hiero.tm.gz | head</code>
 </p>
-</td>
-</tr>
 
-<tr>
-<td bgcolor="#cccccc">
 <pre>
 [X] ||| [X,1] 科学家 [X,2] ||| [X,1] scientists to [X,2] ||| 2.17609119 0.333095818 1.53173875
 [X] ||| [X,1] 科学家 [X,2] ||| [X,2] of the [X,1] scientists ||| 2.47712135 0.333095818 2.17681264
@@ -140,10 +139,7 @@ The small translation grammar contains 15,939 rules -- you can get the count of 
 [X] ||| [X,1] 科学家 [X,2] ||| [X,1] scientists , [X,2] ||| 2.47712135 0.333095818 1.68990576
 [X] ||| [X,1] 科学家 [X,2] ||| scientists [X,2] [X,1] ||| 2.47712135 0.333095818 0.218843221
 </pre>
-</td>
-</tr>
-<tr>
-<td>
+
 <p>The different parts of the rules are separated by the <code>|||</code> delimiter.  The first part of the rule is the left-hand side non-terminal.  The second and third parts are the right-hand side.   The three numbers listed after each translation rules are negative log probabilities that signify, in order: 
 <ul>
 <li>  prob(e|f) - the probability of the English phrase given the foreign phrase </li> 
@@ -178,12 +174,7 @@ For those of you who aren't very familiar with Java, the arguments are the follo
 
 
 <p>You can inspect the output file by typing <code>head example/example.nbest.srilm.out</code></p>
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td bgcolor="#cccccc">
+
 <pre>
 0 ||| scientists to vital early 失智症 the chromosome completed has ||| -127.759 -6.353 -11.577 -5.325 -3.909 ||| -135.267
 0 ||| scientists for vital early 失智症 the chromosome completed has ||| -128.239 -6.419 -11.179 -5.390 -3.909 ||| -135.556
@@ -196,13 +187,7 @@ For those of you who aren't very familiar with Java, the arguments are the follo
 0 ||| scientists to vital early 失智症 completed the chromosome has ||| -127.423 -7.364 -11.577 -5.325 -3.909 ||| -136.009
 0 ||| scientists to vital early 失智症 of chromosomes completed has ||| -127.427 -7.136 -11.612 -5.816 -3.909 ||| -136.086
 </pre>
-</td>
-</tr>
-</table>
 
-<table>
-<tr>
-<td>
 <p>This file contains the n-best translations, under the model.  The first 10 lines that you see above are 10 best translations of the first sentence.  Each line contains 4 fields. The first field is the index of the sentence (index 0 for the first sentence), the second field is the translation, the third field contains the each of the individual feature function scores for the translation (language model, rule translation probability, lexical translation probability, reverse lexical translation probability, and word penalty), and the final field is the overall score. 
 </p>
 <p>
@@ -217,12 +202,7 @@ java -Xmx1g -cp $JOSHUA/bin \
 </pre>
 
 <p>You cat then look at the 1-best output file by typing <code>cat example/example.nbest.srilm.out.1best</code>:</p>
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td bgcolor="#cccccc">
+
 <pre>
 scientists to vital early 失智症 the chromosome completed has
 ( , paris 2 ) international a group of scientists said that they completed to human to chromosome 14 has , the chromosome with many diseases , including more years , may with the early 阿耳滋海默氏症 .
@@ -230,13 +210,6 @@ this is to now completed has in the fourth chromosome , which 八千七百多万
 the weekly british science the study showed that the chromosome 14 are by 一千零五十 genes and gene fragments .
 the goal of gene scientists is to provide diagnostic tools to found of the flawed genes , are still provide a to stop these genes treatments .
 </pre>
-</td>
-</tr>
-</table>
-
-<table>
-<tr>
-<td>
 
 <p>If your translations are identical to the ones above then Joshua is installed correctly.  With this small model, there are many untranslated words, and the quality of the translations is very low.  In the next steps, we'll show you how to train a model for a new language pair, using a larger training corpus that will result in higher quality translations.</p>
 
@@ -270,12 +243,7 @@ If you start with your own data set, you will need to sentence align it.  We rec
 <p>Joshua uses whitespace to delineate words.  For many languages, tokenization can be as simple as separating punctation off as its own token.  For languages like Chinese, which don't put spaces around words, tokenization can be more tricky.  </p>
 
 <p>For this example we'll use the simple tokenizer that is released as part of the WMT.  It's located in the tarball under the scripts directory.  To use it type the following commands:</p>
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td>
+
 <pre>
 tar xfz data.tar.gz
 
@@ -289,10 +257,6 @@ gunzip -c es-en/full-training/europarl-v4.es-en.en.gz \
 	| perl scripts/tokenizer.perl -l en \
 	> es-en/full-training/training.en.tok 
 </pre>
-</td>
-</tr>
-</table>
-
 
 <h3>Normalization</h3>
 
@@ -311,10 +275,7 @@ cat es-en/full-training/training.es.tok \
 
 
 <p>The untokenized file looks like this (<code>gunzip -c es-en/full-training/europarl-v4.es-en.en.gz | head -3</code>):</p>
-</td>
-</tr>
-<tr>
-<td bgcolor="#cccccc">
+
 <p>
 Resumption of the session<br>
 I declare resumed the session of the European Parliament adjourned on Friday 17 December 1999, and I would like once again to wish you a happy new year in the hope that you enjoyed a pleasant festive period.<br>
@@ -415,12 +376,6 @@ Before extracting a translation grammar, we first need to create word alignments
 To run the Berkeley aligner you first need to set up a configuration file,   which defines the models that are used to align the data, how the program runs, and which files are to be aligned.  Here is an example configuration file (you should create your own version of this file and save it as <code>training/word-align.conf</code>):
 </p>
 
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td bgcolor="#cccccc">
 <pre>
 ## word-align.conf
 ## ----------------------
@@ -466,12 +421,6 @@ sentences	MAX
 
 competitiveThresholding
 </pre>
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td>
 
 <p>To run the Berkeley aligner, first set an environment variable saying where the aligner's jar file is located (this environment variable is just used for convenience in this document, and is not necessary for running the aligner in general:
 </p>
@@ -845,12 +794,6 @@ $SRILM/bin/macosx64/ngram-count \
 </pre>
 <p>Next, you'll need to create a list of all of the alternative ways that each word can be capitalized.  This will be stored in a map file that lists a lowercased word as the key and associates it with all of the variant capitalization of that word.  Here's an example perl script to create the map:</p>
 
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td bgcolor="#cccccc">
 <pre>
 #!/usr/bin/perl
 #
@@ -878,12 +821,6 @@ foreach $key (sort keys %map) {
     }
 }
 </pre>
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td>
 
 <pre>
 cat training/training.en.tok | perl truecase-map.perl > model/lm/true-case.map
@@ -904,12 +841,6 @@ $SRILM/bin/macosx/disambig \
 <p>Where <code>strip-sent-tags.perl</code> is:</p>
 
 
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td bgcolor="#cccccc">
 <pre>
 while($line = <>) {
     $line =~ s/^\s*&lt;s&gt;\s*//g;
@@ -917,12 +848,6 @@ while($line = <>) {
     print $line . "\n";
 }
 </pre>
-</td>
-</tr>
-</table>
-<table>
-<tr>
-<td>
 
 
 <!-- ccb - todo - show the recased output -->
@@ -959,11 +884,6 @@ BLEU_BP = 1.0000
 BLEU = 0.1211
 Your Bleu score in this case would be 0.1211.
 -->
-
-
-</td>
-</tr>
-</table>
 
 
 <!-- 	  <div id="news"> -->
