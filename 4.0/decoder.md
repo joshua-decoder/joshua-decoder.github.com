@@ -1,4 +1,8 @@
--
+---
+layout: default
+category: help
+title: Joshua decoder
+---
 
 ## Joshua command-line options and arguments
 
@@ -777,4 +781,11 @@ else if (parameter.equals("c") || parameter.equals("config")) {
 else {
 logger.warning("FATAL: unknown configuration parameter '" + fds[0] + "'");
 System.exit(1);
+
+## Output formats
+
+The output for a given input is a set of one or more lines with the following scheme:
+
+    input ID ||| translation ||| model scores ||| score
+
 
