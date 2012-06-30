@@ -69,198 +69,310 @@ external packages, some of which are included with Joshua.
 
 Make sure that the environment variable `$JOSHUA` is defined, and you should be all set.
 
-## Quick start
+## A basic pipeline run
 
 The pipeline takes a set of inputs (training, tuning, and test data), and creates a set of
 intermediate files in the *run directory*.  By default, the run directory is the current directory,
 but it can be changed with the `--rundir` parameter.
 
-The complete pipeline can be run by specifying just five arguments.  For this quick start, we will
-do just that, working with the example that can be found in `$JOSHUA/examples/pipeline`
+For this quick start, we will be working with the example that can be found in
+`$JOSHUA/examples/pipeline`.  This example contains 1,000 sentences of Urdu-English data (the full
+dataset is available as part of the
+[Indian languages parallel corpora](http://joshua-decoder.org/indian-parallel-corpora/)) with
+100-sentence tuning and test sets with four references.
 
-2. Prepare your data.  The pipeline script needs to be told where to find the raw training, tuning,
-   and test data.  A good convention is to place these files in a data/ subdirectory of your run's
+Running the pipeline requires two main steps: data preparation and invocation.
+
+1. Prepare your data.  The pipeline script needs to be told where to find the raw training, tuning,
+   and test data.  A good convention is to place these files in an input/ subdirectory of your run's
    working directory.  The expected format (for each of training, tuning, and test) is a pair of
    files that share a common path prefix and are distinguished by their extension:
 
-    input/
-         train.[SOURCE]
-         train.[TARGET]
-         tune.[SOURCE]
-         tune.[TARGET]
-         test.[SOURCE]
-         test.[TARGET]
+       input/
+             train.SOURCE
+             train.TARGET
+             tune.SOURCE
+             tune.TARGET
+             test.SOURCE
+             test.TARGET
 
-   These files should be parallel at the sentence level (with one sentence per line), should be
-   in UTF-8, and should be untokenized (tokenization occurs in the pipeline).  [TARGET] and
-   [SOURCE] denote variables that should be replaced with the actual target and source language
-   abbreviations (e.g., "cz" and "en").
+   These files should be parallel at the sentence level (with one sentence per line), should be in
+   UTF-8, and should be untokenized (tokenization occurs in the pipeline).  SOURCE and TARGET denote
+   variables that should be replaced with the actual target and source language abbreviations (e.g.,
+   "ur" and "en").
    
-3. Run the pipeline.  The following is the minimal invocation to run the complete pipeline:
+1. Run the pipeline.  The following is the minimal invocation to run the complete pipeline:
 
-    $JOSHUA/scripts/training/pipeline.pl  \
-       --corpus data/train                \
-       --tune data/tune                   \
-       --test data/test                   \
-       --source [SOURCE]                  \
-       --target [TARGET]
+       $JOSHUA/scripts/training/pipeline.pl  \
+         --corpus input/train                \
+         --tune input/tune                   \
+         --test input/test                   \
+         --source SOURCE                     \
+         --target TARGET
 
    The `--corpus`, `--tune`, and `--test` flags define file prefixes that are concatened with the
    language extensions given by `--target` and `--source`.  Note the correspondences with the files
-   created in step (2) above.  The prefixes can be either absolute or relative pathnames.  This
-   particular invocation assumes that a subdirectory `input/` exists in the current directory, that
-   you are translating from a language identified by the [SOURCE] extension to a language identified
-   by the [TARGET] extension, that the training data can be found at data/train.en and
-   data/train.ur, and so on).
+   defined in the first step above.  The prefixes can be either absolute or relative pathnames.
+   This particular invocation assumes that a subdirectory `input/` exists in the current directory,
+   that you are translating from a language identified "ur" extension to a language identified by
+   the "en" extension, that the training data can be found at `input/train.en` and `input/train.ur`,
+   and so on.
 
-      Assuming no problems arise, this command will run the complete pipeline, producing BLEU scores
-      at the end.  The next section describes further available command-line options.
+   Assuming no problems arise, this command will run the complete pipeline in about 20 minutes,
+   producing BLEU scores at the end.  As it runs, you will see output that looks like the following:
+   
+       [train-copy-en] rebuilding...
+         dep=/Users/post/code/joshua/test/pipeline/input/train.en 
+         dep=data/train/train.en.gz [NOT FOUND]
+         cmd=cat /Users/post/code/joshua/test/pipeline/input/train.en | gzip -9n > data/train/train.en.gz
+         took 0 seconds (0s)
+       [train-copy-ur] rebuilding...
+         dep=/Users/post/code/joshua/test/pipeline/input/train.ur 
+         dep=data/train/train.ur.gz [NOT FOUND]
+         cmd=cat /Users/post/code/joshua/test/pipeline/input/train.ur | gzip -9n > data/train/train.ur.gz
+         took 0 seconds (0s)
+       ...
+   
+   And in the current directory, you will see the following files (among other intermediate files
+   generated by the individual sub-steps).
+   
+       data/
+           train/
+               corpus.ur
+               corpus.en
+               thrax-input-file
+           tune/
+               tune.tok.lc.ur
+               tune.tok.lc.en
+               grammar.filtered.gz
+               grammar.glue
+           test/
+               test.tok.lc.ur
+               test.tok.lc.en
+               grammar.filtered.gz
+               grammar.glue
+       alignments/
+           0/
+               [berkeley aligner output files]
+           training.align
+       thrax-hiero.conf
+       thrax.log
+       grammar.gz
+       lm.gz
+       tune/
+           1/
+               decoder_command
+               joshua.config
+               params.txt
+               joshua.log
+               mert.log
+               joshua.config.ZMERT.final
+           final-bleu
 
-## COMPLETE LIST OF COMMAND-LINE OPTIONS
+   These files will be described in more detail in subsequent sections of this tutorial.
 
-    pipeline.pl
+   The complete pipeline comprises many tens of small steps, which can be grouped together into a
+   set of traditional pipeline tasks (like data preparation, tuning, and so on).  We now describe
+   each of these steps in more detail, with a focus on the relevant set of pipeline arguments that
+   affect each of them.  The steps are:
+   
+       1. [Data preparation](#prep)
+       1. [Alignment](#alignment)
+       1. [Grammar extraction](#tm)
+       1. [Language model building](#lm)
+       1. [Tuning](#tuning)
+       1. [Testing](#testing)
 
-- `--rundir DIR`
+   We now turn to a discussion of each of these steps in turn, together with the pipeline arguments
+   that affect them.
 
-    Place all files beneath the specified directory.  The default is the current directory.
+## Restarting failed runs
 
-- `--first-step STEP`
-- `--last-step STEP`
+If the pipeline dies, you can restart it with the same command you used the first time.  If you
+rerun the pipeline with the exact same invocation as the previous run (or an overlapping
+configuration -- one that causes the same set of behaviors), you will see slightly different
+output:
+
+    [train-copy-en] cached, skipping...
+    [train-copy-ur] cached, skipping...
+    ...
+
+This indicates that the caching module has discovered that the step was already computed and thus
+did not need to be rerun.  This feature is quite useful for restarting pipeline runs that have
+crashed due to bugs, memory limitations, hardware failures, and the myriad other problems that
+plague MT researchers across the world.
+
+Often, a command will die because it was parameterized incorrectly.  For example, perhaps the
+decoder ran out of memory.  This allows you to adjust the parameter (e.g., `--joshua-mem`) and rerun
+the script.  Of course, if you change one of the parameters a step depends on, it will trigger a
+rerun, which in turn might trigger further downstream reruns.
+   
+## Skipping steps, quitting early
+
+You will also find it useful to start the pipeline somewhere other than data preparation (for
+example, if you have already-processed data and an alignment, and want to start building a grammar)
+or to end it prematurely (if, say, you don't have a test set and just want to tune a model).  This
+can be accomplished with the `--first-step` and `--last-step` flags, which take as argument a
+case-insensitive version of the following steps:
+
+- *ALIGN*: Alignment.  You might want to start here if you want to skip data preprocessing.
+
+- *PARSE*: Parsing.  This is only relevant for building SAMT grammars (`--type samt`), in which case
+   the target side (`--target`) of the training data (`--corpus`) is parsed before building a
+   grammar.
+   
+- *THRAX*: Grammar extraction [with Thrax](thrax.html).  If you jump to this step, you'll need to
+   provide an aligned corpus (`--alignment`) along with your parallel data.  
+   
+- *TUNE/MERT/PRO*: Tuning.  These targets are all equivalent.  The exact tuning method is determined
+   with `--tuner {mert,pro}`.  With this option, you need to specify a grammar (`--grammar`) or
+   separate tune (`--tune-grammar`) and test (`--test-grammar`) grammars.  If you want a language
+   model built from the target side of your training data, you'll also need to pass in the training
+   corpus (`--corpus`).  You can also specify an arbitrary number of additional grammars with one or
+   more `--lmfile` flags.
+
+- *TEST*: Testing.  If you have a tuned model file, you can test new corpora by passing in a test
+   corpus with references (`--test`).  You'll need to provide a run name (`--test`) to store
+   the results of this run, which will be placed under `test/NAME`.  You'll also need to provide a
+   Joshua configuration file (`--joshua-config`), one or more language models (`--lmfile`), and a
+   grammar (`--grammar`; will be filtered to the test data unless you specify `--no-filter-tm`) or a
+   filtered test grammar (`--test-grammar`).
+
+We will now discuss each of these steps in detail, using that discussion to list the options
+relevant to each step, after listing the parameters that are general to the pipeline.
+
+## General options
+
+Before discussing the steps of the pipeline, we list some general pipeline options:
+
+- `--rundir` --- *.*
+
+  Place all files beneath the specified directory.  The default is the current directory.
+
+- `--first-step STEP` --- *FIRST*,
+- `--last-step STEP` --- *LAST*
   
-    Allows starting and stopping at at of the following steps: 
+  Allows starting and stopping at at of the following steps: 
 
-    - ALIGN (alignment of the training data)
-    - PARSE (parsing of the target side for SAMT grammar extraction)
-    - THRAX (grammar extraction)
-    - MERT (tuning)
-    - TEST (decoding a test set)
+  - ALIGN (alignment of the training data)
+  - PARSE (parsing of the target side for SAMT grammar extraction)
+  - THRAX (grammar extraction)
+  - TUNE/MERT/PRO (tuning)
+  - TEST (decoding a test set)
 
 - `--source SOURCE`
 - `--target TARGET`
 
-    Specifies the source and target language extensions.  
+  Specifies the source and target language extensions.  
 
 - `--corpus CORPUS1`
 - `[--corpus CORPUS2]`
 - `[...]`
 
-    Specifies a file prefix for a training corpus.  If this flag is found multiples times, the corpora are all concatenated together for alignment and grammar extraction.  The use of multiple `--corpora` flags is only supported when running the script from the beginning; if you are skipping steps, only a single corpus can be provided (so you must do the concatenation yourself, if you so need). 
+  Specifies a file prefix for a training corpus.  If this flag is found multiples times, the corpora
+  are all concatenated together for alignment and grammar extraction.  The use of multiple
+  `--corpora` flags is only supported when running the script from the beginning; if you are
+  skipping steps, only a single corpus can be provided (so you must do the concatenation yourself,
+  if you so need).
 
 - `--tune PREFIX`
 - `--test PREFIX`
   
-    Specify file prefixes for tuning and test data.  Unlike --corpus,
-    only one instance each of --tune or --test is allowed (if you
-    provide multiple ones, only the last value is used).
+  Specify file prefixes for tuning and test data.  Unlike `--corpus`, only one instance each of
+  `--tune` or `--test` is allowed (if you provide multiple ones, only the last value is used).
 
 - `--type {hiero,samt}`
 
-    Whether to learn a Hiero or SAMT grammar.  The default is Hiero.
+  Whether to learn a Hiero or SAMT grammar.  The default is Hiero.
 
 - `--alignment FILE`
 
-    Provide an alignment for the training data.  The format is the
-standard format where 0-indexed many-many alignment pairs for a
-sentence are provided on a line, source language first, e.g.,
+  Provide an alignment for the training data.  The format is the standard format where 0-indexed
+  many-many alignment pairs for a sentence are provided on a line, source language first, e.g.,
 
-    0-0 0-1 1-2 1-7 ...
+      0-0 0-1 1-2 1-7 ...
 
-    This value is required if you are skipping the alignment step.
+  This value is required if you start at the grammar extraction step.
 
--  `--mbr [default]`
--  `--nombr`
+-  `--no-mbr`
 
-    Do (not) do MBR reranking of the n-best output of the test data.
+   Skip Minimum Bayes-risk decoding of the n-best list of the output on the test data.  MBR is
+   usually worth about 0.3 - 0.5 BLEU points, but takes a while.
 
 -  `--lmfile FILE`
 
-    Use the specified file as the language model for decoding (for
-    both tuning and decoding of the test set).  If not provided,
-    SRILM is used to build a Kneser-Ney interpolated 5-gram language
-    model from the target side of the training data.
+   Use the specified file as the language model for decoding (for both tuning and decoding of the
+   test set).  If not provided, a Java program provided with the Berkeley LM is used to build a
+   Kneser-Ney interpolated 5-gram language model from the target side of the training data (unless
+   you specify `--lm-gen srilm`, in which case SRILM is used).
+   
+   You can specify as many `--lmfile` options as you wish.  A language model is built from the
+   target side of the training data unless `--no-corpus-lm` is given.
 
 -  `--filter-lm [default]`
 -  `--no-filter-lm`
 
-    Use Kenneth Heafield's "filter" program to filter the language
-    model to the training data.  This is only available if a training
-    corpus was provided.
+   Use Kenneth Heafield's "filter" program to filter the language model to the training data.  This
+   is only available if a training corpus was provided.
 
 - `--maxlen LEN [default=50]`
 
-    Remove parallel sentences from the training data that are longer
-    than this length (on either side).
+  Remove parallel sentences from the training data that are longer than this length (on either
+  side).  This only applies to the training data, and is computed after tokenization.
 
 - `--grammar FILE`
 
-    Use the specified grammar instead of learning one with Thrax.
+  Use the specified grammar instead of learning one with Thrax.
 
 - `--joshua-config TEMPLATE`
 
-    Use the specified file as the Joshua config file instead of the
-    default template.  This file is a template into which are
-    substituted run-specific information; see the TEMPLATE section
-    below for more information.
+  Use the specified file as the Joshua config file instead of the default template.  This file is a
+  template into which are substituted run-specific information; see the TEMPLATE section below for
+  more information.
 
 - `--decoder-command TEMPLATE`
 
-    Use the specified file as the decoding command.  This file is a
-    template into which are substituted run-specific information; see
-    the TEMPLATE section below for more information.
+  Use the specified file as the decoding command.  This file is a template into which are
+  substituted run-specific information; see the TEMPLATE section below for more information.
 
 - `--thrax-conf FILE`
 
-    Use the provided Thrax configuration file instead of the (grammar-specific) default.
+  Use the provided Thrax configuration file instead of the (grammar-specific) default.
 
 - `--no-subsample [default]`
 - `--subsample`
 
-    Subsampling is a means of throwing away a portion of the training
-    data by only retaining sentence pairs that appear relevant to the
-    tuning and development data.  This makes the pipeline run
-    significantly faster (particularly alignment), and often comes at
-    only a small cost in accuracy on the development set.  Subsampling
-    works by comparing the training data to the tuning and test sets
-    passed in with --tune and --test.
+  Subsampling is a means of throwing away a portion of the training data by only retaining sentence
+  pairs that appear relevant to the tuning and development data.  This makes the pipeline run
+  significantly faster (particularly alignment), and often comes at only a small cost in accuracy on
+  the development set.  Subsampling works by comparing the training data to the tuning and test sets
+  passed in with --tune and --test.
 
 - `--joshua-mem MEM [3100m]`
 
-    Provide the maximum heap size available to instances of the Joshua
-    decoder.  Uses Java notation (the value here is passed to Java's
-    -Xmx flag).
+  Provide the maximum heap size available to instances of the Joshua decoder.  Uses Java notation
+  (the value here is passed to Java's -Xmx flag).
 
 - `--hadoop-mem MEM [4g]`
 
-    Provide the maximum heap size for the hadoop instances used to
-    learn the grammar in Thrax.
+   Provide the maximum heap size for the hadoop instances used to learn the grammar in Thrax.
 
 - `--jobs N`
 
-    The number of parallel Joshua decoders to start (via qsub, by default) when decoding a input file, during both tuning and decoding.
+  The number of parallel Joshua decoders to start (via qsub, by default) when decoding a input file,
+  during both tuning and decoding.
 
 - `--qsub-args "ARGS"`
 
-    Provide the specified qsub arguments to the Joshua decoder command.  Only used if the Joshua decoder_command file contains the appropriate template variable (see the TEMPLATES section below).
-
-## STEPS
-
-The Joshua pipeline provides support for two major use cases.
-
-1. Running the pipeline from start to finish.  If problems arise somewhere in the pipeline, it can be quickly rerun due to CachePipe. 
-
-2. Running pieces of the pipeline.  Early steps can be skipped with --first-step (e.g., if you already have an aligned corpus or grammar you wish to decode with), and –-last-step can be used to exit early from the script.  The following steps are defined:
-
-    - *FIRST*: The beginning of the script.
-    - *SUBSAMPLE*: Subsampling of the corpus towards the tuning and test data.
-    - *ALIGN*: Alignment of the training data.
-    - *PARSE*: Parsing of the target language data (for SAMT grammar extraction only).
-    - *THRAX*: Grammar extraction.
-    - *MERT*: Tuning.
-    - *TEST*: Decoding a test set.
+  Provide the specified qsub arguments to the Joshua decoder command.  Only used if the Joshua
+  decoder_command file contains the appropriate template variable (see the TEMPLATES section below).
 
 ## TEMPLATES
 
-A few pieces of the pipeline are subject to enough variation across runs and across computing environment that it is easier to provide template files than to use command-line arguments.  The Joshua pipeline allows the Joshua configuration file and the Joshua decoder command to be templatized.  Here are the options available to those files:
+A few pieces of the pipeline are subject to enough variation across runs and across computing
+environment that it is easier to provide template files than to use command-line arguments.  The
+Joshua pipeline allows the Joshua configuration file and the Joshua decoder command to be
+templatized.  Here are the options available to those files:
 
 - `<JOSHUA>` is the root of the Joshua installation ($JOSHUA env. var.)
 - `<INPUT>` is the file being decoded
@@ -276,112 +388,33 @@ A few pieces of the pipeline are subject to enough variation across runs and acr
 - `<CONFIG>` is the location of the joshua configuration file
 - `<LOG>` is where the Joshua decoder should put its log file
 
-The default configuration file is the following, located in `$JOSHUA/scripts/training/templates/mert/decoder_command.qsub`.  It can be overridden with the --decoder_command flag.
+The default configuration file is the following, located in
+`$JOSHUA/scripts/training/templates/mert/decoder_command.sequential`.  It can be overridden with the
+`--decoder_command` flag.
 
-    cat <INPUT> | awk 'BEGIN { num = 0 } {print "<seg id=\"" num "\">" $0 "</seg>"; \
-    num++}' | <JOSHUA>/scripts/training/parallelize/parallelize.pl -j <NUMJOBS> -m \
-    --qsub-args '<QSUB_ARGS>' -- java -Xmx<MEM> -Djava.library.path=<JOSHUA>/lib \
-    -Dfile.encoding=utf8 -cp <JOSHUA>/bin/:<JOSHUA>/lib/thrax.jar \
-    joshua.decoder.JoshuaDecoder <CONFIG> > <OUTPUT> 2> <LOG>
+    cat <INPUT> | <JOSHUA>/joshua-decoder -m <MEM> -threads <NUMTHREADS> -c <CONFIG> > <OUTPUT> 2> <LOG>
 
-In addition, if --jobs is set to 1, the following template (located at `$JOSHUA/scripts/training/templates/mert/decoder_command.sequential`) is selected instead:
+If `--jobs` is set to something greater 1, the following template (located at
+`$JOSHUA/scripts/training/templates/mert/decoder_command.qsub`) is selected instead:
 
-    cat <INPUT> | java -Xmx<MEM> -Djava.library.path=<JOSHUA>/lib \
-    -Dfile.encoding=utf8 -cp <JOSHUA>/bin/:<JOSHUA>/lib/thrax.jar joshua.decoder.JoshuaDecoder \
-    <CONFIG> > <OUTPUT> 2> <LOG>
+    cat <INPUT> | awk 'BEGIN { num = 0 } {print "<seg id=\"" num "\">" $0 "</seg>"; num++}' \
+      | <JOSHUA>/scripts/training/parallelize/parallelize.pl -j <NUMJOBS> -m --qsub-args '<QSUB_ARGS>' -- <JOSHUA>/joshua-decoder -m <MEM> -threads <NUMTHREADS> -c <CONFIG> > <OUTPUT> 2> <LOG>
 
 ## COMMON USE CASES AND PITFALLS 
 
-- Memory usage is a major consideration in decoding with Joshua and hierarchical grammars.  In particular, SAMT grammars often require a large amount of memory.  Many steps have been taken to reduce memory usage, including beam settings and test-set- and sentence-level filtering of grammars.  However, memory usage can still be in the tens of gigabytes.
+- Memory usage is a major consideration in decoding with Joshua and hierarchical grammars.  In
+  particular, SAMT grammars often require a large amount of memory.  Many steps have been taken to
+  reduce memory usage, including beam settings and test-set- and sentence-level filtering of
+  grammars.  However, memory usage can still be in the tens of gigabytes.
 
-    To accommodate this kind of variation, the pipeline script allows you to specify both (a) the amount of memory used by the Joshua decoder instance and (b) the amount of memory required of nodes obtained by the qsub command.  These are accomplished with the --joshua-mem MEM and --qsub-args ARGS commands.  For example,
+  To accommodate this kind of variation, the pipeline script allows you to specify both (a) the
+  amount of memory used by the Joshua decoder instance and (b) the amount of memory required of
+  nodes obtained by the qsub command.  These are accomplished with the --joshua-mem MEM and
+  --qsub-args ARGS commands.  For example,
 
-    pipeline.pl --joshua-mem 32g --qsub-args "-l pvmem=32g -q himem.q" ...
+      pipeline.pl --joshua-mem 32g --qsub-args "-l pvmem=32g -q himem.q" ...
 
 ## FEEDBACK 
 
-Please email joshua_technical@googlegroups.com with problems or
-suggestions.  
+Please email joshua_technical@googlegroups.com with problems or suggestions.
 
-# Build a translation model
-
-I recommend placing each week's model in a new directory, e.g., expts/scale12/model0.
-
-Put the input files in a subdirectory "input".
-
-Concatenate all the training files on each side.  The pipeline script normally does tokenization and normalization, but in this instance we have a custom tokenizer we need to apply to the source side, so we have to do it manually and then skip that step using "--first-step alignment".
-
-* to tokenize the English data, do
-
-      cat fisher.en | $JOSHUA/scripts/training/normalize-punctuation.pl en | $JOSHUA/scripts/training/penn-treebank-tokenizer.perl | $JOSHUA/scripts/lowercase.perl > fisher.norm.tok.lc.en
-
-* to tokenize the Spanish data, you have to write an intermediate file since the Java tokenizer doesn't read from STDIN.
-
-      export JOSHUA=/home/hltcoe/mpost/code/joshua
-      cat fisher.es | $JOSHUA/scripts/training/normalize-punctuation.pl es \
-      | $JOSHUA/scripts/support/twitter-tokenizer | $JOSHUA/scripts/lowercase.perl > fisher.norm.tok.lc.es
-      export JOSHUA=/home/hltcoe/lorland/workspace/joshua
-
-      paste fisher.norm.tok.lc.es fisher.norm.tok.lc.en | grep -Pv "^\t|\t$" \
-      | ./splittabs.pl fisher.norm.tok.lc.noblanks.es fisher.norm.tok.lc.noblanks.en
-
-  contents of `splittabls.pl` by Matt Post:
-
-      #!/usr/bin/perl
-
-      # splits on tab, printing respective chunks to the list of files given
-      # as script arguments
-
-      use FileHandle;
-
-      my @fh;
-      $| = 1;   # don't buffer output
-
-      if (@ARGV < 0) {
-        print "Usage: splittabs.pl < tabbed-file\n";
-        exit;
-      }
-
-      my @fh = map { get_filehandle($_) } @ARGV;
-      @ARGV = ();
-
-      while (my $line = <>) {
-        chomp($line);
-        my (@fields) = split(/\t/,$line,scalar @fh);
-
-        map { print {$fh[$_]} "$fields[$_]\n" } (0..$#fields);
-      }
-
-      sub get_filehandle {
-          my $file = shift;
-
-          if ($file eq "-") {
-              return *STDOUT;
-          } else {
-              local *FH;
-              open FH, ">$file" or die "can't open '$file' for writing";
-              return *FH;
-          }
-      }
-
-* Now you can run the pipeline.  You need the following args:
-
-
-      set -u
-      pair=es-en
-      type=hiero
-      #. ~/.bashrc
-      #basedir=$(pwd)
-      dir=grammar-$pair-$type
-      [[ ! -d $dir ]] && mkdir -p $dir
-      cd $dir                                                                                                                                                                                                                                                                                                                                                                           source=$(echo $pair | cut -d- -f 1)                                                                                                                                                      
-      target=$(echo $pair | cut -d- -f 2)
-      $JOSHUA/scripts/training/pipeline.pl \
-        --source $source \
-        --target $target \
-        --corpus /home/hltcoe/lorland/expts/scale12/model1/input/fisher.norm.tok.lc.noblanks \
-        --type $type \
-        --no-prepare \
-        --first-step align \
-        --last-step thrax \
-        --hadoop $HADOOP
