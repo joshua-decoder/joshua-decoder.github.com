@@ -21,7 +21,7 @@ remove this source of confusion, "thrax" is the preferred format designation, an
 default.
 
 The packed grammar format is the efficient grammar representation developed by
-[Juri Ganitkevich](http://cs.jhu.edu/~juri) [is described in detail elsewhere](packed.html).
+[Juri Ganitkevich](http://cs.jhu.edu/~juri) [is described in detail elsewhere](packing.html).
 
 Grammar rules in the Thrax (hiero) format follow this format:
 

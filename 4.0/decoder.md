@@ -240,12 +240,12 @@ The main translation grammar is specified with the following set of parameters:
 - `tm_file STRING` --- *NULL*, `glue_file STRING` --- *NULL*
 
   This points to the file location of the translation grammar for text-based formats or to the
-  directory for the [packed representation](packed.html).
+  directory for the [packed representation](packing.html).
   
 - `tm_format STRING` --- *thrax*, `glue_format STRING` --- *thrax*
 
   The format the file is in.  The permissible formats are `hiero` or `thrax` (which are equivalent),
-  `packed` (for [packed grammars](packed.html)), or `samt` (for grammars encoded in the format
+  `packed` (for [packed grammars](packing.html)), or `samt` (for grammars encoded in the format
   defined by [Zollmann & Venugopal](http://www.cs.cmu.edu/~zollmann/samt/).  This parameter will be
   done away with in the near future since it is easily inferrable.  See
   [the formats page](file-formats.html) for more information about file formats.
