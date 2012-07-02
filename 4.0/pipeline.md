@@ -301,9 +301,26 @@ example, you might see
 
 The file "corpus.LANG" is a symbolic link to the last file in the chain.  
 
-## 2. 
+## 2. ALIGNMENT
 
-Alignments are between the parallel corpora at `RUNDIR/data/train/corpus.{SOURCE,TARGET}`.  
+Alignments are between the parallel corpora at `RUNDIR/data/train/corpus.{SOURCE,TARGET}`.  To
+prevent the alignment tables from getting too big, the parallel corpora are grouped into files of no
+more than ALIGNER\_CHUNK\_SIZE blocks (controlled with a parameter below).  The last block is folded
+into the penultimate block if it is too small.
+
+-   `aligner ALIGNER` {giza (default), berkeley}
+
+    Which aligner to use.  The default is [GIZA++](http://code.google.com/p/giza-pp/), but
+    [the Berkeley aligner](http://code.google.com/p/berkeleyaligner/) can be used instead.  When
+    using the Berkeley aligner, you'll want to pay attention to how much memory you allocate to it
+    with `--aligner-mem` (the default is 10g).
+
+-   `aligner-chunk-size SIZE` (1,000,000)
+
+    The number of sentence pairs to compute alignments over.
+
+## 3. PARSING
+
 
 ## TUNING
 
