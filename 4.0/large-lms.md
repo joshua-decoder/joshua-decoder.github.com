@@ -12,7 +12,10 @@ using SRILM. English text is provided from seven different sources.
 ### Step 0: Clean up the corpus
 
 The Gigaword corpus has to be stripped of all SGML tags and tokenized.
-Instructions for performing those steps are not included in this documentation.
+Instructions for performing those steps are not included in this
+documentation. A description of this process can be found in a paper
+called ["Annotated
+Gigaword"](https://akbcwekex2012.files.wordpress.com/2012/05/28_paper.pdf).
 
 The Joshua package ships with a script that converts all alphabetical
 characters to their lowercase equivalent. The script is located at
@@ -88,7 +91,7 @@ models under resource-limited environments. The manual for this script can be
 read online
 [here](http://www-speech.sri.com/projects/srilm/manpages/training-scripts.1.html).
 Since the Gigaword corpus is so large, it is convenient to use `make-big-lm`
-even in environments with a many parallel processors and a lot of memory.
+even in environments with many parallel processors and a lot of memory.
 
 Initiate the following script from each of the source directories under the
 `lm/` directory (edit it to specify the path to the `make-big-lm` script as
