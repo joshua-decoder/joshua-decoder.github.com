@@ -124,7 +124,7 @@ Running the pipeline requires two main steps: data preparation and invocation.
    exists in the current directory, that you are translating from a language identified "ur"
    extension to a language identified by the "en" extension, that the training data can be found at
    `input/train.en` and `input/train.ur`, and so on.
-
+   
    Assuming no problems arise, this command will run the complete pipeline in about 20 minutes,
    producing BLEU scores at the end.  As it runs, you will see output that looks like the following:
    
@@ -178,6 +178,12 @@ Running the pipeline requires two main steps: data preparation and invocation.
 
    These files will be described in more detail in subsequent sections of this tutorial.
 
+   Another useful flag is the `--rundir DIR` flag, which chdir()s to the specified directory before
+   running the pipeline.  By default the rundir is the current directory.  Changing it can be useful
+   for organizing related pipeline runs.  Relative paths specified to other flags (e.g., to
+   `--corpus` or `--lmfile`) are relative to the directory the pipeline was called *from*, not the
+   rundir itself (unless they happen to be the same, of course).
+
    The complete pipeline comprises many tens of small steps, which can be grouped together into a
    set of traditional pipeline tasks:
    
@@ -220,6 +226,9 @@ grammar) or to end it prematurely (if, say, you don't have a test set and just w
 model).  This can be accomplished with the `--first-step` and `--last-step` flags, which take as
 argument a case-insensitive version of the following steps:
 
+- *FIRST*: Data preparation.  Everything begins with data preparation.  This is the default first
+   step, so there is no need to be explicit about it.
+
 - *ALIGN*: Alignment.  You might want to start here if you want to skip data preprocessing.
 
 - *PARSE*: Parsing.  This is only relevant for building SAMT grammars (`--type samt`), in which case
@@ -244,25 +253,89 @@ argument a case-insensitive version of the following steps:
    grammar (`--grammar`); this will be filtered to the test data unless you specify
    `--no-filter-tm`) or unless you directly provide a filtered test grammar (`--test-grammar`).
 
-## General options
+- *LAST*: The last step.  This is the default target of `--last-step`.
 
-Before discussing the steps of the pipeline listed above in more detail, we list some general
-pipeline options:
+We now discuss these steps in more detail.
 
-- `--rundir` --- *.*
+## 1. Data preparation
 
-  Place all files beneath the specified directory.  The default is the current directory.  This is
-  useful for organizing multiple pipeline runs from the same root directory.
+Data prepare involves doing the following to each of the training data (`--corpus`), tuning data
+(`--tune`), and testing data (`--test`).  Each of these values is an absolute or relative path
+prefix.  To each of these prefixes, a "." is appended, followed by each of SOURCE (`--source`) and
+TARGET (`--target`), which are file extensions identifying the languages.  The SOURCE and TARGET
+files must have the same number of lines.  
 
-- `--first-step STEP` --- *FIRST*,
-- `--last-step STEP` --- *LAST*
+For tuning and test data, multiple references are handled automatically.  A single reference will
+have the format TUNE.TARGET, while multiple references will have the format TUNE.TARGET.NUM, where
+NUM starts at 0 and increments for as many references as there are.
+
+The following processing steps are applied to each file.
+
+1.  **Copying** the files into `RUNDIR/data/TYPE`, where TYPE is one of "train", "tune", or "test".
+    Multiple `--corpora` files are concatenated in the order they are specified.  Multiple `--tune`
+    and `--test` flags are not currently allowed.
+    
+1.  **Normalizing** punctuation and text (e.g., removing extra spaces, converting special
+    quotations).  There are a few language-specific options that depend on the file extension
+    matching the [two-letter ISO 639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
+    designation.
+
+1.  **Tokenizing** the data (e.g., separating out punctuation, converting brackets).  Again, there
+    are language-specific tokenizations for a few languages (English, German, and Greek).
+
+1.  (Training only) **Removing** all parallel sentences with more than `--maxlen` tokens on either
+    side.  By default, MAXLEN is 50.  To turn this off, specify `--maxlen 0`.
+
+1.  **Lowercasing**.
+
+This creates a series of intermediate files which are saved for posterity but compressed.  For
+example, you might see
+
+    data/
+        train/
+            train.en.gz
+            train.tok.en.gz
+            train.tok.50.en.gz
+            train.tok.50.lc.en
+            corpus.en -> train.tok.50.lc.en
+
+The file "corpus.LANG" is a symbolic link to the last file in the chain.  
+
+## 2. 
+
+Alignments are between the parallel corpora at `RUNDIR/data/train/corpus.{SOURCE,TARGET}`.  
+
+## TUNING
+
+Here are
+a number of arguments that define what is done:
+
+-  `--lm` {kenlm (default), berkeleylm}
+
+   This determines the language model code that will be used when decoding.  These implementations
+   are described in their respective papers (PDFs:
+   [KenLM](http://kheafield.com/professional/avenue/kenlm.pdf),
+   [BerkeleyLM](http://nlp.cs.berkeley.edu/pubs/Pauls-Klein_2011_LM_paper.pdf)).
+   
+- `--lmfile FILE`
+
+  Specifies a pre-built language model to use when decoding.  This language model can be in ARPA
+  format, or in KenLM format when using KenLM or BerkeleyLM format when using that format.
+
+- `--lm-gen` {berkeleylm (default), srilm}, `--buildlm-mem MEM`, `--witten-bell`
+
+  At the tuning step, an LM is built from the target side of the training data (unless
+  `--no-corpus-lm` is specified).  This controls which code is used to build it.  The default is a
+  [BerkeleyLM java class](http://code.google.com/p/berkeleylm/source/browse/trunk/src/edu/berkeley/nlp/lm/io/MakeKneserNeyArpaFromText.java)
+  that computes a Kneser-Ney LM with a constant discounting and no count thresholding.  The flag
+  `--buildlm-mem` can be used to control how much memory is allocated to the Java process.  The
+  default is "2g", but you will want to increase it for larger language models.
   
-  Allows starting and stopping at at of the following steps, as described above.
-
-- `--source SOURCE`
-- `--target TARGET`
-
-  Specifies the source and target language extensions.  
+  If SRILM is used, it is called with the following arguments:
+  
+        $SRILM/bin/i686-m64/ngram-count -interpolate SMOOTHING -order 5 -text TRAINING-DATA -unk -lm lm.gz
+        
+  Where SMOOTHING is `-kndiscount`, or `-wbdiscount` if `--witten-bell` is passed to the pipeline.
 
 ## Corpus preparation
 
