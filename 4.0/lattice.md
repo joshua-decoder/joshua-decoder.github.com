@@ -12,3 +12,6 @@ Joshua will automatically detect whether the input sentence is a regular sentenc
 (the usual case) or a lattice.  If a lattice, a feature will be activated that accumulates the cost
 of different paths through the lattice.  In this case, you need to ensure that a weight for this
 feature is present in [your model file](decoder.html).
+
+The main caveats with Joshua's PLF lattice support are that the lattice needs to be listed on a
+single line.
