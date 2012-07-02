@@ -153,8 +153,8 @@ div#content p {
 ul {
     list-style-type: square;
     list-style-position: inside;
-    margin: 1px;
-    padding: 1px;
+    margin: 15px;
+    padding: 15px;
 }
 
 .infobox ul {
