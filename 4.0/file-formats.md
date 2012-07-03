@@ -23,11 +23,11 @@ default.
 The packed grammar format is the efficient grammar representation developed by
 [Juri Ganitkevich](http://cs.jhu.edu/~juri) [is described in detail elsewhere](packing.html).
 
-Grammar rules in the Thrax (hiero) format follow this format:
+Grammar rules in the Thrax format follow this format:
 
     [LHS] ||| SOURCE-SIDE ||| TARGET-SIDE ||| FEATURES
     
-Here are some examples:
+Here are some two examples, one for a Hiero grammar, and the other for an SAMT grammar:
 
     [X] ||| el chico [X] ||| the boy [X] ||| -3.14 0 2 17
     [S] ||| el chico [VP] ||| the boy [VP] ||| -3.14 0 2 17
