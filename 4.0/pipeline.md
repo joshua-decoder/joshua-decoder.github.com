@@ -197,6 +197,40 @@ Running the pipeline requires two main steps: data preparation and invocation.
    These steps are discussed below, after a few intervening sections about high-level details of the
    pipeline.  
 
+## Grammar options
+
+Joshua can extract two types of grammars: Hiero-style grammars and SAMT grammars.  As described on
+the [file formats page](file-formats.html), both of them are encoded into the same file format, but
+they differ in terms of the richness of their nonterminal sets.
+
+Hiero grammars make use of a single nonterminals, and are extracted by computing phrases from
+word-based alignments and then subtracting out phrase differences.  More detail can be found in
+[Chiang (2007) [PDF]](http://www.mitpressjournals.org/doi/abs/10.1162/coli.2007.33.2.201).
+[SAMT grammars](http://www.cs.cmu.edu/~zollmann/samt/) make use of a source- or target-side parse
+tree on the training data, projecting constituent labels down on the phrasal alignments in a variety
+of configurations.  SAMT grammars are usually many times larger and are much slower to decode with,
+but sometimes increase BLEU score.  Both grammar formats are extracted with the
+[Thrax software](thrax.html).
+
+By default, the Joshua pipeline extract a Hiero grammar, but this can be altered with the `--type
+samt` flag.
+
+## Other high-level options
+
+The following command-line arguments control run-time behavior of multiple steps:
+
+- `--threads N` (1)
+
+  This enables multithreaded operation for a number of steps: alignment (with GIZA, max two
+  threads), parsing, and decoding (any number of threads)
+  
+- `--jobs N` (1)
+
+  This enables parallel operation over a cluster using the qsub command.  This feature is not
+  well-documented at this point, but you will likely want to edit the file
+  `$JOSHUA/scripts/training/parallelize/LocalConfig.pm` to setup your qsub environment, and may also
+  want to pass specific qsub commands via the `--qsub-args "ARGS"` command.
+
 ## Restarting failed runs
 
 If the pipeline dies, you can restart it with the same command you used the first time.  If you
@@ -321,6 +355,16 @@ into the penultimate block if it is too small.
 
 ## 3. PARSING
 
+When SAMT grammars are being built (`--type samt`), the target side of the training data must be
+parsed.  The pipeline assumes your target side will be English, and will parse it for you using
+[the Berkeley parser](http://code.google.com/p/berkeleyparser/), which is included.  If it is not
+the case that English is your target-side language, the target side of your training data (found at
+CORPUS.TARGET) must already be parsed in PTB format.  The pipeline will notice that it is parsed and
+will not reparse it.
+
+Parsing is affected by both the `--threads N` and `--jobs N` options.  The former runs the parser in
+multithreaded mode, while the latter distributes the runs across as cluster (and requires some
+configuration, not yet documented).
 
 ## TUNING
 
@@ -508,7 +552,9 @@ If `--jobs` is set to something greater 1, the following template (located at
 
       pipeline.pl --joshua-mem 32g --qsub-args "-l pvmem=32g -q himem.q" ...
 
+- Other pitfalls and advice will be added as it is discovered.
+
 ## FEEDBACK 
 
-Please email joshua_technical@googlegroups.com with problems or suggestions.
+Please email joshua_support@googlegroups.com with problems or suggestions.
 
