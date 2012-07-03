@@ -366,7 +366,44 @@ Parsing is affected by both the `--threads N` and `--jobs N` options.  The forme
 multithreaded mode, while the latter distributes the runs across as cluster (and requires some
 configuration, not yet documented).
 
-## TUNING
+## 4. THRAX (grammar extraction)
+
+The grammar extraction step takes three pieces of data: (1) the source-language training corpus, (2)
+the target-language training corpus (parsed, if an SAMT grammar is being extracted), and (3) the
+alignment file.  From these, it computes a synchronous context-free grammar.
+
+The main variable in grammar extraction is Hadoop.  If you have a Hadoop installation, simply ensure
+that the environment variable `$HADOOP` is defined, and Thrax will seamlessly use it.  If you *do
+not* have a Hadoop installation, the pipeline will roll out out for you, running Hadoop in
+standalone mode.  (This mode is triggered when `$HADOOP` is undefined).  Theoretically, any grammar extractable on a full Hadoop cluster should be
+extractable in standalone mode, if you are patient enough; in practice, you probably are not patient
+enough, and will be limited to smaller datasets.  Setting up your own Hadoop cluster is not too
+difficult a chore; in particular, you may find it helpful to install a
+[pseudo-distributed version of Hadoop](http://hadoop.apache.org/common/docs/r0.20.2/quickstart.html).
+In our experience, this works fine, but you should note the following caveats:
+
+- It is of crucial importance that you have enough physical disks.  We have found that having too
+  few, or too slow of disks, results in a whole host of seemingly unrelated issues that are hard to
+  resolve, such as timeouts.  
+- NFS filesystems can exacerbate this.  You should really try to install physical disks that are
+  dedicated to Hadoop scratch space.
+
+Here are some flags relevant to Hadoop and grammar extraction with Thrax:
+
+- `--hadoop /path/to/hadoop`
+
+  This sets the location of Hadoop (overriding the environment variable `$HADOOP`)
+  
+- `--hadoop-mem MEM` (2g)
+
+  This alters the amount of memory available to Hadoop mappers (passed via the
+  `mapred.child.java.opts` options).
+  
+When the grammar is extracted, it is compressed and placed at `RUNDIR/grammar.gz`.
+
+## 5. TUNING
+
+
 
 Here are
 a number of arguments that define what is done:
