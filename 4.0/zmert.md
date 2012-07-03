@@ -19,7 +19,7 @@ parameters.  For a full list of those parameters, and their default values, run 
 
 So what does a Z-MERT config file look like?
 
-Examine the file `ZMERT_example/ZMERT_config_ex2.txt`.  You will find that it
+Examine the file `examples/ZMERT/ZMERT_config_ex2.txt`.  You will find that it
 specifies the following "main" MERT parameters:
 
     (*) -dir dirPrefix:         working directory
@@ -43,7 +43,7 @@ specifies the following "main" MERT parameters:
 To test Z-MERT on the 100-sentence test set of example2, provide this config
 file to Z-MERT as follows:
 
-    java -cp bin joshua.zmert.ZMERT -maxMem 500 ZMERT_example/ZMERT_config_ex2.txt > ZMERT_example/ZMERT.out
+    java -cp bin joshua.zmert.ZMERT -maxMem 500 examples/ZMERT/ZMERT_config_ex2.txt > examples/ZMERT/ZMERT_example/ZMERT.out
 
 This will run Z-MERT for a couple of iterations on the data from the example2
 folder.  (Notice that we have made copies of the source and reference files
