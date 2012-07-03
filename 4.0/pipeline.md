@@ -189,6 +189,7 @@ of traditional pipeline tasks:
    
 1. [Data preparation](#prep)
 1. [Alignment](#alignment)
+1. [Parsing](#parsing)
 1. [Grammar extraction](#tm)
 1. [Language model building](#lm)
 1. [Tuning](#tuning)
@@ -291,6 +292,7 @@ argument a case-insensitive version of the following steps:
 
 We now discuss these steps in more detail.
 
+<a name="prep" />
 ## 1. DATA PREPARATION
 
 Data prepare involves doing the following to each of the training data (`--corpus`), tuning data
@@ -335,6 +337,7 @@ example, you might see
 
 The file "corpus.LANG" is a symbolic link to the last file in the chain.  
 
+<a name="alignment" />
 ## 2. ALIGNMENT
 
 Alignments are between the parallel corpora at `RUNDIR/data/train/corpus.{SOURCE,TARGET}`.  To
@@ -374,6 +377,7 @@ When alignment is complete, the alignment file can be found at `RUNDIR/alignment
 It is parallel to the training corpora.  There are many files in the `alignments/` subdirectory that
 contain the output of intermediate steps.
 
+<a name="parsing />
 ## 3. PARSING
 
 When SAMT grammars are being built (`--type samt`), the target side of the training data must be
@@ -393,6 +397,7 @@ Once the parsing is complete, there will be two parsed files:
 - `RUNDIR/data/train/corpus.parsed.en`: this is a leaf-lowercased version of the above file used for
   grammar extraction.
 
+<a name="tm" />
 ## 4. THRAX (grammar extraction)
 
 The grammar extraction step takes three pieces of data: (1) the source-language training corpus, (2)
@@ -436,23 +441,8 @@ Here are some flags relevant to Hadoop and grammar extraction with Thrax:
   
 When the grammar is extracted, it is compressed and placed at `RUNDIR/grammar.gz`.
 
-## Interlude: decoder arguments
-
-Running the decoder is done in both the tuning stage and the testing stage.  A critical point is
-that you have to give the decoder enough memory to run.  Joshua can be very memory-intensive, in
-particular when decoding with large grammars and large language models.  The default amount of
-memory is 3100m, which is likely not enough (especially if you are decoding with SAMT grammar).  You
-can alter the amount of memory for Joshua using the `--joshua-mem MEM` argument, where MEM is a Java
-memory specification (passed to its `-Xmx` flag).
-
-## 5. TUNING
-
-Two optimizers are implemented for Joshua: MERT and PRO (`--tuner {mert,pro}`).  Tuning is run till
-convergence in the `RUNDIR/tune` directory.  By default, tuning is run just once, but the pipeline
-supports running the optimizer an arbitrary number of times due to
-[recent work](http://www.youtube.com/watch?v=BOa3XDkgf0Y) pointing out the variance of tuning
-procedures in machine translation, in particular MERT.  This can be activated with `--optimizer-runs
-N`.  Each run can be found in a directory `RUNDIR/tune/N`.
+<a name="lm" />
+## 5. Language model
 
 Before tuning can take place, a language model is needed.  A language model is always built from the
 target side of the training corpus unless `--no-corpus-lm` is specified.  In addition, you can
@@ -486,7 +476,29 @@ arguments are as follows.
         
   Where SMOOTHING is `-kndiscount`, or `-wbdiscount` if `--witten-bell` is passed to the pipeline.
   
-A language model built from the target side of the training data is placed at `RUNDIR/lm.gz`.  When
+A language model built from the target side of the training data is placed at `RUNDIR/lm.gz`.  
+
+
+## Interlude: decoder arguments
+
+Running the decoder is done in both the tuning stage and the testing stage.  A critical point is
+that you have to give the decoder enough memory to run.  Joshua can be very memory-intensive, in
+particular when decoding with large grammars and large language models.  The default amount of
+memory is 3100m, which is likely not enough (especially if you are decoding with SAMT grammar).  You
+can alter the amount of memory for Joshua using the `--joshua-mem MEM` argument, where MEM is a Java
+memory specification (passed to its `-Xmx` flag).
+
+<a name="tuning" />
+## 6. TUNING
+
+Two optimizers are implemented for Joshua: MERT and PRO (`--tuner {mert,pro}`).  Tuning is run till
+convergence in the `RUNDIR/tune` directory.  By default, tuning is run just once, but the pipeline
+supports running the optimizer an arbitrary number of times due to
+[recent work](http://www.youtube.com/watch?v=BOa3XDkgf0Y) pointing out the variance of tuning
+procedures in machine translation, in particular MERT.  This can be activated with `--optimizer-runs
+N`.  Each run can be found in a directory `RUNDIR/tune/N`.
+
+When
 tuning is finished, each final configuration file can be found at either
 
     RUNDIR/tune/N/joshua.config.ZMERT.final
@@ -494,7 +506,8 @@ tuning is finished, each final configuration file can be found at either
 
 where N varies from 1..`--optimizer-runs`.
 
-## 6. Testing
+<a name="testing" />
+## 7. Testing
 
 For each of the tuner runs, Joshua takes the tuner output file and decodes the test set.
 Afterwards, by default, minimum Bayes-risk decoding is run on the 300-best output.  This step
