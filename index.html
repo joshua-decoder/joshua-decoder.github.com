@@ -8,27 +8,49 @@
     <title>Joshua Decoder | An open-source statistical machine translation decoder</title>
   </head>
 
-  <body>
+<body>
 
-    <div id="navbar">
-      <img src="images/joshua-logo-small.png" width="130px" 
-           alt="Joshua logo (picture of a Joshua tree)" />
+  <div id="navbar">
+    <img src="images/joshua-logo-small.png" width="130px" 
+         alt="Joshua logo (picture of a Joshua tree)" />
 
-      <p class="infobox">
-        <b>Stable version</b><br />
-        3.2<br/><br/>
-        <b>Release date</b><br />
-        17 Feb. 2012
-      </p>
+    <p class="infobox">
+      <b>Stable version</b><br />
+      4.0<br/><br/>
+      <b>Release date</b><br />
+      2 July 2012
+    </p>
+
+    <div id="download" class="infobox">
+      <a href="http://cs.jhu.edu/~post/files/joshua-4.0.tgz">Download</a>
     </div>
 
-    <div id="main">
-      <div id="title">
-        <h1>Joshua Decoder</h1>
-      </div>
+    <div class="infobox">
+      <b>Documentation</b><br />
+      <ul>
+        <li> <a href="4.0/index.html">End user</a> </li>
+        <li> <a href="http://cs.jhu.edu/~post/joshua-docs/index.html">Developer</a> </li>
+      </ul>
+    </div>
 
-      <div id="content">
-        <p>
+    <div class="infobox">
+      <b>Links</b><br />
+      <ul>
+        <li> <a href="#lists">Mailing lists</a> </li>
+        <li> <a href="#contributors">Contributors</a> </li>
+        <li> <a href="#acks">Support</a> </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div id="main">
+    <div id="title">
+      <h1>Joshua Decoder</h1>
+    </div>
+
+    <div id="content">
+      <p>
         Joshua is an open-source statistical machine translation decoder for
         hierarchical and syntax-based machine translation, written in Java.
         It is developed by <a href="http://www.cs.jhu.edu/~ccb/">Chris
@@ -36,35 +58,25 @@
         the <a href="http://clsp.jhu.edu">Center for Language and Speech
           Processing</a> and the <a href="http://web.jhu.edu/hltcoe">Human
           Language Technology Center of Excellence</a> at Johns Hopkins
-        University.  For a high-level description, see the following
-        publication describing Joshua
-        3.0: <a href="http://www.statmt.org/wmt11/pdf/WMT60.pdf">Joshua 3.0:
-          Syntax-based Machine Translation with the Thrax Grammar Extractor</a>
-        [PDF link].
+        University.
       </p>
 
+      <a name="download"/>
       <h3>Download</h3>
 
       <p>
-        Joshua's source code is available
-        at <a href="https://github.com/joshua-decoder/joshua">https://github.com/joshua-decoder/joshua</a>.
-        To clone the repository (which downloads the complete source code),
-        you can type:
+        To download, click the big green download button to the left.  This will deliver to you a
+        tarball of our latest release, version 4.0.
       </p>
-
-      <pre>
-        git clone git@github.com:joshua-decoder/joshua.git
-        ant jar
-      </pre>
+      
+      <a name="usage"/>
+      <h3>Usage</h3>
 
       <p>
-        Downloading this way will enable you to easily pull in
-        bugfixes as they are published.  If you prefer, you can also
-        download a ZIP file archive by following the code link above
-        and clicking the "ZIP" button.
+        Check out our <a href="4.0/index.html">large collection of user documentation</a> for
+          information on downloading and setup, a quick start guide, detailed information on
+          different Joshua components, common problems, and more.
       </p>
-
-      <h3>Usage</h3>
 
       <p>
         The easiest way to use Joshua is to use
@@ -85,15 +97,20 @@
           Technical Support Group</a>, or search its archives.
       </p>
 
+      <a name="lists" />
       <h3>Mailing lists</h3>
 
       <ul>
         <li>Technical support (for end users with questions and technical
-          difficulties): <a href="mailto:joshua_support@googlegroups.com">joshua_support@googlegroups.com</a> </li>
-        <li>Developers: <a href="mailto:joshua_developers@googlegroups.com">joshua_developers@googlegroups.com</a> </li>
+          difficulties): <a href="mailto:joshua_support@googlegroups.com">joshua_support@googlegroups.com</a>
+        </li>
+        <li>Developers: <a href="mailto:joshua_developers@googlegroups.com">joshua_developers@googlegroups.com</a>
+        </li>
       </ul>
 
+      <a name="contributors" />
       <h3>Contributors</h3>
+
       <p>
         Joshua was originally ported
         from <a href="http://www.isi.edu/~chiang/">David Chiang's</a>
@@ -112,7 +129,6 @@
           <li><a href="http://cs.jhu.edu/~juri/">Juri Ganitkevitch</a></li>
           <li><a href="http://kheafield.com/">Kenneth Heafield</a></li>
           <li><a href="http://dowobeha.github.com">Lane Schwartz</a></li>
-          <li><a href="https://plus.google.com/107547504293849335564/posts">Luke</a> <a href="https://github.com/lukeorland">Orland</a></li>
           <li><a href="http://cs.jhu.edu/~post/">Matt Post</a></li>
           <li><a href="http://cs.jhu.edu/~ozaidan/">Omar F. Zaidan</a></li>
           <li>Wren Ng Thornton</li>
@@ -122,17 +138,56 @@
         Please email if you know of anyone who has been left off this list.
       </p>
 
+      <a name="others" />
+      <h3>Other decoders</h3>
+
+      <p>
+        There are many other publicly-available open-source decoders available.  Some of them are:
+      </p>
+
+      <ul>
+        <li>
+          <a href="http://cdec-decoder.org/index.php?title=Main_Page">cdec</a>, an SCFG decoder</li>
+        <li>
+          <a href="">Moses</a>, the defacto phrase-based translation system which also supports
+        hierarchical decoding</li>
+        <li>
+          <a href="http://www-i6.informatik.rwth-aachen.de/jane/">Jane</a> a hierarchical phrase-based system
+        <li>
+          <a href="http://www.nrc-cnrc.gc.ca/eng/projects/iit/machine-learning.html">Portage</a>:
+          "Still phrase based, and proud of it!"&trade;
+          </li>
+      </ul>
+
+      <a name="acks" />
       <h3>Acknowledgments</h3>
+
       <div>
-        <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
-        <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
-        <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
+        We gratefully acknowledge support provided by the following institutions.
+
+        <div>
+          <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
+        </div>
+        <div>
+          <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
+        </div>
+        <div>
+          <a href="http://www.euromatrixplus.org/">
+            <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
+          </a> 
+          <br/>
+          Joshua has received funding from the European Community's Seventh Framework Programme
+          (FP7/2007-2013) under grant agreement n° 231720.
+        </div>
         <br/>
-        <img class="sponsor" alt="HLTCOE logo" src="images/sponsors/hltcoe-logo1.png" />
-        <img class="hltcoe" alt="Human Language Technology Center of Excellence (logo)" src="images/sponsors/hltcoe-logo2.png" />
+        <div>
+          <img class="sponsor" alt="HLTCOE logo" src="images/sponsors/hltcoe-logo1.png" />
+          <img class="hltcoe" alt="Human Language Technology Center of Excellence (logo)"
+               src="images/sponsors/hltcoe-logo2.png" />
+        </div>
       </div>
-    </div>      
-    
+    </div>
+
     <div id="twitterbar">
       <b>Twitter feed</b>:
       <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
