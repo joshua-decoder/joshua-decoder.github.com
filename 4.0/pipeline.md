@@ -291,7 +291,7 @@ argument a case-insensitive version of the following steps:
 
 We now discuss these steps in more detail.
 
-## 1. Data preparation
+## 1. DATA PREPARATION
 
 Data prepare involves doing the following to each of the training data (`--corpus`), tuning data
 (`--tune`), and testing data (`--test`).  Each of these values is an absolute or relative path
@@ -356,6 +356,20 @@ The pipeline parameters affecting alignment are:
 
     The number of sentence pairs to compute alignments over.
     
+-   `--alignment FILE`
+
+    If you have an already-computed alignment, you can pass that to the script using this flag.
+    Note that, in this case, you will want to skip data preparation and alignment using
+    `--first-step thrax` (the first step after alignment) and also to specify `--no-prepare-data` so
+    as not to retokenize the data and mess with your alignments.
+    
+    The alignment file format is the standard format where 0-indexed many-many alignment pairs for a
+    sentence are provided on a line, source language first, e.g.,
+
+      0-0 0-1 1-2 1-7 ...
+
+    This value is required if you start at the grammar extraction step.
+
 When alignment is complete, the alignment file can be found at `RUNDIR/alignments/training.align`.
 It is parallel to the training corpora.  There are many files in the `alignments/` subdirectory that
 contain the output of intermediate steps.
@@ -383,7 +397,9 @@ Once the parsing is complete, there will be two parsed files:
 
 The grammar extraction step takes three pieces of data: (1) the source-language training corpus, (2)
 the target-language training corpus (parsed, if an SAMT grammar is being extracted), and (3) the
-alignment file.  From these, it computes a synchronous context-free grammar.
+alignment file.  From these, it computes a synchronous context-free grammar.  If you already have a
+grammar and wish to skip this step, you can do so passing the grammar with the `--grammar GRAMMAR`
+flag. 
 
 The main variable in grammar extraction is Hadoop.  If you have a Hadoop installation, simply ensure
 that the environment variable `$HADOOP` is defined, and Thrax will seamlessly use it.  If you *do
@@ -412,14 +428,36 @@ Here are some flags relevant to Hadoop and grammar extraction with Thrax:
   This alters the amount of memory available to Hadoop mappers (passed via the
   `mapred.child.java.opts` options).
   
+- `--thrax-conf FILE`
+
+   Use the provided Thrax configuration file instead of the (grammar-specific) default.  The Thrax
+   templates are located at `$JOSHUA/scripts/training/templates/thrax-TYPE.conf`, where TYPE is one
+   of "hiero" or "samt".
+  
 When the grammar is extracted, it is compressed and placed at `RUNDIR/grammar.gz`.
+
+## Interlude: decoder arguments
+
+Running the decoder is done in both the tuning stage and the testing stage.  A critical point is
+that you have to give the decoder enough memory to run.  Joshua can be very memory-intensive, in
+particular when decoding with large grammars and large language models.  The default amount of
+memory is 3100m, which is likely not enough (especially if you are decoding with SAMT grammar).  You
+can alter the amount of memory for Joshua using the `--joshua-mem MEM` argument, where MEM is a Java
+memory specification (passed to its `-Xmx` flag).
 
 ## 5. TUNING
 
+Two optimizers are implemented for Joshua: MERT and PRO (`--tuner {mert,pro}`).  Tuning is run till
+convergence in the `RUNDIR/tune` directory.  By default, tuning is run just once, but the pipeline
+supports running the optimizer an arbitrary number of times due to
+[recent work](http://www.youtube.com/watch?v=BOa3XDkgf0Y) pointing out the variance of tuning
+procedures in machine translation, in particular MERT.  This can be activated with `--optimizer-runs
+N`.  Each run can be found in a directory `RUNDIR/tune/N`.
 
-
-Here are
-a number of arguments that define what is done:
+Before tuning can take place, a language model is needed.  A language model is always built from the
+target side of the training corpus unless `--no-corpus-lm` is specified.  In addition, you can
+provide other language models (any number of them) with the `--lmfile FILE` argument.  Other
+arguments are as follows.
 
 -  `--lm` {kenlm (default), berkeleylm}
 
@@ -447,146 +485,41 @@ a number of arguments that define what is done:
         $SRILM/bin/i686-m64/ngram-count -interpolate SMOOTHING -order 5 -text TRAINING-DATA -unk -lm lm.gz
         
   Where SMOOTHING is `-kndiscount`, or `-wbdiscount` if `--witten-bell` is passed to the pipeline.
-
-## Corpus preparation
-
-- `--corpus CORPUS1`
-- `[--corpus CORPUS2]`
-- `[...]`
-
-  Specifies a file prefix for a training corpus.  If this flag is found multiples times, the corpora
-  are all concatenated together for alignment and grammar extraction.  The use of multiple
-  `--corpora` flags is only supported when running the script from the beginning; if you are
-  skipping steps, only a single corpus can be provided (so you must do the concatenation yourself,
-  if you so need).
-
-- `--tune PREFIX`
-- `--test PREFIX`
   
-  Specify file prefixes for tuning and test data.  Unlike `--corpus`, only one instance each of
-  `--tune` or `--test` is allowed (if you provide multiple ones, only the last value is used).
+A language model built from the target side of the training data is placed at `RUNDIR/lm.gz`.  When
+tuning is finished, each final configuration file can be found at either
 
-- `--type {hiero,samt}`
+    RUNDIR/tune/N/joshua.config.ZMERT.final
+    RUNDIR/tune/N/joshua.config.PRO.final
 
-  Whether to learn a Hiero or SAMT grammar.  The default is Hiero.
+where N varies from 1..`--optimizer-runs`.
 
+## 6. Testing
 
+For each of the tuner runs, Joshua takes the tuner output file and decodes the test set.
+Afterwards, by default, minimum Bayes-risk decoding is run on the 300-best output.  This step
+usually yields about 0.3 - 0.5 BLEU points but is time-consuming, and can be turned off with the
+`--no-mbr` flag. 
 
+After decoding the test set with each set of tuned weights, Joshua computes the mean BLEU score,
+writes it to `RUNDIR/test/final-bleu`, and cats it.  That's the end of the pipeline!
 
-- `--alignment FILE`
+Joshua also supports decoding further test sets.  This is enabled by rerunning the pipeline with a
+number of arguments:
 
-  Provide an alignment for the training data.  The format is the standard format where 0-indexed
-  many-many alignment pairs for a sentence are provided on a line, source language first, e.g.,
+-   `--first-step TEST`
 
-      0-0 0-1 1-2 1-7 ...
+    This tells the decoder to start at the test step.
 
-  This value is required if you start at the grammar extraction step.
+-   `--name NAME`
 
--  `--no-mbr`
+    A name is needed to distinguish this test set from the previous ones.  Output for this test run
+    will be stored at `RUNDIR/test/NAME`.
+    
+-   `--joshua-config CONFIG`
 
-   Skip Minimum Bayes-risk decoding of the n-best list of the output on the test data.  MBR is
-   usually worth about 0.3 - 0.5 BLEU points, but takes a while.
-
--  `--lmfile FILE`
-
-   Use the specified file as the language model for decoding (for both tuning and decoding of the
-   test set).  If not provided, a Java program provided with the Berkeley LM is used to build a
-   Kneser-Ney interpolated 5-gram language model from the target side of the training data (unless
-   you specify `--lm-gen srilm`, in which case SRILM is used).
-   
-   You can specify as many `--lmfile` options as you wish.  A language model is built from the
-   target side of the training data unless `--no-corpus-lm` is given.
-
--  `--filter-lm [default]`
--  `--no-filter-lm`
-
-   Use Kenneth Heafield's "filter" program to filter the language model to the training data.  This
-   is only available if a training corpus was provided.
-
-- `--maxlen LEN [default=50]`
-
-  Remove parallel sentences from the training data that are longer than this length (on either
-  side).  This only applies to the training data, and is computed after tokenization.
-
-- `--grammar FILE`
-
-  Use the specified grammar instead of learning one with Thrax.
-
-- `--joshua-config TEMPLATE`
-
-  Use the specified file as the Joshua config file instead of the default template.  This file is a
-  template into which are substituted run-specific information; see the TEMPLATE section below for
-  more information.
-
-- `--decoder-command TEMPLATE`
-
-  Use the specified file as the decoding command.  This file is a template into which are
-  substituted run-specific information; see the TEMPLATE section below for more information.
-
-- `--thrax-conf FILE`
-
-  Use the provided Thrax configuration file instead of the (grammar-specific) default.
-
-- `--no-subsample [default]`
-- `--subsample`
-
-  Subsampling is a means of throwing away a portion of the training data by only retaining sentence
-  pairs that appear relevant to the tuning and development data.  This makes the pipeline run
-  significantly faster (particularly alignment), and often comes at only a small cost in accuracy on
-  the development set.  Subsampling works by comparing the training data to the tuning and test sets
-  passed in with --tune and --test.
-
-- `--joshua-mem MEM [3100m]`
-
-  Provide the maximum heap size available to instances of the Joshua decoder.  Uses Java notation
-  (the value here is passed to Java's -Xmx flag).
-
-- `--hadoop-mem MEM [4g]`
-
-   Provide the maximum heap size for the hadoop instances used to learn the grammar in Thrax.
-
-- `--jobs N`
-
-  The number of parallel Joshua decoders to start (via qsub, by default) when decoding a input file,
-  during both tuning and decoding.
-
-- `--qsub-args "ARGS"`
-
-  Provide the specified qsub arguments to the Joshua decoder command.  Only used if the Joshua
-  decoder_command file contains the appropriate template variable (see the TEMPLATES section below).
-
-## TEMPLATES
-
-A few pieces of the pipeline are subject to enough variation across runs and across computing
-environment that it is easier to provide template files than to use command-line arguments.  The
-Joshua pipeline allows the Joshua configuration file and the Joshua decoder command to be
-templatized.  Here are the options available to those files:
-
-- `<JOSHUA>` is the root of the Joshua installation ($JOSHUA env. var.)
-- `<INPUT>` is the file being decoded
-- `<OUTPUT>` is the output file that the decoder command creates
-- `<SOURCE>` is the source language (--source)
-- `<TARGET>` is the target language (--target)
-- `<LMFILE>` is the language model
-- `<MEM>` is the amount of memory available to the Joshua decoder instances
-- `<OOV>` is the OOV tag used in the grammar ("OOV" for SAMT, "X" for Hiero)
-- `<NUMJOBS>` is the degree of parallelization for the Joshua decoder command
-- `<QSUB_ARGS>` is the qsub arguments (--qsub-args)
-- `<REF>` is the reference file
-- `<CONFIG>` is the location of the joshua configuration file
-- `<LOG>` is where the Joshua decoder should put its log file
-
-The default configuration file is the following, located in
-`$JOSHUA/scripts/training/templates/mert/decoder_command.sequential`.  It can be overridden with the
-`--decoder_command` flag.
-
-    cat <INPUT> | <JOSHUA>/joshua-decoder -m <MEM> -threads <NUMTHREADS> -c <CONFIG> > <OUTPUT> 2> <LOG>
-
-If `--jobs` is set to something greater 1, the following template (located at
-`$JOSHUA/scripts/training/templates/mert/decoder_command.qsub`) is selected instead:
-
-    cat <INPUT> | awk 'BEGIN { num = 0 } {print "<seg id=\"" num "\">" $0 "</seg>"; num++}' \
-      | <JOSHUA>/scripts/training/parallelize/parallelize.pl -j <NUMJOBS> -m --qsub-args '<QSUB_ARGS>' -- <JOSHUA>/joshua-decoder -m <MEM> -threads <NUMTHREADS> -c <CONFIG> > <OUTPUT> 2> <LOG>
+    A tuned parameter file is required.  This file will be the output of some prior tuning run.
+    Necessary pathnames and so on will be adjusted.
 
 ## COMMON USE CASES AND PITFALLS 
 
