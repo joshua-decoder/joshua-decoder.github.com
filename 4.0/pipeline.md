@@ -536,6 +536,22 @@ number of arguments:
 
 ## COMMON USE CASES AND PITFALLS 
 
+- If the pipeline dies at the "thrax-run" stage with an error like the following:
+
+      JOB FAILED (return code 1) 
+      hadoop/bin/hadoop: line 47: 
+      /some/path/to/a/directory/hadoop/bin/hadoop-config.sh: No such file or directory 
+      Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/hadoop/fs/FsShell 
+      Caused by: java.lang.ClassNotFoundException: org.apache.hadoop.fs.FsShell 
+      
+  This occurs if the `$HADOOP` environment variable is set but does not point to a working
+  Hadoop installation.  To fix it, make sure to unset the variable:
+  
+      # in bash
+      unset HADOOP
+      
+  and then rerun the pipeline with the same invocation.
+
 - Memory usage is a major consideration in decoding with Joshua and hierarchical grammars.  In
   particular, SAMT grammars often require a large amount of memory.  Many steps have been taken to
   reduce memory usage, including beam settings and test-set- and sentence-level filtering of
