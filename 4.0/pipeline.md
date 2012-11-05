@@ -559,10 +559,14 @@ number of arguments:
 
   To accommodate this kind of variation, the pipeline script allows you to specify both (a) the
   amount of memory used by the Joshua decoder instance and (b) the amount of memory required of
-  nodes obtained by the qsub command.  These are accomplished with the --joshua-mem MEM and
-  --qsub-args ARGS commands.  For example,
+  nodes obtained by the qsub command.  These are accomplished with the `--joshua-mem` MEM and
+  `--qsub-args` ARGS commands.  For example,
 
       pipeline.pl --joshua-mem 32g --qsub-args "-l pvmem=32g -q himem.q" ...
+
+  Also, should Thrax fail, it might be due to a memory restriction. By default, Thrax requests 2 GB
+  from the Hadoop server. If more memory is needed, set the memory requirement with the
+  `--hadoop-mem` in the same way as the `--joshua-mem` option is used.
 
 - Other pitfalls and advice will be added as it is discovered.
 
