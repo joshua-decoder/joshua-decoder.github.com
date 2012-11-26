@@ -377,7 +377,7 @@ When alignment is complete, the alignment file can be found at `RUNDIR/alignment
 It is parallel to the training corpora.  There are many files in the `alignments/` subdirectory that
 contain the output of intermediate steps.
 
-<a name="parsing />
+<a name="parsing" />
 ## 3. PARSING
 
 When SAMT grammars are being built (`--type samt`), the target side of the training data must be
