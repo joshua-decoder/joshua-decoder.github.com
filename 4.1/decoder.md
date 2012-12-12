@@ -312,18 +312,34 @@ The output for a given input is a set of one or more lines with the following sc
 
 These parameters largely determine what is output by Joshua.
 
-
 - `format`
 
-  built-in denormalization for Joshua.  It's rudimentary but we will grow it over
-  time.  The implementation is in `decoder/io/DeNormalize.java`, and you can get
-  capitalized + denormalized output by specifying `%S` in the output format (as
-  opposed to `%s`, which prints the regular string).
+  *New in 4.1*
 
-  e.g.,
+  You can now specify the output-format variable, which is interpolated for the following variables:
 
-      echo "¿ who you lookin' at , mr. ?" | $JOSHUA/bin/decoder -output-format "%S" -mark-oovs false 2> /dev/null 
-      ¿Who you lookin' at, Mr.? 
+  `%i` : the 0-index sentence number
+
+  `%s` : the translated sentence
+
+  `%f` : the list of feature values (as name=value pairs)
+
+  `%c` : the model cost
+
+  `%w` : the weight vector (unimplemented)
+
+  `%a` : the alignments between source and target words (currently unimplemented)
+
+  The default value is
+
+      output-format = %i ||| %s ||| %f ||| %c
+
+  - `%S` : provides built-in denormalization for Joshua. The beginning character is capitalized, and punctuation is denormalized. 
+
+    e.g.,
+
+        echo "¿ who you lookin' at , mr. ?" | $JOSHUA/bin/decoder -output-format "%S" -mark-oovs false 2> /dev/null 
+        ¿Who you lookin' at, Mr.? 
 
 - `top-n` --- *300*
 
