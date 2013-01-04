@@ -26,3 +26,5 @@ The server, as configured in the example above, will then respond to requests on
     wget -qO - http://cs.jhu.edu/~post/files/pg1023.txt | head -132 | tail -11 | nc localhost 10101
 
 Since no model was loaded, this will just return the text to you as sent to the server.
+
+The `-server-port` option can also be used when creating a [bundled configuration](bundle.html) that will be run in server mode.

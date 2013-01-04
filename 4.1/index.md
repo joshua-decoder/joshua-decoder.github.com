@@ -46,3 +46,5 @@ Joshua's [efficient grammar representation](packing.html) (new with version 4.1)
 
 If you have problems or issues, you might find some help [on our answers page](faq.html) or
 [in the mailing list archives](https://groups.google.com/forum/?fromgroups#!forum/joshua_support).
+
+A [bundled configuration](bundle.html), which is a minimal set of configuration, resource, and script files, can be created and easily transferred and shared.
