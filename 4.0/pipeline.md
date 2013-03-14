@@ -269,17 +269,17 @@ argument a case-insensitive version of the following steps:
 - *PARSE*: Parsing.  This is only relevant for building SAMT grammars (`--type samt`), in which case
    the target side (`--target`) of the training data (`--corpus`) is parsed before building a
    grammar.
-   
+
 - *THRAX*: Grammar extraction [with Thrax](thrax.html).  If you jump to this step, you'll need to
    provide an aligned corpus (`--alignment`) along with your parallel data.  
-   
+
 - *TUNE*: Tuning.  The exact tuning method is determined with `--tuner {mert,pro}`.  With this
    option, you need to specify a grammar (`--grammar`) or separate tune (`--tune-grammar`) and test
    (`--test-grammar`) grammars.  A full grammar (`--grammar`) will be filtered against the relevant
    tuning or test set unless you specify `--no-filter-tm`.  If you want a language model built from
    the target side of your training data, you'll also need to pass in the training corpus
-   (`--corpus`).  You can also specify an arbitrary number of additional grammars with one or more
-   `--lmfile` flags.
+   (`--corpus`).  You can also specify an arbitrary number of additional language models with one or
+   more `--lmfile` flags.
 
 - *TEST*: Testing.  If you have a tuned model file, you can test new corpora by passing in a test
    corpus with references (`--test`).  You'll need to provide a run name (`--name`) to store the
