@@ -4,15 +4,24 @@ category: help
 title: Releases
 ---
 
+
 # [5.0](5.0/index.html)
 
-2012 December ???
+2012 June 7
 
 [download](http://cs.jhu.edu/~post/files/joshua-5.0.tgz)
 
 [documentation](5.0/index.html)
 
+
 ## [5.0](5.0/index.html) Release Notes
+
+- Packed grammar
+
+- TCP Server
+
+- Configured decoder bundler
+
 
 # [4.0](4.0/index.html)
 
@@ -21,6 +30,7 @@ title: Releases
 [download](http://cs.jhu.edu/~post/files/joshua-4.0.tgz)
 
 [documentation](4.0/index.html)
+
 
 ## [4.0](http://joshua-decoder.org/4.0/index.html) Release Notes
 
