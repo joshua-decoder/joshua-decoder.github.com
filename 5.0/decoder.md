@@ -314,7 +314,7 @@ These parameters largely determine what is output by Joshua.
 
 - `format`
 
-  *New in 4.1*
+  *New in 5.0*
 
   You can now specify the output-format variable, which is interpolated for the following variables:
 
