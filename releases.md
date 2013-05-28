@@ -4,7 +4,7 @@ category: help
 title: Releases
 ---
 
-# 5.0
+# [5.0](5.0/index.html)
 
 2012 December ???
 
@@ -12,9 +12,9 @@ title: Releases
 
 [documentation](5.0/index.html)
 
-## 5.0 Release Notes
+## [5.0](5.0/index.html) Release Notes
 
-# 4.0
+# [4.0](4.0/index.html)
 
 2012 July 2
 
@@ -22,7 +22,7 @@ title: Releases
 
 [documentation](4.0/index.html)
 
-## 4.0 Release Notes
+## [4.0](http://joshua-decoder.org/4.0/index.html) Release Notes
 
 - Significantly improved and extended documentation. 
 
