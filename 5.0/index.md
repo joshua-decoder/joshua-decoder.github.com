@@ -47,7 +47,7 @@ use our <a href="pipeline.html">pipeline script</a>.
 For more detail on the decoder itself, including its command-line options, see
 [the Joshua decoder page](decoder.html).  You can also learn more about other steps of
 [the Joshua MT pipeline](pipeline.html), including [grammar extraction](thrax.html) with Thrax and
-Joshua's [efficient grammar representation](packing.html) (introduced in version 4.1).
+Joshua's [efficient grammar representation](packing.html) (new with version 5.0).
 
 If you have problems or issues, you might find some help [on our answers page](faq.html) or
 [in the mailing list archives](https://groups.google.com/forum/?fromgroups#!forum/joshua_support).
