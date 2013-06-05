@@ -51,6 +51,10 @@ The dataset is located at `/export/common/SCALE13/Text/fishcall`. Please set the
 variable for convenience:
 
     export FISHCALL=/export/common/SCALE13/Text/fishcall
+
+If you're at CLSP, the data can be found instead at
+
+    export FISHCALL=/home/mpost/data/fishcall
     
 ### Preparing the data
 
@@ -98,3 +102,5 @@ You can try different variations:
    - Tune with MERT instead of MIRA (`--tuner mert`)
    
    - Decode with a wider beam (`--joshua-args '-pop-limit 200'`) (the default is 100)
+
+   - Add training data (add another `--corpus` line, e.g., `--corpus $FISHCALL/callhome_train`)
