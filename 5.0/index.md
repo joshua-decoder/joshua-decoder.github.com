@@ -13,20 +13,24 @@ from the command line:
 
        wget -q http://cs.jhu.edu/~post/files/joshua-v5.0rc2.tgz
 
-2. Next, unpack it, set the `$JOSHUA` environment variable, and compile everything:
+2. Next, unpack it, set environment variables, and compile everything:
 
        tar xzf joshua-v5.0rc2.tgz
        cd joshua-v5.0rc2
 
        # for bash
+       export JAVA_HOME=/path/to/java
        export JOSHUA=$(pwd)
        echo "export JOSHUA=$JOSHUA" >> ~/.bashrc
 
        # for tcsh
+       setenv JAVA_HOME /path/to/java
        setenv JOSHUA `pwd`
        echo "setenv JOSHUA $JOSHUA" >> ~/.profile
        
        ant all
+
+(If you don't know what to set `$JAVA_HOME` to, try `/usr/java/default`)
 
 3. If you have a Hadoop installation, make sure that the environment variable `$HADOOP` is set and
 points to it.
