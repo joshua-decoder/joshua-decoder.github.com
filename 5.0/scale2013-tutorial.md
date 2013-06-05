@@ -1,7 +1,7 @@
 ---
 layout: default
 category: links
-title: Notes for running the Joshua Pipeline at HLTCOE
+title: SCALE 2013 Joshua tutorial
 ---
 
 If you're running Joshua on the HLTCOE file servers, you're in luck, because if anything the Joshua
@@ -86,3 +86,5 @@ translation) pairs, and evaluate on other Spanish transcripts. It will use the d
 pieces of the pipeline: [GIZA++](https://code.google.com/p/giza-pp/) for alignment, SRILM for
 building the language model, batch MIRA for tuning, KenLM for representing LM state in the decoder,
 and so on.
+
+Some of these steps take a while.
