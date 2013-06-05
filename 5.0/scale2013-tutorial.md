@@ -87,4 +87,14 @@ pieces of the pipeline: [GIZA++](https://code.google.com/p/giza-pp/) for alignme
 building the language model, batch MIRA for tuning, KenLM for representing LM state in the decoder,
 and so on.
 
-Some of these steps take a while.
+### Variations
+
+You can try different variations:
+
+   - Build an SAMT model (`--type samt`), GKHM model (`--type ghkm`), or phrasal model (`--type phrasal`) 
+   
+   - Use the Berkeley aligner instead of GIZA++ (`--aligner berkeley`)
+   
+   - Tune with MERT instead of MIRA (`--tuner mert`)
+   
+   - Decode with a wider beam (`--joshua-args '-pop-limit 200'`) (the default is 100)
