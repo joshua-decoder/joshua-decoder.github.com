@@ -19,6 +19,7 @@ downloading it directly. I recommend you install it under `~/code/`. Assuming yo
 have
 
     export JOSHUA=$HOME/code/joshua-v5.0rc2
+    export JAVA_HOME=/usr/java/default
 
 You should set the following environment variables. Add these to your ~/.bashrc:
 
@@ -31,6 +32,12 @@ Then load them:
 
     source ~/.bashrc
     
+Now compile:
+
+    cd joshua-v5.0rc2
+    export JOSHUA=$(pwd)
+    ant
+
 ## Installation
 
 You don't need to install any external software since it is already installed. The environment
@@ -101,7 +108,7 @@ You can try different variations:
    
    - Build the language model with SRILM (recommended) instead of BerkeleyLM (`--lm-gen srilm`)
 
-   - Tune with MERT instead of MIRA (`--tuner mert`)
+   - Tune with MIRA instead of MERT (`--tuner mert`)
    
    - Decode with a wider beam (`--joshua-args '-pop-limit 200'`) (the default is 100)
 
