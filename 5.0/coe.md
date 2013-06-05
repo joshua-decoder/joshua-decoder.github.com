@@ -41,8 +41,8 @@ For today's experiments, we'll be translating with a Spanish-English translated 
 the Fisher Spanish and CALLHOME Spanish datasets. These translations were collected using Amazon's
 Mechanical Turk.
 
-We plan to publicly release this dataset later this year, and in the meantim *we ask that you do not
- distribute this data or remove it from HLTCOE servers*.
+We plan to publicly release this dataset later this year, and in the meantime *we ask that you do
+ not distribute this data or remove it from HLTCOE servers*.
 
 The dataset is located at `/export/common/SCALE13/Text/fishcall`. Please set the following environment
 variable for convenience:

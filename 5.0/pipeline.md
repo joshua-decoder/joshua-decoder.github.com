@@ -15,12 +15,13 @@ and prone to failure.
 pipeline.  Earlier results (which are often expensive) need not be recomputed.
 
 To facilitate these tasks, the pipeline script:
-- Runs the complete SMT pipeline, from corpus normalization and tokenization, through model
-  building, tuning, test-set decoding, and evaluation.
+
+- Runs the complete SMT pipeline, from corpus normalization and tokenization, through alignment,
+  model building, tuning, test-set decoding, and evaluation.
 
 - Caches the results of intermediate steps (using robust SHA-1 checksums on dependencies), so the
-  pipeline can be debugged or shared across similar runs with (almost) no time spent recomputing
-  expensive steps.
+  pipeline can be debugged or shared across similar runs while doing away with time spent
+  recomputing expensive steps.
  
 - Allows you to jump into and out of the pipeline at a set of predefined places (e.g., the alignment
   stage), so long as you provide the missing dependencies.
@@ -34,27 +35,13 @@ its features.  It is not as extensive, however, as Moses'
 The pipeline has no *required* external dependencies.  However, it has support for a number of
 external packages, some of which are included with Joshua.
 
--  [GIZA++](http://code.google.com/p/giza-pp/)
+-  [GIZA++](http://code.google.com/p/giza-pp/) (included)
 
    GIZA++ is the default aligner.  It is included with Joshua, and should compile successfully when
-   you typed `ant all` from the Joshua root directory.  It is not required because you can use the
+   you typed `ant` from the Joshua root directory.  It is not required because you can use the
    (included) Berkeley aligner (`--aligner berkeley`).
 
--  [SRILM](http://www.speech.sri.com/projects/srilm/)
-
-   By default, the pipeline uses a Java program from the
-   [Berkeley LM](http://code.google.com/p/berkeleylm/) package that constructs an
-   Kneser-Ney-smoothed language model in ARPA format from the target side of your training data.  If
-   you wish to use SRILM instead, you need to do the following:
-   
-   1. Install SRILM and set the `$SRILM` environment variable to point to its installed location.
-   1. Add the `--lm-gen srilm` flag to your pipeline invocation.
-   
-   More information on this is available in the [LM building section of the pipeline](#lm).  SRILM
-   is not used for representing language models during decoding (and in fact is not supported,
-   having been supplanted by [KenLM](http://kheafield.com/code/kenlm/) and BerkeleyLM).
-
--  [Hadoop](http://hadoop.apache.org/)
+-  [Hadoop](http://hadoop.apache.org/) (included)
 
    The pipeline uses the [Thrax grammar extractor](thrax.html), which is built on Hadoop.  If you
    have a Hadoop installation, simply ensure that the `$HADOOP` environment variable is defined, and
@@ -72,6 +59,23 @@ external packages, some of which are included with Joshua.
    If you don't have a Hadoop installation, there are still no worries.  The pipeline will unroll a
    standalone installation and use it to extract your grammar.  This behavior will be triggered if
    `$HADOOP` is undefined.
+   
+-  [SRILM](http://www.speech.sri.com/projects/srilm/) (not included)
+
+   By default, the pipeline uses a Java program from the
+   [Berkeley LM](http://code.google.com/p/berkeleylm/) package that constructs an
+   Kneser-Ney-smoothed language model in ARPA format from the target side of your training data.  If
+   you wish to use SRILM instead, you need to do the following:
+   
+   1. Install SRILM and set the `$SRILM` environment variable to point to its installed location.
+   1. Add the `--lm-gen srilm` flag to your pipeline invocation.
+   
+   More information on this is available in the [LM building section of the pipeline](#lm).  SRILM
+   is not used for representing language models during decoding (and in fact is not supported,
+   having been supplanted by [KenLM](http://kheafield.com/code/kenlm/) (the default) and
+   BerkeleyLM).
+
+-  [Moses](http://statmt.org/moses/) (not included)
 
 Make sure that the environment variable `$JOSHUA` is defined, and you should be all set.
 
