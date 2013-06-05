@@ -114,11 +114,11 @@ Running the pipeline requires two main steps: data preparation and invocation.
    
 1. Run the pipeline.  The following is the minimal invocation to run the complete pipeline:
 
-       $JOSHUA/scripts/training/pipeline.pl  \
-         --corpus input/train                \
-         --tune input/tune                   \
-         --test input/devtest                \
-         --source SOURCE                     \
+       $JOSHUA/bin/pipeline.pl  \
+         --corpus input/train   \
+         --tune input/tune      \
+         --test input/devtest   \
+         --source SOURCE        \
          --target TARGET
 
    The `--corpus`, `--tune`, and `--test` flags define file prefixes that are concatened with the
@@ -128,7 +128,12 @@ Running the pipeline requires two main steps: data preparation and invocation.
    exists in the current directory, that you are translating from a language identified "ur"
    extension to a language identified by the "en" extension, that the training data can be found at
    `input/train.en` and `input/train.ur`, and so on.
-   
+
+*Don't* run the pipeline directly from `$JOSHUA`. I recommend creating a `run/` directory to contain
+ all of your experiments in some other location. The advantage to this (apart from not clobbering
+ part of the Joshua install) is that Joshua provides support scripts for visualizing the results of
+ a series of experiments that only work if you
+
 Assuming no problems arise, this command will run the complete pipeline in about 20 minutes,
 producing BLEU scores at the end.  As it runs, you will see output that looks like the following:
    

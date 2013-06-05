@@ -15,7 +15,10 @@ keep both open in separate tabs.
 ## Download and Setup
 
 You can copy Joshua 5.0rc2 from `~lorland/workspace/mt/joshua/release/joshua-v5.0rc2.tgz` instead of
-downloading it directly.
+downloading it directly. I recommend you install it under `~/code/`. Assuming you do so, you will
+have
+
+    export JOSHUA=$HOME/code/joshua-v5.0rc2
 
 You should set the following environment variables. Add these to your ~/.bashrc:
 
@@ -63,3 +66,23 @@ Fisher Spanish and CALLHOME. The prefixes are as follows:
     $FISHCALL/callhome_devtest
     $FISHCALL/callhome_evltest
     
+### Run the pipeline
+
+I'll assume here a run directory of `$HOME/expts/scale13/joshua-tutorial/runs/`. To run the complete
+pipeline and output results for the Fisher held-out test set, type:
+
+    cd $HOME/expts/scale13/joshua-tutorial/runs/
+    $JOSHUA/bin/pipeline.pl           \
+      --readme "Baseline run"         \
+      --rundir 1                      \
+      --corpus $FISHCALL/fisher_train \
+      --tune $FISHCALL/fisher_dev     \
+      --test $FISHCALL/fisher_dev2    \
+      --source es                     \
+      --target en
+      
+This will start the pipeline building a translation system trained on (Spanish transcript, English
+translation) pairs, and evaluate on other Spanish transcripts. It will use the defaults for all
+pieces of the pipeline: [GIZA++](https://code.google.com/p/giza-pp/) for alignment, SRILM for
+building the language model, batch MIRA for tuning, KenLM for representing LM state in the decoder,
+and so on.
