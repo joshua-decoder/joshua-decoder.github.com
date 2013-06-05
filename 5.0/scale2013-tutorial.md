@@ -87,7 +87,7 @@ pipeline and output results for the Fisher held-out test set, type:
       
 This will start the pipeline building a translation system trained on (Spanish transcript, English
 translation) pairs, and evaluate on other Spanish transcripts. It will use the defaults for all
-pieces of the pipeline: [GIZA++](https://code.google.com/p/giza-pp/) for alignment, SRILM for
+pieces of the pipeline: [GIZA++](https://code.google.com/p/giza-pp/) for alignment, BerkeleyLM for
 building the language model, batch MIRA for tuning, KenLM for representing LM state in the decoder,
 and so on.
 
@@ -99,6 +99,8 @@ You can try different variations:
    
    - Use the Berkeley aligner instead of GIZA++ (`--aligner berkeley`)
    
+   - Build the language model with SRILM (recommended) instead of BerkeleyLM (`--lm-gen srilm`)
+
    - Tune with MERT instead of MIRA (`--tuner mert`)
    
    - Decode with a wider beam (`--joshua-args '-pop-limit 200'`) (the default is 100)
