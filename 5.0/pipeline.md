@@ -207,6 +207,46 @@ of traditional pipeline tasks:
 These steps are discussed below, after a few intervening sections about high-level details of the
 pipeline.
 
+## Managing groups of experiments
+
+The real utility of the pipeline comes when you use it to manage groups of experiments. Typically,
+we have a held-out test set, and want to vary a number of training parameters to determine what
+effect this has on BLEU scores or some other metric. Joshua comes with a script
+`$JOSHUA/scripts/training/summarize.pl` that collects information from a group of runs and reports
+them to you. This script works so long as you organize your runs as follows:
+
+1. Your runs should be grouped together in a root directory, which I'll call `$RUNDIR`.
+
+2. For comparison purposes, the runs should all be evaluated on the same test set.
+
+3. Each run in the run group should be in its own numbered directory, shown with the files used by
+the summarize script:
+
+       $RUNDIR/
+           1/
+               README.txt
+               test/
+                   final-bleu
+                   final-times
+               [other files]
+           2/
+               README.txt
+               ...
+               
+You can get such directories using the `--rundir N` flag to the pipeline. 
+
+Run directories can build off each other. For example, `1/` might contain a complete baseline
+run. If you wanted to just change the tuner, you don't need to rerun the aligner and model builder,
+so you can reuse the results by supplying the second run with the information it needs that was
+computed in step 1:
+
+    $JOSHUA/bin/pipeline.pl \
+      --first-step tune \
+      --grammar 1/grammar.gz \
+      ...
+      
+More details are below.
+
 ## Grammar options
 
 Joshua can extract three types of grammars: Hiero grammars, GHKM, and SAMT grammars.  As described
