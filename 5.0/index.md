@@ -8,15 +8,15 @@ This page contains end-user oriented documentation for the 5.0 release of
 
 ## Download and Setup
 
-1. Follow [this link](http://cs.jhu.edu/~post/files/joshua-v5.0rc4.tgz) to download Joshua, or do it
+1. Follow [this link](http://cs.jhu.edu/~post/files/joshua-v5.0rc5.tgz) to download Joshua, or do it
 from the command line:
 
-       wget -q http://cs.jhu.edu/~post/files/joshua-v5.0rc4.tgz
+       wget -q http://cs.jhu.edu/~post/files/joshua-v5.0rc5.tgz
 
 2. Next, unpack it, set environment variables, and compile everything:
 
-       tar xzf joshua-v5.0rc4.tgz
-       cd joshua-v5.0rc4
+       tar xzf joshua-v5.0rc5.tgz
+       cd joshua-v5.0rc5
 
        # for bash
        export JAVA_HOME=/path/to/java
