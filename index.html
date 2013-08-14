@@ -1,260 +1,285 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="screen,print" href="joshua.css" />
-    <title>Joshua Decoder | An open-source statistical machine translation decoder</title>
+    <meta charset="utf-8">
+    <title>Joshua Machine Translation Toolkit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+      #download {
+          background-color: green;
+          font-size: 14pt;
+          font-weight: bold;
+          text-align: center;
+          color: white;
+          border-radius: 5px;
+          padding: 4px;
+      }
+
+      #download a:link {
+          color: white;
+      }
+
+      #download a:hover {
+          color: lightgrey;
+      }
+
+      #download a:visited {
+          color: white;
+      }
+
+      a.pdf {
+          font-variant: small-caps;
+          /* font-weight: bold; */
+          font-size: 10pt;
+          color: white;
+          background: brown;
+          padding: 2px;
+      }
+
+      a.bibtex {
+          font-variant: small-caps;
+          /* font-weight: bold; */
+          font-size: 10pt;
+          color: white;
+          background: orange;
+          padding: 2px;
+      }
+
+      img.sponsor {
+        height: 120px;
+        margin: 5px;
+      }
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
   </head>
 
-<body>
+  <body>
 
-  <div id="navbar">
-    <img src="images/joshua-logo-small.png" width="130px" 
-         alt="Joshua logo (picture of a Joshua tree)" />
-
-    <br/>
-    <div class="infobox">
-      <b>Stable version</b><br />
-      5.0<br/><br/>
-      <b>Release date</b><br />
-      16 August 2013<br/>
-    </div>
-
-    <div id="download" class="infobox">
-      <a href="http://cs.jhu.edu/~post/files/joshua-5.0.tgz">Download</a>
-    </div>
-
-    <div class="infobox">
-      <b>Documentation</b><br />
-      <ul>
-        <li> <a href="5.0/index.html">End user</a> </li>
-        <li> <a href="http://cs.jhu.edu/~post/joshua-docs/index.html">Developer</a> </li>
-      </ul>
-    </div>
-
-    <div class="infobox">
-      <b>Links</b><br />
-      <ul>
-        <li> <a href="#lists">Mailing lists</a> </li>
-        <li> <a href="#contributors">Contributors</a> </li>
-        <li> <a href="#acks">Support</a> </li>
-      </ul>
-    </div>
-
-    <div class="infobox">
-      <b>Resources</b><br />
-      <ul>
-        <li> <a href="indian-parallel-corpora/">Indian Parallel Corpora</a> </li>
-      </ul>
-    </div>
-
-  </div>
-
-  <div id="main">
-    <div id="title">
-      <h1>Joshua Decoder</h1>
-    </div>
-
-    <div id="content">
-      <p>
-        Joshua is an open-source statistical machine translation decoder for hierarchical and
-        syntax-based machine translation, written in Java.  It is developed as a research
-        collaboration between the <a href="http://hltcoe.jhu.edu/">Human Language Technology Center
-        of Excellence</a> at Johns Hopkins University
-        and <a href="http://www.cs.jhu.edu/~ccb/">Chris Callison-Burch</a>'s research group at
-        the <a href="http://www.cis.upenn.edu">University of Pennsylvania</a>.
-      </p>
-
-      <p>
-        The latest version of Joshua is version 5.0. Its changes are described in the paper
-      </p>
-
-      <blockquote>
-        <a href="http://aclweb.org/anthology-new/W/W13//W13-2226.pdf">Joshua 5.0: Sparser, better,
-          faster, server</a>
-          <a class="bibtex" href="http://aclweb.org/anthology/W/W13/W13-2226.bib">BibTeX</a> <br />
-          Matt Post, Juri Ganitkevitch, Luke Orland, Jonathan Weese, Yuan Cao, and Chris
-          Callison-Burch<br />
-        <a href="http://statmt.org/wmt13/">WMT 2013</a><br/>
-
-      </blockquote>
-
-      You might also be interested in older papers describing Joshua 
-      <a href="http://aclweb.org/anthology/W/W09/W09-0424.pdf">1.0</a>, 
-      <a href="http://aclweb.org/anthology-new/P/P09/P09-4007.pdf">the Joshua demo paper</a>,
-      <a href="http://aclweb.org/anthology-new/W/W10/W10-1718.pdf">2.0</a>, 
-      <a href="http://aclweb.org/anthology-new/W/W11/W11-2160.pdf">3.0</a>, and
-      <a href="http://aclweb.org/anthology-new/W/W12/W12-3134.pdf">4.0</a>.
-
-      <a name="download"/>
-      <h3>Features</h3>
-
-      <p>
-        The main features of Joshua 5.0 are as follows:
-
-        <ul>
-          <li>It's written in Java, so it's fast and uses minimal memory</li>
-          <li>Decoding
-            <ul>
-              <li>Translates with arbitrary SCFGs, with specific support for Hiero, SAMT, and GHKM</li>
-              <li>Translation of lattices (e.g., for speech or word segmentation) in PLF format</li>
-              <li>Support for tens of thousands of parameters with an underlying sparse feature
-              representation and access to large-scale discriminative tuners like PRO and batch MIRA</li>
-              <li>Left-state minimization of LM state via KenLM</li>
-              <li>"Forced" decoding to find all derivations between a source and target sentence</li>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Joshua</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#documentation">Documentation</a></li>
+              <li><a href="#support">Support</a></li>
+              <li><a href="#datasets">Datasets</a></li>
+              <li><a href="#contributors">Contributors</a></li>
+              <li><a href="#sponsors">Sponsors</a></li>
             </ul>
-          </li>
-          <li>Contains a script that handles the complete MT pipeline, from data preparation to
-            alignment, model training, decoding, evaluation, and analysis.</li>
-          <li>Extraction of very large-scale Hiero and SAMT grammars with Thrax, our Hadoop-based
-            grammar extractor</li>
-        </ul>
-      </p>
-      
-      <a name="usage"/>
-      <h3>Usage</h3>
-
-      <p>
-        Check out our <a href="5.0/index.html">large collection of user documentation</a> for
-          information on downloading and setup, a quick start guide, detailed information on
-          different Joshua components, common problems, and more.
-      </p>
-
-      <p>
-        The easiest way to use Joshua is to use
-        <a href="https://github.com/joshua-decoder/joshua/wiki/Joshua-Pipeline">the
-          pipeline script</a> which is included with the source code.  This
-        script supports multiple use cases; see the documentation for more
-        information.
-        For more detail, Chris Callison-Burch
-        describes <a href="http://www.cs.jhu.edu/~ccb/joshua/">how to manually
-          run the steps of the machine translation pipeline</a>.
-        (This information is a bit outdated and much of it is
-        automated by the pipeline, but the broad steps still apply).
-      </p>
-
-      <p>
-        If you run into difficulty, feel free to email
-        the <a href="https://groups.google.com/forum/#!forum/joshua_support">Joshua
-          Technical Support Group</a>, or search its archives.
-      </p>
-
-      <a name="lists" />
-      <h3>Mailing lists</h3>
-
-      <ul>
-        <li>Technical support (for end users with questions and technical
-          difficulties): <a href="mailto:joshua_support@googlegroups.com">joshua_support@googlegroups.com</a>
-        </li>
-        <li>Developers: <a href="mailto:joshua_developers@googlegroups.com">joshua_developers@googlegroups.com</a>
-        </li>
-      </ul>
-
-      <a name="contributors" />
-      <h3>Contributors</h3>
-
-      <p>
-        Joshua was originally ported
-        from <a href="http://www.isi.edu/~chiang/">David Chiang's</a>
-        Python implementation of Hiero
-        by <a href="http://www.cs.jhu.edu/~zfli/">Zhifei Li</a>.
-        Since then, there have been a number of contributors to the
-        project (listed here in alphabetical order).
-        <ul>
-          <li><a href="http://www.cs.cmu.edu/~aphillips/">Aaron Phillips</a></li>
-          <li><a href="http://www.eecs.berkeley.edu/~adpauls/">Adam Pauls</a></li>
-          <li><a href="http://cs.jhu.edu/~ccb/">Chris Callison-Burch</a></li>
-          <li><a href="http://www.cs.cmu.edu/~cdyer/">Chris Dyer</a></li>
-          <li><a href="http://comp.ling.utexas.edu/~bannard/">Colin Bannard</a></li>
-          <li><a href="http://cs.jhu.edu/~jonny/">Jonathan Weese</a></li>
-          <li>Josh Schroeder</li>
-          <li><a href="http://cs.jhu.edu/~juri/">Juri Ganitkevitch</a></li>
-          <li><a href="http://kheafield.com/">Kenneth Heafield</a></li>
-          <li><a href="http://dowobeha.github.com">Lane Schwartz</a></li>
-          <li><a href="https://plus.google.com/107547504293849335564">Luke</a> <a href="https://github.com/lukeorland">Orland</a></li>
-          <li><a href="http://cs.jhu.edu/~post/">Matt Post</a></li>
-          <li><a href="http://cs.jhu.edu/~ozaidan/">Omar F. Zaidan</a></li>
-          <li>Wren Ng Thornton</li>
-          <li>Yuan Cao</li>
-        </ul>
-
-        Please email if you know of anyone who has been left off this list.
-      </p>
-
-      <a name="others" />
-      <h3>Other decoders</h3>
-
-      <p>
-        There are many other publicly-available open-source decoders available.  Some of them are:
-      </p>
-
-      <ul>
-        <li>
-          <a href="http://cdec-decoder.org/index.php?title=Main_Page">cdec</a>, an SCFG decoder</li>
-        <li>
-          <a href="http://statmt.org/moses/">Moses</a>, the defacto phrase-based translation system
-        which also supports hierarchical decoding
-        </li>
-        <li>
-          <a href="http://www-i6.informatik.rwth-aachen.de/jane/">Jane</a> a hierarchical
-          phrase-based system
-        </li>
-        <li>
-          <a href="http://nlp.stanford.edu/phrasal/">Phrasal</a>, Stanford's phrase-based system
-        </li>
-      </ul>
-
-      <a name="acks" />
-      <h3>Acknowledgments</h3>
-
-      <div>
-        We gratefully acknowledge support provided by the following institutions.
-
-        <div>
-          <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
-        </div>
-        <div>
-          <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
-        </div>
-        <div>
-          <a href="http://www.euromatrixplus.org/">
-            <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
-          </a> 
-        </div>
-        <div>
-          <img class="sponsor" alt="Human Language Technology Center of Excellence logo" src="images/sponsors/hltcoe-logo3.png" />
+          </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
-  </div>
 
-  <div id="twitterbar">
-<a class="twitter-timeline" href="https://twitter.com/joshuadecoder" data-widget-id="367380700124569600">Tweets by @joshuadecoder</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-  </div>
+    <div class="container">
 
-		<!-- Start of StatCounter Code for Default Guide -->
-		<script type="text/javascript">
-			var sc_project=8264132; 
-			var sc_invisible=1; 
-			var sc_security="4b97fe2d"; 
-		</script>
-		<script type="text/javascript"
-						src="http://www.statcounter.com/counter/counter.js"></script>
-		<noscript>
-			<div class="statcounter">
-				<a title="hit counter joomla" 
-					 href="http://statcounter.com/joomla/"
-					 target="_blank">
-					<img class="statcounter"
-							 src="http://c.statcounter.com/8264132/0/4b97fe2d/1/"
-							 alt="hit counter joomla" />
-				</a>
-			</div>
-		</noscript>
-		<!-- End of StatCounter Code for Default Guide -->
+      <div class="row">
+        <div class="span2">
+          <img src="images/joshua-logo-small.png" 
+               alt="Joshua logo (picture of a Joshua tree)" />
+        </div>
+        <div class="span10">
+          <h1>Joshua Machine Translation Toolkit</h1>
+          <p>
+            <b>Stable version</b>: 5.0 (Released 17 August 2013)
+          </p>
+          <span id="download">
+            <a href="http://cs.jhu.edu/~post/files/joshua-5.0.tgz">Download</a>
+          </span>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="span8">
 
-</body>
+          <p>
+            Joshua is an open-source statistical machine translation decoder for hierarchical and
+            syntax-based machine translation, written in Java.  It is developed as a research
+            collaboration between the <a href="http://hltcoe.jhu.edu/">Human Language Technology Center
+              of Excellence</a> at Johns Hopkins University
+            and <a href="http://www.cs.jhu.edu/~ccb/">Chris Callison-Burch</a>'s research group at
+            the <a href="http://www.cis.upenn.edu">University of Pennsylvania</a>.
+          </p>
+          
+          <p>
+            The latest version of Joshua is version 5.0. Its changes are described in the paper
+          </p>
+          
+          <blockquote>
+            <a href="http://aclweb.org/anthology-new/W/W13//W13-2226.pdf">Joshua 5.0: Sparser, better,
+              faster, server</a>
+            <a class="bibtex" href="http://aclweb.org/anthology/W/W13/W13-2226.bib">BibTeX</a> <br />
+            Matt Post, Juri Ganitkevitch, Luke Orland, Jonathan Weese, Yuan Cao, and Chris
+            Callison-Burch<br />
+            <a href="http://statmt.org/wmt13/">WMT 2013</a>. Sofia, Bulgaria. August.<br/>
+            
+          </blockquote>
+
+          <p>
+            You might also be interested in older papers describing Joshua 
+            <a href="http://aclweb.org/anthology/W/W09/W09-0424.pdf">1.0</a>, 
+            <a href="http://aclweb.org/anthology-new/P/P09/P09-4007.pdf">the Joshua demo paper</a>,
+            <a href="http://aclweb.org/anthology-new/W/W10/W10-1718.pdf">2.0</a>, 
+            <a href="http://aclweb.org/anthology-new/W/W11/W11-2160.pdf">3.0</a>, and
+            <a href="http://aclweb.org/anthology-new/W/W12/W12-3134.pdf">4.0</a>.
+          </p>
+        </div>
+        <div class="span4">
+           <div id="twitterbar">
+             <a class="twitter-timeline" href="https://twitter.com/joshuadecoder" data-widget-id="367380700124569600">Tweets by @joshuadecoder</a>
+             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+           </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="span8">
+          <h2 id="documentation">Documentation</h2>
+
+          <p>
+            To download and compile Joshua, click the big green download button above, and then type
+            the following. You need to define the $JOSHUA environment variable (put it in your shell
+            init file).
+
+            <pre>
+ wget -q http://cs.jhu.edu/~post/files/joshua-v5.0.tgz
+ tar xf joshua-v5.0.tgz
+ cd joshua-v5.0
+ export JOSHUA=$(pwd)
+ ant</pre>
+          </p>
+
+          <p>
+            For further information, including a quick start guide, please
+            see <a href="5.0/index.html">the user documentation</a>, which contains information on
+            downloading and setup, a quick start guide, detailed information on different Joshua
+            components, common problems, and more.
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="span8">
+          <h2 id="support">Support</h2>
+
+          Support is provided in two
+          forms: <a href="https://groups.google.com/forum/#!forum/joshua_support">Technical
+          support</a> for end-users of Joshua,
+          and <a href="https://groups.google.com/forum/#!forum/joshua_developers">Developer
+          support</a> for contributors.
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="span8">
+          <h2 id="datasets">Datasets</h2> 
+
+          <p>
+            We have also released a parallel corpus obtained by translating Wikipedia pages from six
+            Indian languages into English. You can find that
+            on <a href="indian-parallel-corpora/">the Indian Parallel Corpora page</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="span8">
+          <h2 id="contributors">Contributors</h2>
+          <p>
+            Joshua was originally ported from <a href="http://www.isi.edu/~chiang/">David Chiang's</a>
+            Python implementation of Hiero by <a href="http://www.cs.jhu.edu/~zfli/">Zhifei Li</a>.
+            Since then, there have been a number of contributors to the project (listed here in
+            alphabetical order).
+            <ul>
+              <li><a href="http://www.cs.cmu.edu/~aphillips/">Aaron Phillips</a> (Carnegie Mellon)</li>
+              <li><a href="http://www.eecs.berkeley.edu/~adpauls/">Adam Pauls</a> (Berkeley)</li>
+              <li><a href="http://cs.jhu.edu/~ccb/">Chris Callison-Burch</a> (Penn)</li>
+              <li><a href="http://www.cs.cmu.edu/~cdyer/">Chris Dyer</a> (Carnegie Mellon)</li>
+              <li><a href="http://comp.ling.utexas.edu/~bannard/">Colin Bannard</a> (UT Austin)</li>
+              <li><a href="http://cs.jhu.edu/~jonny/">Jonathan Weese</a> (Johns Hopkins)</li>
+              <li>Josh Schroeder</li>
+              <li><a href="http://cs.jhu.edu/~juri/">Juri Ganitkevitch</a> (Johns Hopkins)</li>
+              <li><a href="http://kheafield.com/">Kenneth Heafield</a> (Carnegie Mellon)</li>
+              <li><a href="http://dowobeha.github.com">Lane Schwartz</a> (Minnesota)</li>
+              <li><a href="https://plus.google.com/107547504293849335564">Luke</a> <a href="https://github.com/lukeorland">Orland</a> (Johns Hopkins)</li>
+              <li><a href="http://cs.jhu.edu/~post/">Matt Post</a> (Johns Hopkins)</li>
+              <li><a href="http://cs.jhu.edu/~ozaidan/">Omar F. Zaidan</a> (Johns Hopkins)</li>
+              <li>Wren Ng Thornton</li>
+              <li>Yuan Cao (Johns Hopkins)</li>
+            </ul>
+            
+            Please email if you know of anyone who has been left off this list.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="sponsors">Acknowledgments</h2>
+
+      We gratefully acknowledge support provided by the following institutions.
+
+      <div>
+        <a href="http://darpa.mil/">
+          <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
+        </a>
+        <a href="http://nsf.gov/">
+          <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
+        </a>
+        <a href="http://www.euromatrixplus.org/">
+          <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
+        </a> 
+      </div>
+      <div>
+        <a href="http://hltcoe.jhu.edu">
+          <img class="sponsor" alt="Human Language Technology Center of Excellence logo"
+               src="images/sponsors/hltcoe-logo3.png" />
+        </a>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap-transition.js"></script>
+    <script src="bootstrap/js/bootstrap-alert.js"></script>
+    <script src="bootstrap/js/bootstrap-modal.js"></script>
+    <script src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="bootstrap/js/bootstrap-tab.js"></script>
+    <script src="bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="bootstrap/js/bootstrap-popover.js"></script>
+    <script src="bootstrap/js/bootstrap-button.js"></script>
+    <script src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="bootstrap/js/bootstrap-typeahead.js"></script>
+
+  </body>
 </html>
