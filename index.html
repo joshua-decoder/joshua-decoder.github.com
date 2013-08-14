@@ -17,24 +17,19 @@
     <br/>
     <div class="infobox">
       <b>Stable version</b><br />
-      4.0<br/><br/>
+      5.0<br/><br/>
       <b>Release date</b><br />
-      2 July 2012<br/>
-      <hr/>
-      <b>Release candidate</b><br />
-      5.0rc5
-      <b>Release date</b><br />
-      21 July 2013<br/>
+      16 August 2013<br/>
     </div>
 
     <div id="download" class="infobox">
-      <a href="http://cs.jhu.edu/~post/files/joshua-4.0.tgz">Download</a>
+      <a href="http://cs.jhu.edu/~post/files/joshua-5.0.tgz">Download</a>
     </div>
 
     <div class="infobox">
       <b>Documentation</b><br />
       <ul>
-        <li> <a href="4.0/index.html">End user</a> (<a href="5.0/index.html">5.0</a>) </li>
+        <li> <a href="5.0/index.html">End user</a> </li>
         <li> <a href="http://cs.jhu.edu/~post/joshua-docs/index.html">Developer</a> </li>
       </ul>
     </div>
@@ -64,42 +59,57 @@
 
     <div id="content">
       <p>
-        Joshua is an open-source statistical machine translation decoder for
-        hierarchical and syntax-based machine translation, written in Java.
-        It is developed by <a href="http://www.cs.jhu.edu/~ccb/">Chris
-          Callison-Burch</a>'s research group at
-        the <a href="http://clsp.jhu.edu">Center for Language and Speech
-          Processing</a> and the <a href="http://web.jhu.edu/hltcoe">Human
-          Language Technology Center of Excellence</a> at Johns Hopkins
-        University.
+        Joshua is an open-source statistical machine translation decoder for hierarchical and
+        syntax-based machine translation, written in Java.  It is developed as a research
+        collaboration between the <a href="http://hltcoe.jhu.edu/">Human Language Technology Center
+        of Excellence</a> at Johns Hopkins University
+        and <a href="http://www.cs.jhu.edu/~ccb/">Chris Callison-Burch</a>'s research group at
+        the <a href="http://www.cis.upenn.edu">University of Pennsylvania</a>.
       </p>
 
       <p>
-        <a href="https://github.com/joshua-decoder/joshua/blob/5.5.0HANGELOG">Click here</a> for a list of changes from the previous version (4.0).  Some of these features are described in more detail in the paper
+        The latest version of Joshua is version 5.0. Its changes are described in the paper
       </p>
 
       <blockquote>
-        <a href="http://aclweb.org/anthology-new/W/W12/W12-3134.pdf">Joshua 4.0: Packing, PRO, and
-          Paraphrases</a>
-          <a class="bibtex" href="http://aclweb.org/anthology-new/W/W12/W12-3134.bib">BibTeX</a> 
-          <br />
-        Juri Ganitkevitch, Yuan Cao, Jonathan Weese, Matt Post, and Chris Callison-Burch<br />
-        <a href="http://statmt.org/wmt12/">WMT 2012</a><br/>
+        <a href="http://aclweb.org/anthology-new/W/W13//W13-2226.pdf">Joshua 5.0: Sparser, better,
+          faster, server</a>
+          <a class="bibtex" href="http://aclweb.org/anthology/W/W13/W13-2226.bib">BibTeX</a> <br />
+          Matt Post, Juri Ganitkevitch, Luke Orland, Jonathan Weese, Yuan Cao, and Chris
+          Callison-Burch<br />
+        <a href="http://statmt.org/wmt13/">WMT 2013</a><br/>
 
       </blockquote>
 
       You might also be interested in older papers describing Joshua 
       <a href="http://aclweb.org/anthology/W/W09/W09-0424.pdf">1.0</a>, 
       <a href="http://aclweb.org/anthology-new/P/P09/P09-4007.pdf">the Joshua demo paper</a>,
-      <a href="http://aclweb.org/anthology-new/W/W10/W10-1718.pdf">2.0</a> and 
-      <a href="http://aclweb.org/anthology-new/W/W11/W11-2160.pdf">3.0</a>.
+      <a href="http://aclweb.org/anthology-new/W/W10/W10-1718.pdf">2.0</a>, 
+      <a href="http://aclweb.org/anthology-new/W/W11/W11-2160.pdf">3.0</a>, and
+      <a href="http://aclweb.org/anthology-new/W/W12/W12-3134.pdf">4.0</a>.
 
       <a name="download"/>
-      <h3>Download</h3>
+      <h3>Features</h3>
 
       <p>
-        To download, click the big green download button to the left.  This will deliver to you a
-        tarball of our latest release, version 5.0.
+        The main features of Joshua 5.0 are as follows:
+
+        <ul>
+          <li>It's written in Java, so it's fast and uses minimal memory
+          <li>Decoding
+            <ul>
+              <li>Translates with arbitrary SCFGs, with specific support for Hiero, SAMT, and GHKM
+              <li>Translation of lattices (e.g., for speech or word segmentation) in PLF format
+              <li>Support for tens of thousands of parameters with an underlying sparse feature
+              representation and access to large-scale discriminative tuners like PRO and batch MIRA
+              <li>Left-state minimization of LM state via KenLM
+              <li>"Forced" decoding to find all derivations between a source and target sentence
+            </ul>
+          <li>Contains a script that handles the complete MT pipeline, from data preparation to
+          alignment, model training, decoding, evaluation, and analysis.
+          <li>Extraction of very large-scale Hiero and SAMT grammars with Thrax, our Hadoop-based
+          grammar extractor
+        </ul>
       </p>
       
       <a name="usage"/>
@@ -183,10 +193,16 @@
         <li>
           <a href="http://cdec-decoder.org/index.php?title=Main_Page">cdec</a>, an SCFG decoder</li>
         <li>
-          <a href="">Moses</a>, the defacto phrase-based translation system which also supports
-        hierarchical decoding</li>
+          <a href="http://statmt.org/moses/">Moses</a>, the defacto phrase-based translation system
+        which also supports hierarchical decoding
+        </li>
         <li>
-          <a href="http://www-i6.informatik.rwth-aachen.de/jane/">Jane</a> a hierarchical phrase-based system</li>
+          <a href="http://www-i6.informatik.rwth-aachen.de/jane/">Jane</a> a hierarchical
+          phrase-based system
+        </li>
+        <li>
+          <a href="http://nlp.stanford.edu/phrasal/">Phrasal</a>, Stanford's phrase-based system
+        </li>
       </ul>
 
       <a name="acks" />
@@ -214,35 +230,8 @@
   </div>
 
     <div id="twitterbar">
-      <b>Twitter feed</b>:
-      <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
-      <script>
-new TWTR.Widget({
-  version: 2,
-  type: 'profile',
-  rpp: 4,
-  interval: 30000,
-  width: 250,
-  height: 300,
-  theme: {
-    shell: {
-      background: '#ffffff',
-      color: '#000000'
-    },
-    tweets: {
-      background: '#ffffff',
-      color: '#000000',
-      links: '#072deb'
-    }
-  },
-  features: {
-    scrollbar: true,
-    loop: false,
-    live: true,
-    behavior: 'all'
-  }
-}).render().setUser('joshuadecoder').start();
-      </script>
+<a class="twitter-timeline" href="https://twitter.com/joshuadecoder" data-widget-id="367380700124569600">Tweets by @joshuadecoder</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </div>
 
 		<!-- Start of StatCounter Code for Default Guide -->
