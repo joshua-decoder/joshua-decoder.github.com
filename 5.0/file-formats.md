@@ -25,7 +25,7 @@ or on the nonterminal labels (Joshua supports decoding with SAMT and GHKM gramma
 
 The feature values can have optional labels, e.g.:
 
-    [X] ||| el chico [X,1] ||| the boy [X,1] ||| lexprob=-3.14 abstract=0 numwords=2 count=17
+    [X] ||| el chico [X,1] ||| the boy [X,1] ||| lexprob=-3.14 lexicalized=1 numwords=2 count=17
     
 One file common to decoding is the glue grammar, which for hiero grammar is defined as follows:
 
