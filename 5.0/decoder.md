@@ -11,7 +11,7 @@ To run the decoder, a convenience script is provided that loads the necessary Ja
 Assuming you have set the environment variable `$JOSHUA` to point to the root of your installation,
 its syntax is:
 
-    $JOSHUA/joshua-decoder [-m memory-amount] [-c config-file other-joshua-options ...]
+    $JOSHUA/bin/decoder [-m memory-amount] [-c config-file other-joshua-options ...]
 
 The `-m` argument, if present, must come first, and the memory specification is in Java format
 (e.g., 400m, 4g, 50g).  Most notably, the suffixes "m" and "g" are used for "megabytes" and
@@ -44,21 +44,22 @@ Values are one of four types (which we list here mostly to call attention to the
   to false.  For command-line options, the value may be omitted, in which case it evaluates to
   true.  For example, the following are equivalent:
 
-      $JOSHUA/joshua-decoder -show-align-index true
-      $JOSHUA/joshua-decoder -show-align-index
+      $JOSHUA/bin/decoder -mark-oovs true
+      $JOSHUA/bin/decoder -mark-oovs
 
 ## Joshua configuration file
 
-Before describing the list of Joshua parameters, we present a note about the configuration file.
-In addition to the decoder parameters described below, the configuration file contains the feature
-weight values for the model.  The weight values are distinguished from runtime parameters in two
-ways: (1) they cannot be overridden on the command line, and (2) they do not have an equals sign
-(=).  Parameters are described in further detail in the [feature file](features.html).  They take
-the following format, and by convention are placed at the end of the configuration file:
+In addition to the decoder parameters described below, the configuration file contains the model
+feature weights.  These weights are distinguished from runtime parameters in that they are delimited
+by a space instead of an equals sign. They take the following
+format, and by convention are placed at the end of the configuration file:
 
-    lm 0 4.23
-    phrasement pt 0 -0.2
-    oovpenalty -100
+    lm_0 4.23
+    tm_pt_0 -0.2
+    OOVPenalty -100
+   
+Joshua can make use of thousands of features, which are described in further detail in the
+[feature file](features.html).
 
 ## Joshua decoder parameters
 
@@ -68,64 +69,53 @@ removed and case is converted to lowercase.  For example, the following paramete
 equivalent (either in the configuration file or from the command line):
 
     {top-n, topN, top_n, TOP_N, t-o-p-N}
-    {poplimit, pop-limit, pop-limit, popLimit}
+    {poplimit, pop-limit, pop-limit, popLimit,PoPlImIt}
 
 This basically defines equivalence classes of parameters, and relieves you of the task of having to
 remember the exact format of each parameter.
 
 In what follows, we group the configuration parameters in the following groups:
 
-- [Alternate modes of operation](#modes)
 - [General options](#general)
 - [Pruning](#pruning)
 - [Translation model options](#tm)
 - [Language model options](#lm)
 - [Output options](#output)
+- [Alternate modes of operation](#modes)
 
-<a name="modes" />
-
-### Alternate modes of operation
-
-In addition to decoding (which is the default mode), Joshua can also produce synchronous parses of a
-(source,target) pair of sentences.  This mode disables the language model (since no generation is
-required) but still requires a translation model.  To enable it, you must do two things:
-
-1. Set the configuration parameters `parse = true`.
-2. Provide input in the following format:
-
-       source sentence ||| target sentence
-
-You may also wish to display the synchronouse parse tree (`-use-tree-nbest`) and the alignment
-(`-show-align-index`).
-
-The synchronous parsing implementation is that of Dyer (2010)
-[PDF](http://www.aclweb.org/anthology/N/N10/N10-1033).
-
-If parsing is enabled, the following features become relevant.  If you would like more information
-about how to use these features, please ask [Jonny Weese](http://cs.jhu.edu/~jonny/) to document
-them.
-
-- `forest-pruning` --- *false*
-
-  If true, the synchronous forest will be pruned.
-
-- `forest-pruning-threshold` --- *10*
-
-  The threshold used for pruning.
-
-- `use-kbest-hg` --- *false*
-
-  The k-best hypergraph to use.
-
-
-<a name="general" />
+<a id="general" />
 
 ### General decoder options
 
 - `c`, `config` --- *NULL*
 
    Specifies the configuration file from which Joshua options are loaded.  This feature is unique in
-   that it must be specified from the command line.
+   that it must be specified from the command line (obviously).
+
+- `amortize` --- *true*
+
+  When true, specifies that sorting of the rule lists at each trie node in the grammar should be
+  delayed until the trie node is accessed. When false, all such nodes are sorted before decoding
+  even begins. Setting to true results in slower per-sentence decoding, but allows the decoder to
+  begin translating almost immediately (especially with large grammars).
+
+- `server-port` --- *0*
+
+  If set to a nonzero value, Joshua will start a multithreaded TCP/IP server on the specified
+  port. Clients can connect to it directly through programming APIs or command-line tools like
+  `telnet` or `nc`.
+  
+      $ $JOSHUA/bin/decoder -m 30g -c /path/to/config/file -server-port 8723
+      ...
+      $ cat input.txt | nc localhost 8723 > results.txt
+
+- `maxlen` --- *200*
+
+  Input sentences longer than this are truncated.
+
+- `feature-function`
+
+  Enables a particular feature function. See the [feature function page](features.html) for more information.
 
 - `oracle-file` --- *NULL*
 
@@ -137,7 +127,10 @@ them.
 
 - `default-nonterminal` --- *"X"*
 
-   This is the nonterminal symbol assigned to out-of-vocabulary (OOV) items.  
+   This is the nonterminal symbol assigned to out-of-vocabulary (OOV) items. Joshua assigns this
+   label to every word of the input, in fact, so that even known words can be translated as OOVs, if
+   the model prefers them. Usually, a very low weight on the `OOVPenalty` feature discourages their
+   use unless necessary.
 
 - `goal-symbol` --- *"GOAL"*
 
@@ -150,24 +143,10 @@ them.
 
   By default, Joshua creates an OOV entry for every word in the source sentence, regardless of
   whether it is found in the grammar.  This allows every word to be pushed through untranslated
-  (although potentially incurring a high cost based on the `oovPenalty` feature).  If this option is
-  set, then only true OOVs are entered into the chart as OOVs.
-
-- `use-sent-specific-tm` --- *false*
-
-  If set to true, Joshua will look for sentence-specific filtered grammars.  The location is
-  determined by taking the supplied translation model (`tm-file`) and looking for a `filtered/`
-  subdirectory for a file with the same name but with the (0-indexed) sentence number appended to
-  it.  For example, if 
-
-      tm-file = /path/to/grammar.gz
-
-  then the sentence-filtered grammars should be found at
-
-      /path/to/filtered/grammar.0.gz
-      /path/to/filtered/grammar.1.gz
-      /path/to/filtered/grammar.2.gz
-      ...
+  (although potentially incurring a high cost based on the `OOVPenalty` feature).  If this option is
+  set, then only true OOVs are entered into the chart as OOVs. To determine "true" OOVs, Joshua
+  examines the first level of the grammar trie for each word of the input (this isn't a perfect
+  heuristic, since a word could be present only in deeper levels of the trie).
 
 - `threads`, `num-parallel-decoders` --- *1*
 
@@ -176,194 +155,136 @@ them.
   Outputs are assembled in order and Joshua has to hold on to the complete target hypergraph until
   it is ready to be processed for output, so too many simultaneous threads could result in lots of
   memory usage if a long sentence results in many sentences being queued up.  We have run Joshua
-  with as many as 48 threads without any problems of this kind, but it's useful to keep in the back
+  with as many as 64 threads without any problems of this kind, but it's useful to keep in the back
   of your mind.
+  
+- `weights-file` --- NULL
 
-- `oov-feature-cost` --- *100*
+  Weights are appended to the end of the Joshua configuration file, by convention. If you prefer to
+  put them in a separate file, you can do so, and point to the file with this parameter.
 
-  Each OOV word incurs this cost, which is multiplied against the `oovPenalty` feature (which is
-  tuned but can be held fixed).
-
-- `use-google-linear-corpus-gain`
-- `google-bleu-weights`
-
-
-<a name="pruning" />
-
-### Pruning options
-
-There are three different approaches to pruning in Joshua.
-
-1. No pruning.  Exhaustive decoding is triggered by setting `pop-limit = 0` and
-`use-beam-and-threshold-prune = false`.
-
-1. The old approach.  This approach uses a handful of pruning parameters whose specific roles are
-hard to understand and whose interaction is even more difficult to quantify.  It is triggered by
-setting `pop-limit = 0` and `use-beam-and-threshold-prune = true`.
-
-1. Pop-limit pruning (the new approach).  The pop limit determines the number of hypotheses that are
-  popped from the candidates list for each of the O(n^2) spans of the input.  A nice feature of this
-  approach is that it provides a single value to control the size of the search space that is
-  explored (and therefore runtime).
-
-Selecting among these pruning methods could be made easier via a single parameter with enumerated
-values, but currently, we are stuck with this slightly more cumbersome way.  The defaults ensure
-that you don't have to worry about them too much.  Pop-limit pruning is enabled by default, and it
-is the recommended approach; if you want to control the speed / accuracy tradeoff, you should change
-the pop limit.
+### Pruning options <a id="pruning" />
 
 - `pop-limit` --- *100*
 
-  The number of hypotheses to examine for each span of the input.  Higher values result in a larger
-  portion of the search space being explored at the cost of an increased search time.
+  The number of cube-pruning hypotheses that are popped from the candidates list for each span of
+  the input.  Higher values result in a larger portion of the search space being explored at the
+  cost of an increased search time. For exhaustive search, set `pop-limit` to 0.
 
-- `use-beam-and-threshold-pruning` --- *false*
+- `filter-grammar` --- false
 
-  Enables the use of beam-and-threshold pruning, and makes the following five features relevant.
-
-  - `fuzz1` --- *0.1*
-  - `fuzz2` --- *0.2*
-  - `max-n-items` --- *30*
-  - `relative-threshold` --- *10.0*
-  - `max-n-rules` --- *50*
+  Set to true, this enables dynamic sentence-level filtering. For each sentence, each grammar is
+  filtered at runtime down to rules that can be applied to the sentence under consideration. This
+  takes some time (which we haven't thoroughly quantified), but can result in the removal of many
+  rules that are only partially applicable to the sentence.
 
 - `constrain-parse` --- *false*
 - `use_pos_labels` --- *false*
 
+  *These features are not documented.*
 
-<a name="tm" />
+### Translation model options <a id="tm" />
 
-### Translation model options
+Joshua supports any number of translation models. Conventionally, two are supplied: the main grammar
+containing translation rules, and the glue grammar for patching things together. Internally, Joshua
+doesn't distinguish between the roles of these grammars; they are treated differently only in that
+they typically have different span limits (the maximum input width they can be applied to).
 
-At the moment, Joshua supports only two translation models, which are designated as the (main)
-translation model and the glue grammar.  Internally, these grammars are distinguished only in that
-the `span-limit` parameter applies only to the glue grammar.  In the near future we plan to
-generalize the grammar specification to permit an unlimited number of translation models.
+Grammars are instantiated with config file lines of the following form:
 
-The main translation grammar is specified with the following set of parameters:
+    tm = TYPE OWNER SPAN_LIMIT FILE
 
-- `tm_file STRING` --- *NULL*, `glue_file STRING` --- *NULL*
+* `TYPE` is the grammar type, which must be set to "thrax". 
+* `OWNER` is the grammar's owner, which defines the set of [feature weights](features.html) that
+  apply to the weights found in each line of the grammar (using different owners allows each grammar
+  to have different sets and numbers of weights, while sharing owners allows weights to be shared
+  across grammars).
+* `SPAN_LIMIT` is the maximum span of the input that rules from this grammar can be applied to. A
+  span limit of 0 means "no limit", while a span limit of -1 means that rules from this grammar must
+  be anchored to the left side of the sentence (index 0).
+* `FILE` is the path to the file containing the grammar. If the file is a directory, it is assumed
+  to be [packed](packed.html). Only one packed grammar can currently be used at a time.
 
-  This points to the file location of the translation grammar for text-based formats or to the
-  directory for the [packed representation](packing.html).
+For reference, the following two translation model lines are used by the [pipeline](pipeline.html):
 
-- `tm_format STRING` --- *thrax*, `glue_format STRING` --- *thrax*
+    tm = thrax pt 20 /path/to/packed/grammar
+    tm = thrax glue -1 /path/to/glue/grammar
 
-  The format the file is in.  The permissible formats are `hiero` or `thrax` (which are equivalent),
-  `packed` (for [packed grammars](packing.html)), or `samt` (for grammars encoded in the format
-  defined by [Zollmann & Venugopal](http://www.cs.cmu.edu/~zollmann/samt/).  This parameter will be
-  done away with in the near future since it is easily inferrable.  See
-  [the formats page](file-formats.html) for more information about file formats.
+### Language model options <a id="lm" />
 
-- `phrase_owner STRING` --- *pt*, `glue-owner STRING` --- *pt*
-
-  The ownership concept is used to distinguish the set of feature weights that apply to each
-  grammar.  See the [page on features](features.html) for more information.  By default, these
-  parameters have the same value, meaning the grammars share a set of features.
-
-- `span-limit` --- *10*
-
-  This controls the maximum span of the input that grammar rules loaded from `tm-file` are allowed
-  to apply.  The span limit is ignored for glue grammars.
-
-<a name="lm" />
-
-### Language model options
-
-Joshua supports the incorporation of an arbitrary number of language models.  To add a language
+Joshua supports any number of language models.  To add a language
 model, add a line of the following format to the configuration file:
 
-    lm = lm-type order 0 0 lm-ceiling-cost lm-file
+    lm = TYPE ORDER LEFT_STATE RIGHT_STATE CEILING_COST FILE
 
 where the six fields correspond to the following values:
 
-* *lm-type*: one of "kenlm", "berkeleylm", "javalm" (not recommended), or "none"
-* *order*: the N of the N-gram language model
-* *0*: whether to use left equivalent state (currently not supported)
-* *0*: whether to use right equivalent state (currently not supported)
-* *lm-ceiling-cost*: the LM-specific ceiling cost of any n-gram (currently ignored;
-   `lm-ceiling-cost` applies to all language models)
-* *lm-file*: the path to the language model file.  All types support the standard ARPA format.
-   Additionally, if the LM type is "kenlm", this file can be compiled into KenLM's compiled format
-   (using the program at `$JOSHUA/src/joshua/decoder/ff/lm/kenlm/build_binary`), and if the LM type
-   is "berkeleylm", it can be compiled by following the directions in
-   `$JOSHUA/src/joshua/decoder/ff/lm/berkeley_lm/README`.
+* `TYPE`: one of "kenlm", "berkeleylm", or "none"
+* `ORDER`: the order of the language model
+* `LEFT_STATE`: whether to use left-state minimization; currently only supported by KenLM
+* `RIGHT_STATE`: whether to use right equivalent state (currently unsupported)
+* `CEILING_COST`: the LM-specific ceiling cost of all n-grams (currently ignored)
+* `FILE`: the path to the language model file.  All language model types support the standard ARPA
+   format.  Additionally, if the LM type is "kenlm", this file can be compiled into KenLM's compiled
+   format (using the program at `$JOSHUA/bin/build_binary`); if the the LM type is "berkeleylm", it
+   can be compiled by following the directions in
+   `$JOSHUA/src/joshua/decoder/ff/lm/berkeley_lm/README`. The [pipeline](pipeline.html) will
+   automatically compile either type.
 
 For each language model, you need to specify a feature weight in the following format:
 
-    lm 0 WEIGHT
-    lm 1 WEIGHT
+    lm_0 WEIGHT
+    lm_1 WEIGHT
     ...
 
-where the indices correspond to the language model declaration lines in order.
+where the indices correspond to the order of the language model declaration lines.
 
-For backwards compatibility, Joshua also supports a separate means of specifying the language model,
-by separately specifying each of `lm-file` (NULL), `lm-type` (kenlm), `order` (5), and
-`lm-ceiling-cost` (100).
+### Output options <a id="output" />
 
+- `output-format` *New in 5.0*
 
-<a name="output" />
+  Joshua prints a lot of information to STDERR (making this more granular is on the TODO
+  list). Output to STDOUT is reserved for decoder translations, and is controlled by the
 
-### Output options
+   - `%i`: the sentence number (0-indexed)
 
-The output for a given input is a set of one or more lines with the following scheme:
+   - `%e`: the source sentence
 
-    input ID ||| translation ||| model scores ||| score
+   - `%s`: the translated sentence
 
-These parameters largely determine what is output by Joshua.
+   - `%S`: the translated sentence, with some basic capitalization and denomralization. e.g.,
 
-- `format`
+         $ echo "¿ who you lookin' at , mr. ?" | $JOSHUA/bin/decoder -output-format "%S" -mark-oovs false 2> /dev/null 
+         ¿Who you lookin' at, Mr.? 
 
-  *New in 5.0*
+   - `%t`: the synchronous derivation
 
-  You can now specify the output-format variable, which is interpolated for the following variables:
+   - `%f`: the list of feature values (as name=value pairs)
 
-  `%i` : the 0-index sentence number
+   - `%c`: the model cost
 
-  `%s` : the translated sentence
+   - `%w`: the weight vector (unimplemented)
 
-  `%f` : the list of feature values (as name=value pairs)
-
-  `%c` : the model cost
-
-  `%w` : the weight vector (unimplemented)
-
-  `%a` : the alignments between source and target words (currently unimplemented)
+   - `%a`: the alignments between source and target words (unimplemented)
 
   The default value is
 
       output-format = %i ||| %s ||| %f ||| %c
+      
+  i.e.,
 
-  - `%S` : provides built-in denormalization for Joshua. The beginning character is capitalized, and punctuation is denormalized. 
-
-    e.g.,
-
-        echo "¿ who you lookin' at , mr. ?" | $JOSHUA/bin/decoder -output-format "%S" -mark-oovs false 2> /dev/null 
-        ¿Who you lookin' at, Mr.? 
+      input ID ||| translation ||| model scores ||| score
 
 - `top-n` --- *300*
 
-  The number of translation hypotheses to output, sorted in non-increasing order of model score (i.e.,
-  highest first).
+  The number of translation hypotheses to output, sorted in decreasing order of model score
 
 - `use-unique-nbest` --- *true*
 
   When constructing the n-best list for a sentence, skip hypotheses whose string has already been
-  output.  This increases the amount of diversity in the n-best list by removing spurious ambiguity
-  in the derivation structures.
-
-- `add-combined-cost` --- *true*
-
-  In addition to outputting the hypothesis number, the translation, and the individual feature
-  weights, output the combined model cost.
-
-- `use-tree-nbest` --- *false* 
-
-  Output the synchronous derivation tree in addition to the output string, for each candidate in the
-  n-best list.
+  output.
 
 - `escape-trees` --- *false*
-
 
 - `include-align-index` --- *false*
 
@@ -371,7 +292,7 @@ These parameters largely determine what is output by Joshua.
 
 - `mark-oovs` --- *false*
 
-  if `true`, this causes the text "_OOV" to be appended to each OOV in the output.
+  if `true`, this causes the text "_OOV" to be appended to each untranslated word in the output.
 
 - `visualize-hypergraph` --- *false*
 
@@ -380,560 +301,54 @@ These parameters largely determine what is output by Joshua.
   `$JOSHUA/examples/tree_visualizer/`, which contains a demonstration of a source sentence,
   translation, and synchronous derivation.
 
-- `save-disk-hg` --- *false* [DISABLED]
+- `dump-hypergraph` --- ""
 
-  This feature directs that the hypergraph should be written to disk.  The code is in
+  This feature directs that the hypergraph should be written to disk for each input sentence. If
+  set, the value should contain the string "%d", which is replaced with the sentence number. For
+  example,
+  
+      cat input.txt | $JOSHUA/bin/decoder -dump-hypergraph hgs/%d.txt
 
-      $JOSHUA/src/joshua/src/DecoderThread.java
+  Note that the output directory must exist.
 
-  but the feature has not been tested in some time, and is thus disabled.  It probably wouldn't take
-  much work to fix it!  If you do, you might find the
+  TODO: revive the
   [discussion on a common hypergraph format](http://aclweb.org/aclwiki/index.php?title=Hypergraph_Format)
-  on the ACL Wiki to be useful.
+  on the ACL Wiki and support that format.
 
-<!--
+### Alternate modes of operation <a id="modes" />
 
-## Full list of command-line options and arguments
+In addition to decoding input sentences in the standard way, Joshua supports both *constrained
+decoding* and *synchronous parsing*. In both settings, both the source and target sides are provided
+as input, and the decoder finds a derivation between them.
 
-<table border="0">
-  <tr>
-    <th>
-      option
-    </th>
-    <th>
-      value
-    </th>
-    <th>
-      description
-    </th>
-  </tr>
+### Constrained decoding
 
-  <tr>
-    <td>
-      <code>-lm</code>
-    </td>
-    <td>
-      String, e.g. <n /> <code>TYPE 5 false false 100 FILE</code>
-    </td>
-    <td markdown="1">
-      Use once for each of one or language models.
-    </td>
-  </tr>
+To enable constrained decoding, simply append the desired target string as part of the input, in
+the following format:
 
-  <tr>
-    <td>
-      <code>-lm_file</code>
-    </td>
-    <td>
-      String: path the the language model file
-    </td>
-    <td>
-      ???
-    </td>
-  </tr>
+    source sentence ||| target sentence
 
-  <tr>
-    <td>
-      <code>-parse</code>
-    </td>
-    <td>
-      None
-    </td>
-    <td>
-      whether to parse (if not then decode)
-    </td>
-  </tr>
+Joshua will translate the source sentence constrained to the target sentence. There are a few
+caveats:
 
-  <tr>
-    <td>
-      <code>-tm_file</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-       path to the the translation model
-    </td>
-  </tr>
+   * Left-state minimization cannot be enabled for the language model
 
-  <tr>
-    <td>
-      <code>-glue_file</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      ???
-    </td>
-  </tr>
+   * A heuristic is used to constrain the derivation (the LM state must match against the
+     input). This is not a perfect heuristic, and sometimes results in analyses that are not
+     perfectly constrained to the input, but have extra words.
 
-  <tr>
-    <td>
-      <code>-tm_format</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
+#### Synchronous parsing
 
-  <tr>
-    <td>
-      <code>-glue_format</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
+Joshua supports synchronous parsing as a two-step sequence of monolingual parses, as described in
+Dyer (NAACL 2010) ([PDF](http://www.aclweb.org/anthology/N10-1033‎.pdf)). To enable this:
 
-  <tr>
-    <td>
-      <code>-lm_type</code>
-    </td>
-    <td>
-      value
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>lm_ceiling_cost</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
+   - Set the configuration parameter `parse = true`.
 
-  <tr>
-    <td>
-      <code>use_left_equivalent_state</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
+   - Remove all language models from the input file 
 
-  <tr>
-    <td>
-      <code>use_right_equivalent_state</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
+   - Provide input in the following format:
 
-  <tr>
-    <td>
-      <code>order</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
+          source sentence ||| target sentence
 
-  <tr>
-    <td>
-      <code>use_sent_specific_lm</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>span_limit</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>phrase_owner</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>glue_owner</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>default_non_terminal</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>goalSymbol</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>constrain_parse</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>oov_feature_index</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>true_oovs_only</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>use_pos_labels</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>fuzz1</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>fuzz2</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>max_n_items</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>relative_threshold</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>max_n_rules</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>use_unique_nbest</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>add_combined_cost</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>use_tree_nbest</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>escape_trees</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>include_align_index</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>top_n</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>parallel_files_prefix</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>num_parallel_decoders</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>threads</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>save_disk_hg</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>use_kbest_hg</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>forest_pruning</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>forest_pruning_threshold</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>visualize_hypergraph</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>mark_oovs</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>pop-limit</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <code>useCubePrune</code>
-    </td>
-    <td>
-      String
-    </td>
-    <td>
-      description
-    </td>
-  </tr>
-</table>
--->
-
+You may also wish to display the synchronouse parse tree (`-output-format %t`) and the alignment
+(`-show-align-index`).
