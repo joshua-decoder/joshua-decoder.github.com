@@ -8,54 +8,11 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/joshua.css" rel="stylesheet" />
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-      #download {
-          background-color: green;
-          font-size: 14pt;
-          font-weight: bold;
-          text-align: center;
-          color: white;
-          border-radius: 5px;
-          padding: 4px;
-      }
-
-      #download a:link {
-          color: white;
-      }
-
-      #download a:hover {
-          color: lightgrey;
-      }
-
-      #download a:visited {
-          color: white;
-      }
-
-      a.pdf {
-          font-variant: small-caps;
-          /* font-weight: bold; */
-          font-size: 10pt;
-          color: white;
-          background: brown;
-          padding: 2px;
-      }
-
-      a.bibtex {
-          font-variant: small-caps;
-          /* font-weight: bold; */
-          font-size: 10pt;
-          color: white;
-          background: orange;
-          padding: 2px;
-      }
-
-      img.sponsor {
-        height: 120px;
-        margin: 5px;
       }
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
@@ -83,15 +40,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Joshua</a>
+          <a class="brand" href="/">Joshua</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#documentation">Documentation</a></li>
-              <li><a href="#support">Support</a></li>
-              <li><a href="#datasets">Datasets</a></li>
-              <li><a href="#contributors">Contributors</a></li>
-              <li><a href="#sponsors">Sponsors</a></li>
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="5.0/index.html">Documentation</a></li>
+              <!-- <li><a href="#support">Support</a></li> -->
+              <li><a href="/indian-parallel-corpora/">Datasets</a></li>
+              <li><a href="http://cs.jhu.edu/~post/joshua-docs/index.html">Developer</a></li>
+              <!-- <li><a href="#contributors">Contributors</a></li> -->
+              <!-- <li><a href="#sponsors">Sponsors</a></li> -->
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -108,7 +66,7 @@
         <div class="span10">
           <h1>Joshua Machine Translation Toolkit</h1>
           <p>
-            <b>Stable version</b>: 5.0 (Released 17 August 2013)
+            <b>Stable version</b>: 5.0 (Released 16 August 2013)
           </p>
           <span id="download">
             <a href="http://cs.jhu.edu/~post/files/joshua-5.0.tgz">Download</a>
@@ -116,14 +74,16 @@
         </div>
       </div>
       
+      <hr />
+
       <div class="row">
         <div class="span8">
 
           <p>
             Joshua is an open-source statistical machine translation decoder for hierarchical and
             syntax-based machine translation, written in Java.  It is developed as a research
-            collaboration between the <a href="http://hltcoe.jhu.edu/">Human Language Technology Center
-              of Excellence</a> at Johns Hopkins University
+            collaboration between the <a href="http://hltcoe.jhu.edu/">Human Language Technology
+            Center of Excellence</a> at Johns Hopkins University
             and <a href="http://www.cs.jhu.edu/~ccb/">Chris Callison-Burch</a>'s research group at
             the <a href="http://www.cis.upenn.edu">University of Pennsylvania</a>.
           </p>
@@ -139,7 +99,6 @@
             Matt Post, Juri Ganitkevitch, Luke Orland, Jonathan Weese, Yuan Cao, and Chris
             Callison-Burch<br />
             <a href="http://statmt.org/wmt13/">WMT 2013</a>. Sofia, Bulgaria. August.<br/>
-            
           </blockquote>
 
           <p>
@@ -150,67 +109,16 @@
             <a href="http://aclweb.org/anthology-new/W/W11/W11-2160.pdf">3.0</a>, and
             <a href="http://aclweb.org/anthology-new/W/W12/W12-3134.pdf">4.0</a>.
           </p>
-        </div>
-        <div class="span4">
-           <div id="twitterbar">
-             <a class="twitter-timeline" href="https://twitter.com/joshuadecoder" data-widget-id="367380700124569600">Tweets by @joshuadecoder</a>
-             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-           </div>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="span8">
-          <h2 id="documentation">Documentation</h2>
-
+          <h2 id="support">Technical Support</h2>
           <p>
-            To download and compile Joshua, click the big green download button above, and then type
-            the following. You need to define the $JOSHUA environment variable (put it in your shell
-            init file).
-
-            <pre>
- wget -q http://cs.jhu.edu/~post/files/joshua-v5.0.tgz
- tar xf joshua-v5.0.tgz
- cd joshua-v5.0
- export JOSHUA=$(pwd)
- ant</pre>
+            Support is provided in two
+            forms: <a href="https://groups.google.com/forum/#!forum/joshua_support">Technical
+              support</a> for end-users of Joshua,
+            and <a href="https://groups.google.com/forum/#!forum/joshua_developers">Developer
+              support</a> for contributors.
           </p>
 
-          <p>
-            For further information, including a quick start guide, please
-            see <a href="5.0/index.html">the user documentation</a>, which contains information on
-            downloading and setup, a quick start guide, detailed information on different Joshua
-            components, common problems, and more.
-          </p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="span8">
-          <h2 id="support">Support</h2>
-
-          Support is provided in two
-          forms: <a href="https://groups.google.com/forum/#!forum/joshua_support">Technical
-          support</a> for end-users of Joshua,
-          and <a href="https://groups.google.com/forum/#!forum/joshua_developers">Developer
-          support</a> for contributors.
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="span8">
-          <h2 id="datasets">Datasets</h2> 
-
-          <p>
-            We have also released a parallel corpus obtained by translating Wikipedia pages from six
-            Indian languages into English. You can find that
-            on <a href="indian-parallel-corpora/">the Indian Parallel Corpora page</a>.
-          </p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="span8">
           <h2 id="contributors">Contributors</h2>
           <p>
             Joshua was originally ported from <a href="http://www.isi.edu/~chiang/">David Chiang's</a>
@@ -237,31 +145,36 @@
             
             Please email if you know of anyone who has been left off this list.
           </p>
+
+          <h2 id="sponsors">Acknowledgments</h2>
+
+          We gratefully acknowledge support provided by the following institutions.
+
+          <div>
+            <a href="http://darpa.mil/">
+              <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
+            </a>
+            <a href="http://nsf.gov/">
+              <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
+            </a>
+            <a href="http://www.euromatrixplus.org/">
+              <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
+            </a> 
+          </div>
+          <div>
+            <a href="http://hltcoe.jhu.edu">
+              <img class="sponsor" alt="Human Language Technology Center of Excellence logo"
+                   src="images/sponsors/hltcoe-logo3.png" />
+            </a>
+          </div>
+        </div>
+        <div class="span4">
+           <div id="twitterbar">
+             <a class="twitter-timeline" href="https://twitter.com/joshuadecoder" data-widget-id="367380700124569600">Tweets by @joshuadecoder</a>
+             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+           </div>
         </div>
       </div>
-
-      <h2 id="sponsors">Acknowledgments</h2>
-
-      We gratefully acknowledge support provided by the following institutions.
-
-      <div>
-        <a href="http://darpa.mil/">
-          <img class="sponsor" alt="DARPA logo" src="images/sponsors/darpa-logo.jpg" />
-        </a>
-        <a href="http://nsf.gov/">
-          <img class="sponsor" alt="NSF logo" src="images/sponsors/NSF-logo.jpg" />
-        </a>
-        <a href="http://www.euromatrixplus.org/">
-          <img class="sponsor" alt="EuroMatrix+" src="images/sponsors/euromatrix.png" />
-        </a> 
-      </div>
-      <div>
-        <a href="http://hltcoe.jhu.edu">
-          <img class="sponsor" alt="Human Language Technology Center of Excellence logo"
-               src="images/sponsors/hltcoe-logo3.png" />
-        </a>
-      </div>
-
     </div> <!-- /container -->
 
     <!-- Le javascript

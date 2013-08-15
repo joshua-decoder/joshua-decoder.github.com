@@ -8,54 +8,11 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/joshua.css" rel="stylesheet" />
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-      #download {
-          background-color: green;
-          font-size: 14pt;
-          font-weight: bold;
-          text-align: center;
-          color: white;
-          border-radius: 5px;
-          padding: 4px;
-      }
-
-      #download a:link {
-          color: white;
-      }
-
-      #download a:hover {
-          color: lightgrey;
-      }
-
-      #download a:visited {
-          color: white;
-      }
-
-      a.pdf {
-          font-variant: small-caps;
-          /* font-weight: bold; */
-          font-size: 10pt;
-          color: white;
-          background: brown;
-          padding: 2px;
-      }
-
-      a.bibtex {
-          font-variant: small-caps;
-          /* font-weight: bold; */
-          font-size: 10pt;
-          color: white;
-          background: orange;
-          padding: 2px;
-      }
-
-      img.sponsor {
-        height: 120px;
-        margin: 5px;
       }
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
@@ -83,11 +40,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Joshua</a>
+          <a class="brand" href="/">Joshua</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
-              <li><a href="index.html">Indian Languages</a></li>
+              <li class="active"><a href="index.html">Indian Languages</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -98,15 +54,11 @@
 
       <div class="row">
         <div class="span8">
-          <h1>Indian Languages Parallel Corpora</h1>
-        </div>
-        <div>
-          <p>
-            <br/>
-            <span id="download">
-              <a href="https://github.com/joshua-decoder/indian-parallel-corpora/zipball/master">Download</a>
-            </span>
-          </p>
+          <h1>Datasets</h1>
+          <h2>Indian Parallel Languages</h2>
+          <span id="download">
+            <a href="https://github.com/joshua-decoder/indian-parallel-corpora/zipball/master">Download</a>
+          </span>
         </div>
       </div>
       
@@ -115,10 +67,9 @@
       <div class="row">
         <div class="span8">
 
-          <h2>Description</h2>
-
-          This page describes a set of parallel corpora between English and six languages from the
-          Indian sub-continent:
+          This page describes a set of six parallel corpora obtained by translating popular
+          Wikipedia documents in six languages from the Indian sub-continent into English. The
+          languages are:
 
           <ul>
             <li>Bengali</li>
@@ -130,11 +81,7 @@
           </ul>
 
           <p>
-            They can be used to train (and evaluate) models
-            for <a href="http://en.wikipedia.org/wiki/Statistical_machine_translation">automatically
-            translating</a> text into and out of these languages.  They were collected by
-            translating Indian Wikipedia articles into English using Amazon's Mechanical Turk.
-            Their collection and release are described in the paper:
+            The collection and release of this data is described in the following paper:
           </p>
 
           <blockquote>
@@ -151,32 +98,18 @@
 
           The Indian parallel corpora dataset
           is <a href="https://github.com/joshua-decoder/indian-parallel-corpora">hosted on
-          Github</a>.  You can download a tarball directly
-          by <a href="https://github.com/joshua-decoder/indian-parallel-corpora/zipball/master">clicking
-          here</a>. The corpus is licensed under the <a href="http://creativecommons.org/">Creative
+          Github</a>.  You can clone that, or download a release tarball by clicking the big green
+          button above. The corpus is licensed under
+          the <a href="http://creativecommons.org/">Creative
           Commons</a> <a href="http://creativecommons.org/licenses/by-sa/3.0/">Attribution-Sharealike
           3.0 Unported License</a> (CC BY-SA 3.0).
-
-          <h2>Citations</h2>
-          
-          <p>
-            The following publications have made use of this dataset.
-          </p>
-
-          <ul>
-            <li><b>Post, Callison-Burch, and Osborne (2012)</b>. This paper introduced the parallel
-              corpora, describing how the data was collected, reporting the results of prelimary
-              experiments, and suggesting some potential research directions.
-            </li>
-          </ul>
 
           <h2>Scores</h2>
 
           <p>
-            Below are the best translation scores (case-insensitive BLEU-4) that have been
-            reported on the provided test sets.  The Google results were recorded in the fall of
-            2011 (and are described in Post et al. (2012)).  Google does not have a Malayalam
-            system.
+            Below are the best translation scores (case-insensitive BLEU-4) that have been reported
+            on the provided test sets.  The Google results were recorded in the fall of 2011 (and
+            are described in Post et al. (2012)).  Google does not have a Malayalam system.
           </p>
 
           <div>
@@ -200,7 +133,7 @@
                 <td>23.09</td>
               </tr>
               <tr>
-                <td class="system">Post et al. (2012)</td>
+                <td class="system"><a href="http://aclweb.org/anthology/W/W12/W12-3152.pdf">Post et al. (2012)</a></td>
                 <td>13.53</td>
                 <td>17.29</td>
                 <td>13.72</td>
