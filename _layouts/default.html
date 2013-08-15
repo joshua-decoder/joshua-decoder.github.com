@@ -1,94 +1,147 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="screen,print" href="../joshua.css" />
-    <title>Joshua | {{ page.title }}</title>
+    <meta charset="utf-8">
+    <title>Joshua Documentation | {{ page.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+      #download {
+          background-color: green;
+          font-size: 14pt;
+          font-weight: bold;
+          text-align: center;
+          color: white;
+          border-radius: 5px;
+          padding: 4px;
+      }
+
+      #download a:link {
+          color: white;
+      }
+
+      #download a:hover {
+          color: lightgrey;
+      }
+
+      #download a:visited {
+          color: white;
+      }
+
+      a.pdf {
+          font-variant: small-caps;
+          /* font-weight: bold; */
+          font-size: 10pt;
+          color: white;
+          background: brown;
+          padding: 2px;
+      }
+
+      a.bibtex {
+          font-variant: small-caps;
+          /* font-weight: bold; */
+          font-size: 10pt;
+          color: white;
+          background: orange;
+          padding: 2px;
+      }
+
+      img.sponsor {
+        height: 120px;
+        margin: 5px;
+      }
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
   </head>
 
   <body>
 
-    <div id="navbar">
-      <a href="http://joshua-decoder.org/">
-        <img src="../images/joshua-logo-small.png" width="130px" 
-             alt="Joshua logo (picture of a Joshua tree)" />
-      </a>
-
-      <br/>
-      <div class="infobox">
-        <b>Stable version</b><br />
-        5.0<br/><br/>
-        <b>Release date</b><br />
-        17 August 2013<br/>
-      </div>
-
-<!--       <div class="infobox"> -->
-<!--         <b>AUTO LINKS</b><br/> -->
-<!--         <ul> -->
-<!--           {% for page in site.pages %} -->
-<!--           <li> {{ page.title }}</li> -->
-<!--           {% endfor %} -->
-<!--         </ul> -->
-<!--       </div>   -->
-
-      <div class="infobox">
-
-        <b>Links</b><br />
-        <ul>
-          <li> <a href="../index.html">Main</a> </li>
-          <li> <a href="pipeline.html">Pipeline</a> </li>
-          <li> <a href="decoder.html">Decoder</a> </li>
-          <li> <a href="server.html">Decoder Server</a> </li>
-          <li> <a href="file-formats.html">File formats</a> </li>
-          <li> <a href="thrax.html">Grammar Extraction</a> </li>
-          <li> <a href="../releases.html">Releases</a> </li>
-        </ul>
-      </div>
-
-      <div class="infobox">
-        <b>Advanced</b><br />
-        <ul>
-<!--          <li> <a href="packing.html">Grammar packing</a> </li> -->
-          <li> <a href="large-lms.html">Building large LMs</a> </li>
-          <li> <a href="zmert.html">Running Z-MERT</a> </li>
-          <li> <a href="lattice.html">Lattices</a> </li>
-          <li> <a href="server.html">TCP/IP server</a> </li>
-          <li> <a href="bundle.html">Bundled configuration</a> </li>
-        </ul>
-      </div>
-
-      <div class="infobox">
-        <b>Help</b><br />
-        <ul>
-          <li> <a href="faq.html">Answers</a> </li>
-          <li> <a href="https://groups.google.com/d/forum/joshua_support">Archive</a> </li>
-        </ul>
-      </div>
-
-      <div class="footer">
-        Last updated on {{ site.time | date: "%B %d, %Y" }}
-      </div>
-
-    </div>
-
-    <div id="main">
-      <div id="title">
-        <h1>{{ page.title }}</h1>
-      </div>
-
-      <div id="content">
-        
-        {{ content }}
-
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/">Joshua</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="pipeline.html">Pipeline</a></li>
+              <li><a href="decoder.html">Decoder</a></li>
+              <li><a href="thrax.html">Thrax</a></li>
+              <li><a href="file-formats.html">File formats</a></li>
+              <li><a href="advanced.html">Advanced</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
       </div>
     </div>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="span2">
+          <img src="/images/joshua-logo-small.png" 
+               alt="Joshua logo (picture of a Joshua tree)" />
+        </div>
+        <div class="span10">
+          <h1>Joshua Documentation</h1>
+          <h2>{{ page.title }}</h2>
+          <span id="download">
+            <a href="http://cs.jhu.edu/~post/files/joshua-5.0.tgz">Download</a>
+          </span>
+          &nbsp; (version 5.0, released 16 August 2013)
+        </div>
+      </div>
+      
+      <hr />
+
+      <div class="row">
+        <div class="span8">
+
+          {{ content }}
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap-transition.js"></script>
+    <script src="bootstrap/js/bootstrap-alert.js"></script>
+    <script src="bootstrap/js/bootstrap-modal.js"></script>
+    <script src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="bootstrap/js/bootstrap-tab.js"></script>
+    <script src="bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="bootstrap/js/bootstrap-popover.js"></script>
+    <script src="bootstrap/js/bootstrap-button.js"></script>
+    <script src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="bootstrap/js/bootstrap-typeahead.js"></script>
 
   </body>
 </html>
-
-
-
-
-
