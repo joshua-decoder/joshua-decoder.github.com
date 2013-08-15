@@ -321,7 +321,7 @@ In addition to decoding input sentences in the standard way, Joshua supports bot
 decoding* and *synchronous parsing*. In both settings, both the source and target sides are provided
 as input, and the decoder finds a derivation between them.
 
-### Constrained decoding
+#### Constrained decoding
 
 To enable constrained decoding, simply append the desired target string as part of the input, in
 the following format:
