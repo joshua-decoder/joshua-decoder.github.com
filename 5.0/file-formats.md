@@ -23,7 +23,6 @@ or on the nonterminal labels (Joshua supports decoding with SAMT and GHKM gramma
     [S] ||| el chico [VP,1] ||| the boy [VP,1] ||| -3.14 0 2 17
     [VP] ||| [NP,1] [IN,2] [VB,3] ||| [VB,3] [IN,2] [NP,1] ||| 0.0019026637 0.81322956
 
-    
 The feature values can have optional labels, e.g.:
 
     [X] ||| el chico [X,1] ||| the boy [X,1] ||| lexprob=-3.14 abstract=0 numwords=2 count=17
