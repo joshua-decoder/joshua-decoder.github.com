@@ -8,11 +8,11 @@ This page describes the Joshua pipeline script, which manages the complexity of 
 evaluating machine translation systems.  The pipeline eases the pain of two related tasks in
 statistical machine translation (SMT) research:
 
-1. Training SMT systems involves a complicated process of interacting steps that are time-consuming
-and prone to failure.
+- Training SMT systems involves a complicated process of interacting steps that are
+  time-consuming and prone to failure.
 
-1. Developing and testing new techniques requires varying parameters at different points in the
-pipeline.  Earlier results (which are often expensive) need not be recomputed.
+- Developing and testing new techniques requires varying parameters at different points in the
+  pipeline. Earlier results (which are often expensive) need not be recomputed.
 
 To facilitate these tasks, the pipeline script:
 
@@ -28,7 +28,8 @@ To facilitate these tasks, the pipeline script:
 
 The Joshua pipeline script is designed in the spirit of Moses' `train-model.pl`, and shares many of
 its features.  It is not as extensive, however, as Moses'
-[Experiment Management System](http://www.statmt.org/moses/?n=FactoredTraining.EMS).
+[Experiment Management System](http://www.statmt.org/moses/?n=FactoredTraining.EMS), which allows
+the user to define arbitrary execution dependency graphs.
 
 ## Installation
 
@@ -88,7 +89,7 @@ but it can be changed with the `--rundir` parameter.
 For this quick start, we will be working with the example that can be found in
 `$JOSHUA/examples/pipeline`.  This example contains 1,000 sentences of Urdu-English data (the full
 dataset is available as part of the
-[Indian languages parallel corpora](http://joshua-decoder.org/indian-parallel-corpora/) with
+[Indian languages parallel corpora](/indian-parallel-corpora/) with
 100-sentence tuning and test sets with four references each.
 
 Running the pipeline requires two main steps: data preparation and invocation.
@@ -96,8 +97,9 @@ Running the pipeline requires two main steps: data preparation and invocation.
 1. Prepare your data.  The pipeline script needs to be told where to find the raw training, tuning,
    and test data.  A good convention is to place these files in an input/ subdirectory of your run's
    working directory (NOTE: do not use `data/`, since a directory of that name is created and used
-   by the pipeline itself).  The expected format (for each of training, tuning, and test) is a pair
-   of files that share a common path prefix and are distinguished by their extension:
+   by the pipeline itself for storing processed files).  The expected format (for each of training,
+   tuning, and test) is a pair of files that share a common path prefix and are distinguished by
+   their extension, e.g.,
 
        input/
              train.SOURCE
@@ -122,17 +124,17 @@ Running the pipeline requires two main steps: data preparation and invocation.
          --target TARGET
 
    The `--corpus`, `--tune`, and `--test` flags define file prefixes that are concatened with the
-   language extensions given by `--target` and `--source` (with a "." in betwee).  Note the
+   language extensions given by `--target` and `--source` (with a "." in between).  Note the
    correspondences with the files defined in the first step above.  The prefixes can be either
    absolute or relative pathnames.  This particular invocation assumes that a subdirectory `input/`
    exists in the current directory, that you are translating from a language identified "ur"
    extension to a language identified by the "en" extension, that the training data can be found at
    `input/train.en` and `input/train.ur`, and so on.
 
-*Don't* run the pipeline directly from `$JOSHUA`. I recommend creating a `run/` directory to contain
- all of your experiments in some other location. The advantage to this (apart from not clobbering
- part of the Joshua install) is that Joshua provides support scripts for visualizing the results of
- a series of experiments that only work if you
+*Don't* run the pipeline directly from `$JOSHUA`. We recommend creating a run directory somewhere
+ else to contain all of your experiments in some other location. The advantage to this (apart from
+ not clobbering part of the Joshua install) is that Joshua provides support scripts for visualizing
+ the results of a series of experiments that only work if you
 
 Assuming no problems arise, this command will run the complete pipeline in about 20 minutes,
 producing BLEU scores at the end.  As it runs, you will see output that looks like the following:
@@ -203,6 +205,7 @@ of traditional pipeline tasks:
 1. [Language model building](#lm)
 1. [Tuning](#tuning)
 1. [Testing](#testing)
+1. [Analysis](#analysis)
 
 These steps are discussed below, after a few intervening sections about high-level details of the
 pipeline.
@@ -210,7 +213,7 @@ pipeline.
 ## Managing groups of experiments
 
 The real utility of the pipeline comes when you use it to manage groups of experiments. Typically,
-we have a held-out test set, and want to vary a number of training parameters to determine what
+there is a held-out test set, and we want to vary a number of training parameters to determine what
 effect this has on BLEU scores or some other metric. Joshua comes with a script
 `$JOSHUA/scripts/training/summarize.pl` that collects information from a group of runs and reports
 them to you. This script works so long as you organize your runs as follows:
@@ -307,7 +310,7 @@ decoder ran out of memory.  This allows you to adjust the parameter (e.g., `--jo
 the script.  Of course, if you change one of the parameters a step depends on, it will trigger a
 rerun, which in turn might trigger further downstream reruns.
    
-## Skipping steps, quitting early
+## <a id="steps" /> Skipping steps, quitting early
 
 You will also find it useful to start the pipeline somewhere other than data preparation (for
 example, if you have already-processed data and an alignment, and want to begin with building a
@@ -327,7 +330,7 @@ argument a case-insensitive version of the following steps:
 - *THRAX*: Grammar extraction [with Thrax](thrax.html).  If you jump to this step, you'll need to
    provide an aligned corpus (`--alignment`) along with your parallel data.  
 
-- *TUNE*: Tuning.  The exact tuning method is determined with `--tuner {mert,pro}`.  With this
+- *TUNE*: Tuning.  The exact tuning method is determined with `--tuner {mert,mira,pro}`.  With this
    option, you need to specify a grammar (`--grammar`) or separate tune (`--tune-grammar`) and test
    (`--test-grammar`) grammars.  A full grammar (`--grammar`) will be filtered against the relevant
    tuning or test set unless you specify `--no-filter-tm`.  If you want a language model built from
@@ -346,8 +349,7 @@ argument a case-insensitive version of the following steps:
 
 We now discuss these steps in more detail.
 
-<a name="prep" />
-## 1. DATA PREPARATION
+### <a id="prep" /> 1. DATA PREPARATION
 
 Data prepare involves doing the following to each of the training data (`--corpus`), tuning data
 (`--tune`), and testing data (`--test`).  Each of these values is an absolute or relative path
@@ -361,7 +363,7 @@ NUM starts at 0 and increments for as many references as there are.
 
 The following processing steps are applied to each file.
 
-1.  **Copying** the files into `RUNDIR/data/TYPE`, where TYPE is one of "train", "tune", or "test".
+1.  **Copying** the files into `$RUNDIR/data/TYPE`, where TYPE is one of "train", "tune", or "test".
     Multiple `--corpora` files are concatenated in the order they are specified.  Multiple `--tune`
     and `--test` flags are not currently allowed.
     
@@ -391,27 +393,27 @@ example, you might see
 
 The file "corpus.LANG" is a symbolic link to the last file in the chain.  
 
-<a name="alignment" />
-## 2. ALIGNMENT
+## 2. ALIGNMENT <a id="alignment" />
 
-Alignments are between the parallel corpora at `RUNDIR/data/train/corpus.{SOURCE,TARGET}`.  To
+Alignments are between the parallel corpora at `$RUNDIR/data/train/corpus.{SOURCE,TARGET}`.  To
 prevent the alignment tables from getting too big, the parallel corpora are grouped into files of no
 more than ALIGNER\_CHUNK\_SIZE blocks (controlled with a parameter below).  The last block is folded
 into the penultimate block if it is too small.  These chunked files are all created in a
-subdirectory of `RUNDIR/data/train/splits`, named `corpus.LANG.0`, `corpus.LANG.1`, and so on.
+subdirectory of `$RUNDIR/data/train/splits`, named `corpus.LANG.0`, `corpus.LANG.1`, and so on.
 
 The pipeline parameters affecting alignment are:
 
--   `aligner ALIGNER` {giza (default), berkeley}
+-   `--aligner ALIGNER` {giza (default), berkeley}
 
     Which aligner to use.  The default is [GIZA++](http://code.google.com/p/giza-pp/), but
     [the Berkeley aligner](http://code.google.com/p/berkeleyaligner/) can be used instead.  When
     using the Berkeley aligner, you'll want to pay attention to how much memory you allocate to it
     with `--aligner-mem` (the default is 10g).
 
--   `aligner-chunk-size SIZE` (1,000,000)
+-   `--aligner-chunk-size SIZE` (1,000,000)
 
-    The number of sentence pairs to compute alignments over.
+    The number of sentence pairs to compute alignments over. The training data is split into blocks
+    of this size, aligned separately, and then concatenated.
     
 -   `--alignment FILE`
 
@@ -427,19 +429,18 @@ The pipeline parameters affecting alignment are:
 
     This value is required if you start at the grammar extraction step.
 
-When alignment is complete, the alignment file can be found at `RUNDIR/alignments/training.align`.
+When alignment is complete, the alignment file can be found at `$RUNDIR/alignments/training.align`.
 It is parallel to the training corpora.  There are many files in the `alignments/` subdirectory that
 contain the output of intermediate steps.
 
-<a name="parsing" />
-## 3. PARSING
+### <a id="parsing" /> 3. PARSING
 
-When SAMT grammars are being built (`--type samt`), the target side of the training data must be
-parsed.  The pipeline assumes your target side will be English, and will parse it for you using
-[the Berkeley parser](http://code.google.com/p/berkeleyparser/), which is included.  If it is not
-the case that English is your target-side language, the target side of your training data (found at
-CORPUS.TARGET) must already be parsed in PTB format.  The pipeline will notice that it is parsed and
-will not reparse it.
+To build SAMT and GHKM grammars (`--type samt` and `--type ghkm`), the target side of the
+training data must be parsed. The pipeline assumes your target side will be English, and will parse
+it for you using [the Berkeley parser](http://code.google.com/p/berkeleyparser/), which is included.
+If it is not the case that English is your target-side language, the target side of your training
+data (found at CORPUS.TARGET) must already be parsed in PTB format.  The pipeline will notice that
+it is parsed and will not reparse it.
 
 Parsing is affected by both the `--threads N` and `--jobs N` options.  The former runs the parser in
 multithreaded mode, while the latter distributes the runs across as cluster (and requires some
@@ -447,34 +448,36 @@ configuration, not yet documented).  The options are mutually exclusive.
 
 Once the parsing is complete, there will be two parsed files:
 
-- `RUNDIR/data/train/corpus.en.parsed`: this is the mixed-case file that was parsed.
-- `RUNDIR/data/train/corpus.parsed.en`: this is a leaf-lowercased version of the above file used for
+- `$RUNDIR/data/train/corpus.en.parsed`: this is the mixed-case file that was parsed.
+- `$RUNDIR/data/train/corpus.parsed.en`: this is a leaf-lowercased version of the above file used for
   grammar extraction.
 
-<a name="tm" />
-## 4. THRAX (grammar extraction)
+## 4. THRAX (grammar extraction) <a id="tm" />
 
 The grammar extraction step takes three pieces of data: (1) the source-language training corpus, (2)
 the target-language training corpus (parsed, if an SAMT grammar is being extracted), and (3) the
 alignment file.  From these, it computes a synchronous context-free grammar.  If you already have a
-grammar and wish to skip this step, you can do so passing the grammar with the `--grammar GRAMMAR`
-flag. 
+grammar and wish to skip this step, you can do so passing the grammar with the `--grammar
+/path/to/grammar` flag.
 
 The main variable in grammar extraction is Hadoop.  If you have a Hadoop installation, simply ensure
 that the environment variable `$HADOOP` is defined, and Thrax will seamlessly use it.  If you *do
 not* have a Hadoop installation, the pipeline will roll out out for you, running Hadoop in
-standalone mode.  (This mode is triggered when `$HADOOP` is undefined).  Theoretically, any grammar extractable on a full Hadoop cluster should be
-extractable in standalone mode, if you are patient enough; in practice, you probably are not patient
-enough, and will be limited to smaller datasets.  Setting up your own Hadoop cluster is not too
-difficult a chore; in particular, you may find it helpful to install a
+standalone mode (this mode is triggered when `$HADOOP` is undefined).  Theoretically, any grammar
+extractable on a full Hadoop cluster should be extractable in standalone mode, if you are patient
+enough; in practice, you probably are not patient enough, and will be limited to smaller
+datasets. You may also run into problems with disk space; Hadoop uses a lot (use `--tmp
+/path/to/tmp` to specify an alternate place for temporary data; we suggest you use a local disk
+partition with tens or hundreds of gigabytes free, and not an NFS partition).  Setting up your own
+Hadoop cluster is not too difficult a chore; in particular, you may find it helpful to install a
 [pseudo-distributed version of Hadoop](http://hadoop.apache.org/common/docs/r0.20.2/quickstart.html).
 In our experience, this works fine, but you should note the following caveats:
 
 - It is of crucial importance that you have enough physical disks.  We have found that having too
   few, or too slow of disks, results in a whole host of seemingly unrelated issues that are hard to
   resolve, such as timeouts.  
-- NFS filesystems can exacerbate this.  You should really try to install physical disks that are
-  dedicated to Hadoop scratch space.
+- NFS filesystems can cause lots of problems.  You should really try to install physical disks that
+  are dedicated to Hadoop scratch space.
 
 Here are some flags relevant to Hadoop and grammar extraction with Thrax:
 
@@ -493,10 +496,9 @@ Here are some flags relevant to Hadoop and grammar extraction with Thrax:
    templates are located at `$JOSHUA/scripts/training/templates/thrax-TYPE.conf`, where TYPE is one
    of "hiero" or "samt".
   
-When the grammar is extracted, it is compressed and placed at `RUNDIR/grammar.gz`.
+When the grammar is extracted, it is compressed and placed at `$RUNDIR/grammar.gz`.
 
-<a name="lm" />
-## 5. Language model
+## <a id="lm" /> 5. Language model
 
 Before tuning can take place, a language model is needed.  A language model is always built from the
 target side of the training corpus unless `--no-corpus-lm` is specified.  In addition, you can
@@ -508,21 +510,19 @@ arguments are as follows.
    This determines the language model code that will be used when decoding.  These implementations
    are described in their respective papers (PDFs:
    [KenLM](http://kheafield.com/professional/avenue/kenlm.pdf),
-   [BerkeleyLM](http://nlp.cs.berkeley.edu/pubs/Pauls-Klein_2011_LM_paper.pdf)).
+   [BerkeleyLM](http://nlp.cs.berkeley.edu/pubs/Pauls-Klein_2011_LM_paper.pdf)). KenLM is written in
+   C++ and requires a pass through the JNI, but is recommended because it supports left-state minimization.
    
 - `--lmfile FILE`
 
   Specifies a pre-built language model to use when decoding.  This language model can be in ARPA
   format, or in KenLM format when using KenLM or BerkeleyLM format when using that format.
 
-- `--lm-gen` {berkeleylm (default), srilm}, `--buildlm-mem MEM`, `--witten-bell`
+- `--lm-gen` {kenlm (default), srilm, berkeleylm}, `--buildlm-mem MEM`, `--witten-bell`
 
   At the tuning step, an LM is built from the target side of the training data (unless
   `--no-corpus-lm` is specified).  This controls which code is used to build it.  The default is a
-  [BerkeleyLM java class](http://code.google.com/p/berkeleylm/source/browse/trunk/src/edu/berkeley/nlp/lm/io/MakeKneserNeyArpaFromText.java)
-  that computes a Kneser-Ney LM with a constant discounting and no count thresholding.  The flag
-  `--buildlm-mem` can be used to control how much memory is allocated to the Java process.  The
-  default is "2g", but you will want to increase it for larger language models.
+  KenLM's [lmplz](http://kheafield.com/code/kenlm/estimation/), and is strongly recommended.
   
   If SRILM is used, it is called with the following arguments:
   
@@ -530,8 +530,12 @@ arguments are as follows.
         
   Where SMOOTHING is `-kndiscount`, or `-wbdiscount` if `--witten-bell` is passed to the pipeline.
   
-A language model built from the target side of the training data is placed at `RUNDIR/lm.gz`.  
-
+  [BerkeleyLM java class](http://code.google.com/p/berkeleylm/source/browse/trunk/src/edu/berkeley/nlp/lm/io/MakeKneserNeyArpaFromText.java)
+  is also available. It computes a Kneser-Ney LM with a constant discounting (0.75) and no count
+  thresholding.  The flag `--buildlm-mem` can be used to control how much memory is allocated to the
+  Java process.  The default is "2g", but you will want to increase it for larger language models.
+  
+  A language model built from the target side of the training data is placed at `$RUNDIR/lm.gz`.  
 
 ## Interlude: decoder arguments
 
@@ -542,34 +546,31 @@ memory is 3100m, which is likely not enough (especially if you are decoding with
 can alter the amount of memory for Joshua using the `--joshua-mem MEM` argument, where MEM is a Java
 memory specification (passed to its `-Xmx` flag).
 
-<a name="tuning" />
-## 6. TUNING
+## <a id="tuning" /> 6. TUNING
 
-Two optimizers are implemented for Joshua: MERT and PRO (`--tuner {mert,pro}`).  Tuning is run till
-convergence in the `RUNDIR/tune` directory.  By default, tuning is run just once, but the pipeline
-supports running the optimizer an arbitrary number of times due to
-[recent work](http://www.youtube.com/watch?v=BOa3XDkgf0Y) pointing out the variance of tuning
-procedures in machine translation, in particular MERT.  This can be activated with `--optimizer-runs
-N`.  Each run can be found in a directory `RUNDIR/tune/N`.
+Two optimizers are provided with Joshua: MERT and PRO (`--tuner {mert,pro}`).  If Moses is
+installed, you can also use Cherry & Foster's k-best batch MIRA (`--tuner mira`, recommended).
+Tuning is run till convergence in the `$RUNDIR/tune/N` directory, where N is the tuning instance.
+By default, tuning is run just once, but the pipeline supports running the optimizer an arbitrary
+number of times due to [recent work](http://www.youtube.com/watch?v=BOa3XDkgf0Y) pointing out the
+variance of tuning procedures in machine translation, in particular MERT.  This can be activated
+with `--optimizer-runs N`.  Each run can be found in a directory `$RUNDIR/tune/N`.
 
-When
-tuning is finished, each final configuration file can be found at either
+When tuning is finished, each final configuration file can be found at either
 
-    RUNDIR/tune/N/joshua.config.ZMERT.final
-    RUNDIR/tune/N/joshua.config.PRO.final
+    $RUNDIR/tune/N/joshua.config.final
 
 where N varies from 1..`--optimizer-runs`.
 
-<a name="testing" />
-## 7. Testing
+## <a id="testing" /> 7. Testing 
 
-For each of the tuner runs, Joshua takes the tuner output file and decodes the test set.
-Afterwards, by default, minimum Bayes-risk decoding is run on the 300-best output.  This step
-usually yields about 0.3 - 0.5 BLEU points but is time-consuming, and can be turned off with the
-`--no-mbr` flag. 
+For each of the tuner runs, Joshua takes the tuner output file and decodes the test set.  If you
+like, you can also apply minimum Bayes-risk decoding to the decoder output with `--mbr`.  This
+usually yields about 0.3 - 0.5 BLEU points, but is time-consuming.
 
 After decoding the test set with each set of tuned weights, Joshua computes the mean BLEU score,
-writes it to `RUNDIR/test/final-bleu`, and cats it.  That's the end of the pipeline!
+writes it to `$RUNDIR/test/final-bleu`, and cats it. It also writes a file
+`$RUNDIR/test/final-times` containing a summary of runtime information. That's the end of the pipeline!
 
 Joshua also supports decoding further test sets.  This is enabled by rerunning the pipeline with a
 number of arguments:
@@ -581,12 +582,19 @@ number of arguments:
 -   `--name NAME`
 
     A name is needed to distinguish this test set from the previous ones.  Output for this test run
-    will be stored at `RUNDIR/test/NAME`.
+    will be stored at `$RUNDIR/test/NAME`.
     
 -   `--joshua-config CONFIG`
 
     A tuned parameter file is required.  This file will be the output of some prior tuning run.
     Necessary pathnames and so on will be adjusted.
+    
+## <a id="analysis"> 8. ANALYSIS
+
+If you have used the suggested layout, with a number of related runs all contained in a common
+directory with sequential numbers, you can use the script `$JOSHUA/scripts/training/summarize.pl` to
+display a summary of the mean BLEU scores from all runs, along with the text you placed in the run
+README file (using the pipeline's `--readme TEXT` flag).
 
 ## COMMON USE CASES AND PITFALLS 
 

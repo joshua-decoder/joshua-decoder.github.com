@@ -50,11 +50,11 @@ versions, and preventing the pipeline from retokenizing using the `--no-prepare-
 In `$INDIAN/bn-en/tok`, you should see the following files:
 
     $ ls $INDIAN/bn-en/tok
-    dev.bn-en.bn		devtest.bn-en.bn	dict.bn-en.bn		test.bn-en.en.2
-    dev.bn-en.en.0		devtest.bn-en.en.0	dict.bn-en.en		test.bn-en.en.3
-    dev.bn-en.en.1		devtest.bn-en.en.1	test.bn-en.bn		training.bn-en.bn
-    dev.bn-en.en.2		devtest.bn-en.en.2	test.bn-en.en.0		training.bn-en.en
-    dev.bn-en.en.3		devtest.bn-en.en.3	test.bn-en.en.1
+    dev.bn-en.bn     devtest.bn-en.bn     dict.bn-en.bn     test.bn-en.en.2
+    dev.bn-en.en.0   devtest.bn-en.en.0   dict.bn-en.en     test.bn-en.en.3
+    dev.bn-en.en.1   devtest.bn-en.en.1   test.bn-en.bn     training.bn-en.bn
+    dev.bn-en.en.2   devtest.bn-en.en.2   test.bn-en.en.0   training.bn-en.en
+    dev.bn-en.en.3   devtest.bn-en.en.3   test.bn-en.en.1
 
 We will now use this data to test the complete pipeline with a single command.
     
@@ -71,8 +71,8 @@ related experiments.
 
     cd ~/expts/joshua
     $JOSHUA/bin/pipeline.pl           \
-      --readme "Baseline Hiero run"   \
       --rundir 1                      \
+      --readme "Baseline Hiero run"   \
       --source bn                     \
       --target en                     \
       --corpus $INDIAN/bn-en/tok/training.bn-en \
@@ -145,7 +145,7 @@ directory, tell the pipeline to start at the tuning step, and provide the needed
  pipeline always builds an LM on the target side of the training data, if provided, but we are
  supplying the language model that was already built. We could equivalently have removed the
  `--corpus` line.
-
+ 
 ## Changing the model type
 
 Let's compare the Hiero model we've already built to an SAMT model. We have to reextract the
@@ -163,6 +163,8 @@ grammar, but can reuse the alignments and the language model:
       --first-step parse \
       --no-build-lm \
       --lmfile 1/lm.gz
+
+See [the pipeline script page](pipeline.html#steps) for a list of all the steps.
 
 ## Analyzing the results
 
