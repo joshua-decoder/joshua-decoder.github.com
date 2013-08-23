@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default4
 category: advanced
 title: Lattice decoding
 ---

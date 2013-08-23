@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="screen,print" href="../joshua4.css" />
+    <title>Joshua | {{ page.title }}</title>
+  </head>
+
+  <body>
+
+    <div id="navbar">
+      <a href="http://joshua-decoder.org/">
+        <img src="../images/joshua-logo-small.png" width="130px" 
+             alt="Joshua logo (picture of a Joshua tree)" />
+      </a>
+
+      <p class="infobox">
+        <b>Stable version</b><br />
+        4.1<br/><br/>
+        <b>Release date</b><br />
+        2013 January
+      </p>
+
+<!--       <div class="infobox"> -->
+<!--         <b>AUTO LINKS</b><br/> -->
+<!--         <ul> -->
+<!--           {% for page in site.pages %} -->
+<!--           <li> {{ page.title }}</li> -->
+<!--           {% endfor %} -->
+<!--         </ul> -->
+<!--       </div>   -->
+
+      <div class="infobox">
+
+        <b>Links</b><br />
+        <ul>
+          <li> <a href="../index.html">Main</a> </li>
+          <li> <a href="pipeline.html">Pipeline</a> </li>
+          <li> <a href="step-by-step-instructions.html">Manual walkthrough</a> </li>
+          <li> <a href="decoder.html">Decoder</a> </li>
+          <li> <a href="server.html">Decoder Server</a> </li>
+          <li> <a href="file-formats.html">File formats</a> </li>
+          <li> <a href="thrax.html">Grammar Extraction</a> </li>
+          <li> <a href="../releases.html">Releases</a> </li>
+        </ul>
+      </div>
+
+      <div class="infobox">
+        <b>Advanced</b><br />
+        <ul>
+<!--          <li> <a href="packing.html">Grammar packing</a> </li> -->
+          <li> <a href="large-lms.html">Building large LMs</a> </li>
+          <li> <a href="zmert.html">Running Z-MERT</a> </li>
+          <li> <a href="lattice.html">Lattices</a> </li>
+          <li> <a href="server.html">TCP/IP server</a> </li>
+          <li> <a href="bundle.html">Bundled configuration</a> </li>
+        </ul>
+      </div>
+
+      <div class="infobox">
+        <b>Help</b><br />
+        <ul>
+          <li> <a href="faq.html">Answers</a> </li>
+          <li> <a href="https://groups.google.com/d/forum/joshua_support">Archive</a> </li>
+        </ul>
+      </div>
+
+      <div class="footer">
+        Last updated on {{ site.time | date: "%B %d, %Y" }}
+      </div>
+
+    </div>
+
+    <div id="main">
+      <div id="title">
+        <h1>{{ page.title }}</h1>
+      </div>
+
+      <div id="content">
+        
+        {{ content }}
+
+      </div>
+    </div>
+
+  </body>
+</html>
+
+
+
+
+

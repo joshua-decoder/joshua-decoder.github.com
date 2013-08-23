@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default4
 title: Joshua 4.0 User Documentation
 ---
 

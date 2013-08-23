@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default4
 title: Building large LMs with SRILM
 category: advanced
 ---
