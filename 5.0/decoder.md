@@ -317,9 +317,10 @@ where the indices correspond to the order of the language model declaration line
 
 ### Lattice decoding
 
-In addition to regular sentences, Joshua can decode weighted lattices encoded in [the PLF
-format](http://www.statmt.org/moses/?n=Moses.WordLattices).  Lattice decoding was originally added
-by Lane Schwartz and [Chris Dyer](http://www.cs.cmu.edu/~cdyer/).
+In addition to regular sentences, Joshua can decode weighted lattices encoded in
+[the PLF format](http://www.statmt.org/moses/?n=Moses.WordLattices), except that path costs should
+be listed as <b>log probabilities</b> instead of probabilities.  Lattice decoding was originally
+added by Lane Schwartz and [Chris Dyer](http://www.cs.cmu.edu/~cdyer/).
 
 Joshua will automatically detect whether the input sentence is a regular sentence (the usual case)
 or a lattice.  If a lattice, a feature will be activated that accumulates the cost of different
