@@ -134,7 +134,7 @@ directory, tell the pipeline to start at the tuning step, and provide the needed
       --first-step tune \
       --tuner mira \
       --grammar 1/grammar.gz \
-      --no-build-lm \
+      --no-corpus-lm \
       --lmfile 1/lm.gz
       
  Here, we have essentially the same invocation, but we have told the pipeline to use a different
@@ -161,7 +161,7 @@ grammar, but can reuse the alignments and the language model:
       --test $INDIAN/bn-en/tok/devtest.bn-en    \
       --alignment 1/alignments/training.align   \
       --first-step parse \
-      --no-build-lm \
+      --no-corpus-lm \
       --lmfile 1/lm.gz
 
 See [the pipeline script page](pipeline.html#steps) for a list of all the steps.
