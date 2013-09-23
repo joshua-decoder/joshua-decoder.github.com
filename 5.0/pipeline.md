@@ -40,7 +40,9 @@ external packages, some of which are included with Joshua.
 
    GIZA++ is the default aligner.  It is included with Joshua, and should compile successfully when
    you typed `ant` from the Joshua root directory.  It is not required because you can use the
-   (included) Berkeley aligner (`--aligner berkeley`).
+   (included) Berkeley aligner (`--aligner berkeley`). We have recently also provided support
+   for the [Jacana-XY aligner](http://code.google.com/p/jacana-xy/wiki/JacanaXY) (`--aligner
+   jacana`). 
 
 -  [Hadoop](http://hadoop.apache.org/) (included)
 
@@ -403,7 +405,7 @@ subdirectory of `$RUNDIR/data/train/splits`, named `corpus.LANG.0`, `corpus.LANG
 
 The pipeline parameters affecting alignment are:
 
--   `--aligner ALIGNER` {giza (default), berkeley}
+-   `--aligner ALIGNER` {giza (default), berkeley, jacana}
 
     Which aligner to use.  The default is [GIZA++](http://code.google.com/p/giza-pp/), but
     [the Berkeley aligner](http://code.google.com/p/berkeleyaligner/) can be used instead.  When
