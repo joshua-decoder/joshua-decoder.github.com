@@ -1,11 +1,6 @@
-safe:        true
-port:        4000
-baseurl:     /
-url: http://localhost:4000
-
 source:      .
-destination: userdocs
 plugins:     ./_plugins
+url: http://joshua-decoder.org/
 
 future:      true
 lsi:         false
