@@ -1,1 +1,102 @@
-<meta http-equiv="refresh" content="0; url=http://github.com/joshua-decoder/fisher-callhome-corpus/" />
+---
+layout: documentation
+title: Fisher / CALLHOME Parallel Corpus
+---
+
+    <div class="container">
+
+      <div class="row">
+        <div class="span8">
+          <h1>Datasets</h1>
+          <h2>Fisher / CALLHOME Spanish&ndash;English Parallel Corpus</h2>
+          <span id="download">
+            <a href="https://github.com/joshua-decoder/fisher-callhome-corpus/zipball/master">Download</a>
+          </span>
+        </div>
+      </div>
+      
+      <hr />
+
+      <div class="row">
+        <div class="span8">
+
+          <p>
+            This paper describes the release of a set of English translations (obtained
+            on <a href="http://mturk.com">Amazon's Mechcanical Turk</a>) and ASR lattice output
+            (produced with <a href="http://kaldi.sf.net">Kaldi</a>). Together, this data supplements
+            existing LDC datasets (in the form of audio and Spanish transcriptions), yielding a
+            four-way parallel corpus for research in Spanish&ndash;English spoken language
+            translation. 
+          </p>
+
+          <p>
+            The LDC datasets that this dataset extends are as follows:
+          </p>
+
+          <p style="text-align: center"><center>
+            <table style="border: 1px solid lightgray">
+              <tr>
+                <th></th>
+                <th>Audio</th>
+                <th>Transcripts</th>
+              </tr>
+              <tr>
+                <td>Fisher Spanish</td>
+                <td><a href="http://catalog.ldc.upenn.edu/LDC2010S01">LDC2010S01</a></td>
+                <td><a href="http://catalog.ldc.upenn.edu/LDC2010T04">LDC2010T04</a></td>
+              </tr>
+              <tr>
+                <td>CALLHOME Spanish</td>
+                <td><a href="http://catalog.ldc.upenn.edu/LDC96S35">LDC96S35</a></td>
+                <td><a href="http://catalog.ldc.upenn.edu/LDC96T17">LDC96T17</a></td>
+              </tr>
+            </table>
+          </center></p>
+
+          <p>
+            If you use this dataset, please cite the following paper, which also contains a number
+            of experiments to compare against:
+          </p>
+
+          <blockquote>
+            <i>Improved Speech-to-Text Translation with the Fisher and Callhome Spanish&ndash;English
+            Speech Translation Corpus</i> <br/>
+            Matt Post, Gaurav Kumar, Adam Lopez, Damianos Karakos, Chris Callison-Burch and Sanjeev
+            Khudanpur <br/>
+            <a href="http://www.iwslt2013.org">IWSLT 2013</a> <br/>
+            <a class="pdf" href="http://cs.jhu.edu/~post/papers/post2013improved.bib">PDF</a>
+            <a class="bibtex" href="http://cs.jhu.edu/~post/papers/post2013improved.bib">BIB</a>
+          </blockquote>
+
+          <h2>Download & License</h2>
+
+          The Fisher / CALLHOME corpus
+          is <a href="https://github.com/joshua-decoder/fisher-callhome-corpus">hosted on
+          Github</a>.  You can clone that, or download a release tarball by clicking the big green
+          button above. The corpus is licensed under
+          the <a href="http://creativecommons.org/">Creative
+          Commons</a> <a href="http://creativecommons.org/licenses/by-sa/3.0/">Attribution-Sharealike
+          3.0 Unported License</a> (CC BY-SA 3.0).
+
+          <h2>Scores</h2>
+
+          <p>
+            Below are the best translation scores (case-insensitive BLEU-4) that have been reported
+            on the provided test sets.  The Google results were recorded in the fall of 2011 (and
+            are described in Post et al. (2012)).  Google does not have a Malayalam system.
+          </p>
+
+        </div>
+
+        <div class="span4">
+          <div style="border: 1px solid lightgray">
+            <p style="text-align: center">
+              <img width="250px" src="images/lattice.png"/><br/>
+            </p>
+            <p style="text-align: center">
+              An example lattice from the dataset
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
