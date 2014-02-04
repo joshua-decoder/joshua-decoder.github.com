@@ -78,13 +78,15 @@ related experiments.
       --corpus $INDIAN/bn-en/tok/training.bn-en \
       --corpus $INDIAN/bn-en/tok/dict.bn-en     \
       --tune $INDIAN/bn-en/tok/dev.bn-en        \
-      --test $INDIAN/bn-en/tok/devtest.bn-en
+      --test $INDIAN/bn-en/tok/devtest.bn-en    \
+      --lm-order 3
       
 This will start the pipeline building a Bengali--English translation system constructed from the
 training data and a dictionary, tuned against dev, and tested against devtest. It will use the
 default values for most of the pipeline: [GIZA++](https://code.google.com/p/giza-pp/) for alignment,
 KenLM's `lmplz` for building the language model, Z-MERT for tuning, KenLM with left-state
-minimization for representing LM state in the decoder, and so on.
+minimization for representing LM state in the decoder, and so on. We change the order of the n-gram
+model to 3 (from its default of 5) because there is not enough data to build a 5-gram LM.
 
 A few notes:
 
