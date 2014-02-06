@@ -45,7 +45,7 @@ Inside this tarball is a directory for each language pair. Within each language 
 directory named `tok/`, which contains pre-tokenized and normalized versions of the data. This was
 done because the normalization scripts provided with Joshua is written in scripting languages that
 often have problems properly handling UTF-8 character sets. We will be using these tokenized
-versions, and preventing the pipeline from retokenizing using the `--no-prepare-data` flag.
+versions, and preventing the pipeline from retokenizing using the `--no-prepare` flag.
 
 In `$INDIAN/bn-en/tok`, you should see the following files:
 
