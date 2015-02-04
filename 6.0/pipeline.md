@@ -421,7 +421,7 @@ The pipeline parameters affecting alignment are:
 
     If you have an already-computed alignment, you can pass that to the script using this flag.
     Note that, in this case, you will want to skip data preparation and alignment using
-    `--first-step thrax` (the first step after alignment) and also to specify `--no-prepare-data` so
+    `--first-step thrax` (the first step after alignment) and also to specify `--no-prepare` so
     as not to retokenize the data and mess with your alignments.
     
     The alignment file format is the standard format where 0-indexed many-many alignment pairs for a
