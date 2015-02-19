@@ -14,6 +14,10 @@ Joshua's [efficient grammar representation](packing.html).
 
 A [bundled configuration](bundle.html), which is a minimal set of configuration, resource, and script files, can be created and easily transferred and shared.
 
+## Development
+
+For developer support, please consult [the javadoc documentation](http://cs.jhu.edu/~post/joshua-docs) and the [Joshua developers mailing list](https://groups.google.com/forum/?fromgroups#!forum/joshua_developers).
+
 ## Support
 
 If you have problems or issues, you might find some help [on our answers page](faq.html) or
