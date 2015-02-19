@@ -32,17 +32,3 @@ test sets, and reports results that should correspond with what you find on <a
 href="/indian-parallel-corpora/">the Indian Parallel Corpora page</a>. For
 more details, including information on the many options available with the pipeline script, please
 see <a href="pipeline.html">its documentation page</a>.
-
-## More information
-
-For more detail on the decoder itself, including its command-line options, see
-[the Joshua decoder page](decoder.html).  You can also learn more about other steps of
-[the Joshua MT pipeline](pipeline.html), including [grammar extraction](thrax.html) with Thrax and
-Joshua's [efficient grammar representation](packing.html).
-
-If you have problems or issues, you might find some help [on our answers page](faq.html) or
-[in the mailing list archives](https://groups.google.com/forum/?fromgroups#!forum/joshua_support).
-
-A [bundled configuration](bundle.html), which is a minimal set of
-configuration, resource, and script files, can be created and easily
-transferred and shared. (This is what we use to distribute pre-built models).
