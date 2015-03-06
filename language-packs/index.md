@@ -19,6 +19,7 @@ It is important to note the assumptions underlying the translation engine:
 
 ## Available language packs
 
-*Language packs are forthcoming*. 
+- [Spanish--English phrase-based model](es-en-phrase/), built on Europarl and the Fisher
+  and CALLHOME parallel dataset.
 
 Have a request? Please email [Matt Post](http://cs.jhu.edu/~post/).
