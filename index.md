@@ -10,9 +10,11 @@ translation, written in Java.  It is developed at the
 [Human Language Technology Center of Excellence](http://hltcoe.jhu.edu/)
 at [Johns Hopkins University](http://www.jhu.edu/).
 
-The latest release of Joshua is version 6.0 (February 4,
+### Latest Release
+
+The latest release of Joshua is version 6.0.1 (March 6,
 2015). Information about downloading and using Joshua can be found
-[in the Joshua documentation](/6.0/).
+[in the Joshua documentation](/6.0/). You can [download it here](releases/6.0/) (tarball). 
 
 ### Features
 
