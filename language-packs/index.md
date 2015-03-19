@@ -19,10 +19,10 @@ It is important to note the assumptions underlying the translation engine:
 
 ## Available language packs
 
-- [Spanish--English phrase-based model](es-en-phrase/), built on Europarl and the Fisher
+- [Spanish--English phrase-based model](es-en-phrase/) [1.9 GB], built on Europarl and the Fisher
   and CALLHOME parallel dataset.
 
-- [Arabic--English phrase-based model](ar-en-phrase/), built from
+- [Arabic--English phrase-based model](ar-en-phrase/) [2.4 GB], built from
   [the LDC Arabic-Dialect/English parallel text](https://catalog.ldc.upenn.edu/LDC2012T09),
   [the ISI Arabic--English automatically extracted parallel text](https://catalog.ldc.upenn.edu/LDC2007T08), and
   [translations of the Arabic CALLHOME transcripts](https://catalog.ldc.upenn.edu/LDC97T19),
