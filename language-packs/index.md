@@ -22,4 +22,10 @@ It is important to note the assumptions underlying the translation engine:
 - [Spanish--English phrase-based model](es-en-phrase/), built on Europarl and the Fisher
   and CALLHOME parallel dataset.
 
+- [Arabic--English phrase-based model](ar-en-phrase/), built from
+  [the LDC Arabic-Dialect/English parallel text](https://catalog.ldc.upenn.edu/LDC2012T09),
+  [the ISI Arabic--English automatically extracted parallel text](https://catalog.ldc.upenn.edu/LDC2007T08), and
+  [translations of the Arabic CALLHOME transcripts](https://catalog.ldc.upenn.edu/LDC97T19),
+  and with an English Gigaword language model.
+
 Have a request? Please email [Matt Post](http://cs.jhu.edu/~post/).
