@@ -10,14 +10,14 @@ Building your own models takes a bit more work, and requires you to
 supply parallel data that the models can be trained from. Information
 about how to do this can be found in [the pipeline documentation](/6.0/pipeline.html).
 
-Our pipeline.html">pipeline script</a> is the quickest way to get started. For example, to
+Our <a href="pipeline.html">pipeline script</a> is the quickest way to get started. For example, to
 train and test a complete model translating from Bengali to English:
 
 First, download the Indian languages data:
    
-   curl -#L https://github.com/joshua-decoder/indian-parallel-corpora/tarball/master > indian-languages.tgz
-    tar xf indian-languages.tgz
-    ln -s joshua-decoder-indian-parallel-corpora-b71d31a input
+    curl -#L https://github.com/joshua-decoder/indian-parallel-corpora/tarball/master > indian-languages.tgz
+     tar xf indian-languages.tgz
+     ln -s joshua-decoder-indian-parallel-corpora-* input
 
 Then, train and test a model
 
