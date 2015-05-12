@@ -4,7 +4,7 @@ title: Quick Start
 ---
 
 The quickest way to use Joshua is to download a
-[pre-built model](/6.0/models.html) and use them to start translating data.
+[pre-built model](/language-packs/) and use them to start translating data.
 
 Building your own models takes a bit more work, and requires you to
 supply parallel data that the models can be trained from. Information
