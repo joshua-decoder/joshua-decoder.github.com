@@ -55,12 +55,9 @@ Here is an example invocation:
       /path/to/rundir/test/1/joshua.config \
       language-pack-YYYY-MM-DD \
       --root /path/to/rundir \
-      --tm "pt /path/to/rundir/grammar.gz" \
-      --pack-tm \
+      --pack-tm /path/to/rundir/grammar.gz \
       --copy-config-options \ 
-        '-top-n 1 \
-        -output-format %S \
-        -mark-oovs false' \
+        '-top-n 1 -output-format %S -mark-oovs false' \
       --server-port 5674
 
 The copy config options tell the decoder to present just the
@@ -71,7 +68,9 @@ to OOVs (`-mark-oovs false`), and to use the grammar
 [this page](decoder.html) for a longer list of decoder options.
 
 The `--pack-tm` option tells the run bundler to
-[pack the grammar](packing.html), which can take some time.
+[pack the grammar](packing.html), which can take some time. Since it
+is the first of any `--[pack-]tm` arguments, it applies to the first
+TM encountered in the config file.
 
 A new directory `language-pack-YYYY-MM-DD` will be created along with
 a README and a number of support files.
