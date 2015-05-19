@@ -44,9 +44,14 @@ very large, so that it takes a long time to load and to
 filtered against the tuning and testing data in the pipeline, and
 these filtered models will be what is listed in the source config
 files. However, when exporting a model for use as a language pack, you
-need to export the full model instead of the filtered one. The `--tm`
-line is used to accomplish this; it takes two arguments: the first
-identifies the TM's owner, and the second, the updated path.
+need to export the full model instead of the filtered one. The
+`--tm` parameter is used to accomplish this; it takes an argument
+specifying the path to the full model. Multiple `--tm` parameters can
+be passed; they will replace TMs found in the config file in order. If
+you would additionally like the large model to be
+[packed](packing.html) (which reformats it so that it can be quickly
+loaded at run time), you can use `--pack-tm` instead. You can only
+pack one TM, but typically there is only one anyway.
 
 Here is an example invocation:
 
@@ -63,14 +68,11 @@ Here is an example invocation:
 The copy config options tell the decoder to present just the
 single-best (`-top-n 0`) translated output string that has been
 heuristically capitalized (`-output-format %S`), to not append `_OOV`
-to OOVs (`-mark-oovs false`), and to use the grammar
-`/path/to/rundir/grammar.gz` as the main translation grammar. See
-[this page](decoder.html) for a longer list of decoder options.
-
-The `--pack-tm` option tells the run bundler to
-[pack the grammar](packing.html), which can take some time. Since it
-is the first of any `--[pack-]tm` arguments, it applies to the first
-TM encountered in the config file.
+to OOVs (`-mark-oovs false`), and to use the translation model
+`/path/to/rundir/grammar.gz` as the main translation model, packing it
+before placing it in the bundle. Note that these arguments to
+`--copy-config` are the default, so you could leave this off entirely.
+See [this page](decoder.html) for a longer list of decoder options.
 
 A new directory `language-pack-YYYY-MM-DD` will be created along with
 a README and a number of support files.
