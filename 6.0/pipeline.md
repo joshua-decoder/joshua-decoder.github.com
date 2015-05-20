@@ -26,10 +26,11 @@ To facilitate these tasks, the pipeline script:
 - Allows you to jump into and out of the pipeline at a set of predefined places (e.g., the alignment
   stage), so long as you provide the missing dependencies.
 
-The Joshua pipeline script is designed in the spirit of Moses' `train-model.pl`, and shares many of
-its features.  It is not as extensive, however, as Moses'
+The Joshua pipeline script is designed in the spirit of Moses' `train-model.pl`, and shares
+(and has borrowed) many of its features.  It is not as extensive as Moses'
 [Experiment Management System](http://www.statmt.org/moses/?n=FactoredTraining.EMS), which allows
-the user to define arbitrary execution dependency graphs.
+the user to define arbitrary execution dependency graphs. However, it is significantly simpler to
+use, allowing many systems to be built with a single command (that may run for days or weeks).
 
 ## Installation
 
@@ -65,10 +66,11 @@ external packages, some of which are included with Joshua.
    
 -  [SRILM](http://www.speech.sri.com/projects/srilm/) (not included)
 
-   By default, the pipeline uses a Java program from the
-   [Berkeley LM](http://code.google.com/p/berkeleylm/) package that constructs an
-   Kneser-Ney-smoothed language model in ARPA format from the target side of your training data.  If
-   you wish to use SRILM instead, you need to do the following:
+   By default, the pipeline uses the included [KenLM](https://kheafield.com/code/kenlm/) for
+   building (and also querying) language models. Joshua also includes a Java program from the
+   [Berkeley LM](http://code.google.com/p/berkeleylm/) package that contains code for constructing a
+   Kneser-Ney-smoothed language model in ARPA format from the target side of your training data.  
+   There is no need to use SRILM, but if you do wish to use it, you need to do the following:
    
    1. Install SRILM and set the `$SRILM` environment variable to point to its installed location.
    1. Add the `--lm-gen srilm` flag to your pipeline invocation.
@@ -89,7 +91,7 @@ intermediate files in the *run directory*.  By default, the run directory is the
 but it can be changed with the `--rundir` parameter.
 
 For this quick start, we will be working with the example that can be found in
-`$JOSHUA/examples/pipeline`.  This example contains 1,000 sentences of Urdu-English data (the full
+`$JOSHUA/examples/training`.  This example contains 1,000 sentences of Urdu-English data (the full
 dataset is available as part of the
 [Indian languages parallel corpora](/indian-parallel-corpora/) with
 100-sentence tuning and test sets with four references each.

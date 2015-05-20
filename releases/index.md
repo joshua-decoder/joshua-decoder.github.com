@@ -3,8 +3,8 @@ layout: default6
 title: Joshua releases
 ---
 
-The current release of Joshua is version 6.0.1, which can be [downloaded
-here](6.0/). It was released on March 6, 2015.
+The current release of Joshua is version 6.0.2, which can be [downloaded
+here](6.0/). It was released on April 10, 2015.
 
 Older versions are also available:
 
