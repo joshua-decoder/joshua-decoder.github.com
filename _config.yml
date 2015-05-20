@@ -1,2 +1,5 @@
 timezone: US/Eastern
 markdown: kramdown
+
+gems:
+  - jekyll-redirect-from
