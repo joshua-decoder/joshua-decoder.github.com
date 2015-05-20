@@ -12,8 +12,8 @@ at [Johns Hopkins University](http://www.jhu.edu/).
 
 ### Latest Release
 
-The latest release of Joshua is version 6.0.2 (April 10,
-2015). Information about downloading and using Joshua can be found
+The latest release of Joshua is version {{ site.data.joshua.release_version }}
+({{ site.data.joshua.release_date }}). Information about downloading and using Joshua can be found
 [in the Joshua documentation](/6.0/). You can [download it here](releases/6.0/) (tarball). 
 
 ### Features
