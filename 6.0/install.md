@@ -11,13 +11,13 @@ install the decoder. There are no external dependencies.
 
 1. Download Joshua
 
-       curl -#L http://joshua-decoder.org/releases/6.0 > joshua-v6.0.tgz
+       wget -q http://cs.jhu.edu/~post/joshua-v{{ site.data.joshua.release_version }}.tgz
 
 1. Next, unpack it, set environment variables, and compile everything. You need to define the
 `$JOSHUA` environment variable (which in turn requires `$JAVA_HOME`).
 
-       tar xzf joshua-v6.0.tgz
-       cd joshua-v6.0
+       tar xzf joshua-v{{ site.data.joshua.release_version }}.tgz
+       cd joshua-v{{ site.data.joshua.release_version }}
 
        # for bash
        export JAVA_HOME=/path/to/java
@@ -39,19 +39,19 @@ If you wish to build models for new language pairs from existing data
 (such as the [WMT data](http://statmt.org/wmt14/)), you need to
 install some additional dependencies.
 
-1. For learning hierarchical models, Joshua includes a tool called [Thrax](/6.0/thrax.html), which
+1. For learning hierarchical models, Joshua includes a tool called [Thrax](thrax.html), which
 is built on Hadoop. If you have a Hadoop installation, make sure that the environment variable
 `$HADOOP` is set and points to it. If you don't, Joshua will roll one out for you in standalone
 mode. Hadoop is only needed if you plan to build new models with Joshua.
 
 1. You will need to install Moses if either of the following applies to you:
 
-    - You wish to build [phrase-based models](/6.0/phrase.html) (Joshua 6.0 includes a phrase-based
+    - You wish to build [phrase-based models](phrase.html) (Joshua 6 includes a phrase-based
       decoder, but not the tools for building such a model)
 
     - You are building your own models (phrase- or syntax-based) and wish to use Cherry & Foster's
 [batch MIRA tuner](http://aclweb.org/anthology-new/N/N12/N12-1047v2.pdf) instead of the included
-MERT implementation, [Z-MERT](/6.0/zmert.html). 
+MERT implementation, [Z-MERT](zmert.html). 
 
     Follow [the instructions for installing Moses
 here](http://www.statmt.org/moses/?n=Development.GetStarted), and then define the `$MOSES`
