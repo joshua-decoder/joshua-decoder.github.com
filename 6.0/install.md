@@ -13,14 +13,14 @@ install the decoder. There are no external dependencies.
    also `$HADOOP`, if you have a Hadoop installation (Joshua's pipeline looks
    for `$HADOOP/bin/hadoop`.
 
-      export JAVA_HOME=/path/to/java
+       export JAVA_HOME=/path/to/java
 
-      # JAVA_HOME is not very standardized. Here are some places to look:
-      # OS X:  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home
-      # Linux: export JAVA_HOME=/usr/java/default
+       # JAVA_HOME is not very standardized. Here are some places to look:
+       # OS X:  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home
+       # Linux: export JAVA_HOME=/usr/java/default
       
-      export HADOOP=/usr
-
+       export HADOOP=/usr
+ 
 1. Download Joshua
 
        wget -q http://cs.jhu.edu/~post/joshua-v{{ site.data.joshua.release_version }}.tgz
