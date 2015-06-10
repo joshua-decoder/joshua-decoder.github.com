@@ -13,75 +13,87 @@ other options available in the pipeline.
 Download and install Joshua as described on the [quick start page](index.html), installing it under
 `~/code/`. Once you've done that, you should make sure you have the following environment variable set:
 
-    export JOSHUA=$HOME/code/joshua-v5.0
+    export JOSHUA=$HOME/code/joshua-v{{ site.data.joshua.release_version }}
     export JAVA_HOME=/usr/java/default
 
-If you have a Hadoop installation, make sure you've set `$HADOOP` to point to it (if not, Joshua
-will roll out a standalone cluster for you). If you'd like to use kbmira for tuning, you should also
-install Moses, and define the environment variable `$MOSES` to point to the root of its installation.
+If you have a Hadoop installation, make sure you've set `$HADOOP` to point to it. For example, if the `hadoop` command is in `/usr/bin`,
+you should type
+
+    export HADOOP=/usr
+
+Joshua will find the binary and use it to submit to your hadoop cluster. If you don't have one, just
+make sure that HADOOP is unset, and Joshua will roll one out for you and run it in
+[standalone mode](https://hadoop.apache.org/docs/r1.2.1/single_node_setup.html). 
 
 ## A basic pipeline run
 
-For today's experiments, we'll be building a Bengali--English system using data included in the
-[Indian Languages Parallel Corpora](/indian-parallel-corpora/). This data was collected by taking
-the 100 most-popular Bengali Wikipedia pages and translating them into English using Amazon's
-[Mechanical Turk](http://www.mturk.com/). As a warning, many of these pages contain material that is
-not typically found in machine translation tutorials.
+For today's experiments, we'll be building a Spanish--English system using data included in the
+[Fisher and CALLHOME translation corpus](/data/fisher-callhome-corpus/). This
+data was collected by translating transcribed speech from previous LDC releases.
 
 Download the data and install it somewhere:
 
     cd ~/data
-    wget -q --no-check -O indian-parallel-corpora.zip https://github.com/joshua-decoder/indian-parallel-corpora/archive/master.zip
-    unzip indian-parallel-corpora.zip
+    wget --no-check -O fisher-spanish-corpus.zip https://github.com/joshua-decoder/fisher-callhome-corpus/archive/master.zip
+    unzip fisher-spanish-corpus.zip
 
-Then define the environment variable `$INDIAN` to point to it:
+Then define the environment variable `$FISHER` to point to it:
 
-    cd ~/data/indian-parallel-corpora-master
-    export INDIAN=$(pwd)
+    cd ~/data/fisher-spanish-corpus-master
+    export FISHER=$(pwd)
     
 ### Preparing the data
 
-Inside this tarball is a directory for each language pair. Within each language directory is another
-directory named `tok/`, which contains pre-tokenized and normalized versions of the data. This was
-done because the normalization scripts provided with Joshua is written in scripting languages that
-often have problems properly handling UTF-8 character sets. We will be using these tokenized
-versions, and preventing the pipeline from retokenizing using the `--no-prepare` flag.
+Inside the tarball is the Fisher and CALLHOME Spanish--English data, which includes Kaldi-provided
+ASR output and English translations on the Fisher and CALLHOME  dataset transcriptions. Because of
+licensing restrictions, we cannot distribute the Spanish transcripts, but if you have an LDC site
+license, a script is provided to build them. You can type:
 
-In `$INDIAN/bn-en/tok`, you should see the following files:
+    ./bin/build_fisher.sh /export/common/data/corpora/LDC/LDC2010T04
 
-    $ ls $INDIAN/bn-en/tok
-    dev.bn-en.bn     devtest.bn-en.bn     dict.bn-en.bn     test.bn-en.en.2
-    dev.bn-en.en.0   devtest.bn-en.en.0   dict.bn-en.en     test.bn-en.en.3
-    dev.bn-en.en.1   devtest.bn-en.en.1   test.bn-en.bn     training.bn-en.bn
-    dev.bn-en.en.2   devtest.bn-en.en.2   test.bn-en.en.0   training.bn-en.en
-    dev.bn-en.en.3   devtest.bn-en.en.3   test.bn-en.en.1
+Where the first argument is the path to your LDC data release. This will create the files in `corpus/ldc`.
 
-We will now use this data to test the complete pipeline with a single command.
+In `$FISHER/corpus`, there are a set of parallel directories for LDC transcripts (`ldc`), ASR output
+(`asr`), oracle ASR output (`oracle`), and ASR lattice output (`plf`). The files look like this:
+
+    $ ls corpus/ldc
+    callhome_devtest.en  fisher_dev2.en.2  fisher_dev.en.2   fisher_test.en.2
+    callhome_evltest.en  fisher_dev2.en.3  fisher_dev.en.3   fisher_test.en.3
+    callhome_train.en    fisher_dev2.es    fisher_dev.es     fisher_test.es
+    fisher_dev2.en.0     fisher_dev.en.0   fisher_test.en.0  fisher_train.en
+    fisher_dev2.en.1     fisher_dev.en.1   fisher_test.en.1  fisher_train.es
+
+If you don't have the LDC transcripts, you can use the data in `corpus/asr` instead. We will now use
+this data to build our own Spanish--English model using Joshua's pipeline.
     
 ### Run the pipeline
 
-Create an experiments directory for containing your first experiment:
+Create an experiments directory for containing your first experiment. *Note: it's important that
+this **not** be inside your `$JOSHUA` directory*.
 
     mkdir ~/expts/joshua
     cd ~/expts/joshua
     
 We will now create the baseline run, using a particular directory structure for experiments that
 will allow us to take advantage of scripts provided with Joshua for displaying the results of many
-related experiments.
+related experiments. Because this can take quite some time to run, we are going to add a crippling
+restriction: Joshua will only use sentences in the training sets with ten or fewer words on either
+side (Spanish or English):
 
     cd ~/expts/joshua
     $JOSHUA/bin/pipeline.pl           \
       --rundir 1                      \
       --readme "Baseline Hiero run"   \
-      --source bn                     \
+      --source es                     \
       --target en                     \
-      --corpus $INDIAN/bn-en/tok/training.bn-en \
-      --corpus $INDIAN/bn-en/tok/dict.bn-en     \
-      --tune $INDIAN/bn-en/tok/dev.bn-en        \
-      --test $INDIAN/bn-en/tok/devtest.bn-en    \
+      --type hiero                    \
+      --corpus $FISHER/corpus/ldc/fisher_train \
+      --tune $FISHER/corpus/ldc/fisher_dev \
+      --test $FISHER/corpus/ldc/fisher_dev2 \
+      --maxlen 10 \
       --lm-order 3
       
-This will start the pipeline building a Bengali--English translation system constructed from the
+This will start the pipeline building a Spanish--English translation system constructed from the
 training data and a dictionary, tuned against dev, and tested against devtest. It will use the
 default values for most of the pipeline: [GIZA++](https://code.google.com/p/giza-pp/) for alignment,
 KenLM's `lmplz` for building the language model, Z-MERT for tuning, KenLM with left-state
@@ -113,7 +125,7 @@ of the baseline model. Here are some examples of what you could vary:
    
 - Decode with a wider beam (`--joshua-args '-pop-limit 200'`) (the default is 100)
 
-- Add the provided BN-EN dictionary to the training data (add another `--corpus` line, e.g., `--corpus $INDIAN/bn-en/dict.bn-en`)
+- Add the provided BN-EN dictionary to the training data (add another `--corpus` line, e.g., `--corpus $FISHER/bn-en/dict.bn-en`)
 
 To do this, we will create new runs that partially reuse the results of previous runs. This is
 possible by doing two things: (1) incrementing the run directory and providing an updated README
@@ -130,9 +142,9 @@ directory, tell the pipeline to start at the tuning step, and provide the needed
       --readme "Tuning with MIRA"     \
       --source bn                     \
       --target en                     \
-      --corpus $INDIAN/bn-en/tok/training.bn-en \
-      --tune $INDIAN/bn-en/tok/dev.bn-en        \
-      --test $INDIAN/bn-en/tok/devtest.bn-en    \
+      --corpus $FISHER/bn-en/tok/training.bn-en \
+      --tune $FISHER/bn-en/tok/dev.bn-en        \
+      --test $FISHER/bn-en/tok/devtest.bn-en    \
       --first-step tune \
       --tuner mira \
       --grammar 1/grammar.gz \
@@ -158,9 +170,9 @@ grammar, but can reuse the alignments and the language model:
       --readme "Baseline SAMT model"  \
       --source bn                     \
       --target en                     \
-      --corpus $INDIAN/bn-en/tok/training.bn-en \
-      --tune $INDIAN/bn-en/tok/dev.bn-en        \
-      --test $INDIAN/bn-en/tok/devtest.bn-en    \
+      --corpus $FISHER/bn-en/tok/training.bn-en \
+      --tune $FISHER/bn-en/tok/dev.bn-en        \
+      --test $FISHER/bn-en/tok/devtest.bn-en    \
       --alignment 1/alignments/training.align   \
       --first-step parse \
       --no-corpus-lm \
