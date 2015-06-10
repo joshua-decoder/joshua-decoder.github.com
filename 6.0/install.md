@@ -9,26 +9,33 @@ To use Joshua as a standalone decoder (with
 [language packs](/language-packs/)), you only need to download and
 install the decoder. There are no external dependencies.
 
+1. Set up some basic environment variables. You need to define `$JAVA_HOME` and
+   also `$HADOOP`, if you have a Hadoop installation (Joshua's pipeline looks
+   for `$HADOOP/bin/hadoop`.
+
+      export JAVA_HOME=/path/to/java
+
+      # JAVA_HOME is not very standardized. Here are some places to look:
+      # OS X:  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home
+      # Linux: export JAVA_HOME=/usr/java/default
+      
+      export HADOOP=/usr
+
 1. Download Joshua
 
        wget -q http://cs.jhu.edu/~post/joshua-v{{ site.data.joshua.release_version }}.tgz
 
-1. Next, unpack it, set environment variables, and compile everything. You need to define the
-`$JOSHUA` environment variable (which in turn requires `$JAVA_HOME`).
+1. Next, unpack it and compile everything. 
 
        tar xzf joshua-v{{ site.data.joshua.release_version }}.tgz
        cd joshua-v{{ site.data.joshua.release_version }}
 
-       # for bash
-       export JAVA_HOME=/path/to/java
+       # Add this to your init files
        export JOSHUA=$(pwd)
-       echo "export JOSHUA=$JOSHUA" >> ~/.bashrc
        
        # build everything
        ant
 
-   (If you don't know what to set `$JAVA_HOME` to, try `/usr/java/default`).
-   
    This compiles Joshua and also a number of support tools, such as KenLM and GIZA++.
 
 1. [Download a model](/language-packes/) and start translating!
