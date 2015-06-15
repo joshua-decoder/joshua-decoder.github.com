@@ -34,12 +34,12 @@ data was collected by translating transcribed speech from previous LDC releases.
 Download the data and install it somewhere:
 
     cd ~/data
-    wget --no-check -O fisher-spanish-corpus.zip https://github.com/joshua-decoder/fisher-callhome-corpus/archive/master.zip
-    unzip fisher-spanish-corpus.zip
+    wget --no-check -O fisher-callhome-corpus.zip https://github.com/joshua-decoder/fisher-callhome-corpus/archive/master.zip
+    unzip fisher-callhome-corpus.zip
 
 Then define the environment variable `$FISHER` to point to it:
 
-    cd ~/data/fisher-spanish-corpus-master
+    cd ~/data/fisher-callhome-corpus-master
     export FISHER=$(pwd)
     
 ### Preparing the data
@@ -76,7 +76,8 @@ this **not** be inside your `$JOSHUA` directory*.
     
 We will now create the baseline run, using a particular directory structure for experiments that
 will allow us to take advantage of scripts provided with Joshua for displaying the results of many
-related experiments. Because this can take quite some time to run, we are going to add a crippling
+related experiments. Because this can take quite some time to run, we are going to reduce the model
+by quite a bit by 
 restriction: Joshua will only use sentences in the training sets with ten or fewer words on either
 side (Spanish or English):
 
