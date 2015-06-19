@@ -12,7 +12,7 @@ alphabetical order).
 - [Adam Pauls](http://www.eecs.berkeley.edu/~adpauls/) (Berkeley)
 - [Chris Callison-Burch](http://cs.jhu.edu/~ccb/) (Penn)
 - [Chris Dyer](http://www.cs.cmu.edu/~cdyer/) (Carnegie Mellon)
-- [Chris Mattmann](http://sunset.usc.edu/~mattmann/) (APL, USC)
+- [Chris Mattmann](http://sunset.usc.edu/~mattmann/) (NASA JPL, USC)
 - [Colin Bannard](http://comp.ling.utexas.edu/~bannard/) (UT Austin)
 - [Jonathan Weese](http://cs.jhu.edu/~jonny/) (Johns Hopkins)
 - Josh Schroeder (Edinburgh)
