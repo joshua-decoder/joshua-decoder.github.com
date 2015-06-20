@@ -212,24 +212,33 @@ For reference, the following two translation model lines are used by the [pipeli
 
 ### Language model options <a id="lm" />
 
-Joshua supports any number of language models.  To add a language
-model, add a line of the following format to the configuration file:
+Joshua supports any number of language models. With Joshua 6.0, these
+are just regular feature functions:
 
-    lm = TYPE ORDER LEFT_STATE RIGHT_STATE CEILING_COST FILE
+    feature-function = LanguageModel -lm_file /path/to/lm/file -lm_order N -lm_type TYPE
+    feature-function = StateMinimizingLanguageModel -lm_file /path/to/lm/file -lm_order N -lm_type TYPE
 
-where the six fields correspond to the following values:
+`LanguageModel` is a generic language model, supporting types 'kenlm'
+(the default) and 'berkeleylm'. `StateMinimizingLanguageModel`
+implements LM state minimization to reduce the size of context n-grams
+where appropriate
+([Li and Khudanpur, 2008](http://www.aclweb.org/anthology/W08-0402.pdf);
+[Heafield et al., 2013](https://aclweb.org/anthology/N/N13/N13-1116.pdf)). This
+is currently only supported by KenLM, so the `-lm_type` option is not
+available here.
 
-* `TYPE`: one of "kenlm", "berkeleylm", or "none"
-* `ORDER`: the order of the language model
-* `LEFT_STATE`: whether to use left-state minimization; currently only supported by KenLM
-* `RIGHT_STATE`: whether to use right equivalent state (currently unsupported)
-* `CEILING_COST`: the LM-specific ceiling cost of all n-grams (currently ignored)
-* `FILE`: the path to the language model file.  All language model types support the standard ARPA
-   format.  Additionally, if the LM type is "kenlm", this file can be compiled into KenLM's compiled
-   format (using the program at `$JOSHUA/bin/build_binary`); if the the LM type is "berkeleylm", it
-   can be compiled by following the directions in
-   `$JOSHUA/src/joshua/decoder/ff/lm/berkeley_lm/README`. The [pipeline](pipeline.html) will
-   automatically compile either type.
+The other key/value pairs are defined as follows:
+
+* `lm_type`: one of "kenlm" "berkeleylm"
+* `lm_order`: the order of the language model
+* `lm_file`: the path to the language model file.  All language model
+   types support the standard ARPA format.  Additionally, if the LM
+   type is "kenlm", this file can be compiled into KenLM's compiled
+   format (using the program at `$JOSHUA/bin/build_binary`); if the
+   the LM type is "berkeleylm", it can be compiled by following the
+   directions in
+   `$JOSHUA/src/joshua/decoder/ff/lm/berkeley_lm/README`. The
+   [pipeline](pipeline.html) will automatically compile either type.
 
 For each language model, you need to specify a feature weight in the following format:
 
