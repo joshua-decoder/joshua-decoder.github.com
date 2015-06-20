@@ -257,7 +257,9 @@ where the indices correspond to the order of the language model declaration line
          $ echo "¿ who you lookin' at , mr. ?" | $JOSHUA/bin/decoder -output-format "%S" -mark-oovs false 2> /dev/null 
          ¿Who you lookin' at, Mr.? 
 
-   - `%t`: the synchronous derivation
+   - `%t`: the target-side tree projection, all printed on one line (PTB style)
+   
+   - `%d`: the synchronous derivation, with each rules printed indented on their own lines
 
    - `%f`: the list of feature values (as name=value pairs)
 
@@ -265,7 +267,7 @@ where the indices correspond to the order of the language model declaration line
 
    - `%w`: the weight vector (unimplemented)
 
-   - `%a`: the alignments between source and target words (unimplemented)
+   - `%a`: the alignments between source and target words (currently broken for hierarchical mode)
 
   The default value is
 
