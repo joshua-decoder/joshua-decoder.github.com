@@ -4,73 +4,50 @@ category: advanced
 title: Grammar Packing
 ---
 
-Grammar packing refers to the process of taking a textual grammar output by [Thrax](thrax.html) and
-efficiently encoding it for use by Joshua.  Packing the grammar results in significantly faster load
-times for very large grammars.
+Grammar packing refers to the process of taking a textual grammar
+output by [Thrax](thrax.html) (or Moses, for phrase-based models) and
+efficiently encoding it so that it can be loaded
+[very quickly](https://aclweb.org/anthology/W/W12/W12-3134.pdf) ---
+packing the grammar results in significantly faster load times for
+very large grammars.  Packing is done automatically by the
+[Joshua pipeline](pipeline.html), but you can also run the packer
+manually.
 
-Soon, the [Joshua pipeline script](pipeline.html) will add support for grammar packing
-automatically, and we will provide a script that automates these steps for you.
+The script can be found at
+`$JOSHUA/scripts/support/grammar-packer.pl`. See that script for
+example usage. You can then add it to a Joshua config file, simply
+replacing a `tm` path to the compressed text-file format with a path
+to the packed grammar directory (Joshua will automatically detect that
+it is packed.
 
-1. Make sure the grammar is labeled.  A labeled grammar is one that has feature names attached to
-each of the feature values in each row of the grammar file.  Here is a line from an unlabeled
-grammar:
+Packing the grammar requires first sorting it, which can take quite a
+bit of temporary space.
 
-        [X] ||| [X,1] অন্যান্য [X,2] ||| [X,1] other [X,2] ||| 0 0 1 0 0 1.02184
+*CAVEAT*: You may run into problems packing very large hiero
+ grammars. Email the support list if you do.
 
-   and here is one from an labeled grammar (note that the labels are not very useful):
+### Examples
 
-        [X] ||| [X,1] অন্যান্য [X,2] ||| [X,1] other [X,2] ||| f1=0 f2=0 f3=1 f4=0 f5=0 f6=1.02184
+A Hiero grammar, using the compressed text file version:
 
-   If your grammar is not labeled, you can use the script `$JOSHUA/scripts/label_grammar.py`:
-   
-        zcat grammar.gz | $JOSHUA/scripts/label_grammar.py > grammar-labeled.gz
-
-   As a side-effect of this step is to produce a file 'dense_map' in the current directory,
-   containing the mapping between feature names and feature columns.  This file is needed in later
-   steps.
-
-1. The packer needs a sorted grammar.  It is sufficient to sort by the first word:
-
-        zcat grammar-labeled.gz | sort -k3,3 | gzip > grammar-sorted.gz
-      
-   (The reason we need a sorted grammar is because the packer stores the grammar in a trie.  The
-   pieces can't be more than 2 GB due to Java limitations, so we need to ensure that rules are
-   grouped by the first arc in the trie to avoid redundancy across tries and to simplify the
-   lookup).
+    tm = hiero -owner pt -maxspan 20 -path grammar.filtered.gz
     
-1. In order to pack the grammar, we need two pieces of information: (1) a packer configuration file,
-   and (2) a dense map file.
+Pack it:
 
-   1. Write a packer config file.  This file specifies items such as the chunk size (for the packed
-      pieces) and the quantization classes and types for each feature name.  Examples can be found
-      at
-   
-            $JOSHUA/test/packed/packer.config
-            $JOSHUA/test/bn-en/packed/packer.quantized
-            $JOSHUA/test/bn-en/packed/packer.uncompressed
-       
-      The quantizer lines in the packer config file have the following format:
-   
-            quantizer TYPE FEATURES
-       
-       where `TYPE` is one of `boolean`, `float`, `byte`, or `8bit`, and `FEATURES` is a
-       space-delimited list of feature names that have that quantization type.
-   
-   1. Write a dense_map file.  If you labeled an unlabeled grammar, this was produced for you as a
-      side product of the `label_grammar.py` script you called in Step 1.  Otherwise, you need to
-      create a file that lists the mapping between feature names and (0-indexed) columns in the
-      grammar, one per line, in the following format:
-   
-            feature-index feature-name
-    
-1. To pack the grammar, type the following command:
+    $JOSHUA/scripts/support/grammar-packer.pl grammar.filtered.gz grammar.packed
 
-        java -cp $JOSHUA/bin joshua.tools.GrammarPacker -c PACKER_CONFIG_FILE -p OUTPUT_DIR -g GRAMMAR_FILE
+Pack a really big grammar:
 
-    This will read in your packer configuration file and your grammar, and produced a packed grammar
-    in the output directory.
+    $JOSHUA/scripts/support/grammar-packer.pl -m 30g grammar.filtered.gz grammar.packed
 
-1. To use the packed grammar, just point to the packed directory in your Joshua configuration file.
+Be a little more verbose:
 
-        tm-file = packed-grammar/
-        tm-format = packed
+    $JOSHUA/scripts/support/grammar-packer.pl -m 30g grammar.filtered.gz grammar.packed
+
+You have a different temp file location:
+
+    $JOSHUA/scripts/support/grammar-packer.pl -T /local grammar.filtered.gz grammar.packed
+
+Update the config file line:
+
+    tm = hiero -owner pt -maxspan 20 -path grammar.packed
