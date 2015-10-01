@@ -31,6 +31,7 @@ First, download the dataset:
 Then, train and test a model
 
     $JOSHUA/bin/pipeline.pl --source bn --target en \
+        --type hiero \
         --no-prepare --aligner berkeley \
         --corpus input/bn-en/tok/training.bn-en \
         --tune input/bn-en/tok/dev.bn-en \
