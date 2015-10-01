@@ -19,7 +19,7 @@ It is important to note the assumptions underlying the translation engine:
 
 ## Available language packs
 
-<table>
+<table class="table table-condensed">
   <tr>
     <th>Language pair</th>
     <th>Type</th>
@@ -31,7 +31,7 @@ It is important to note the assumptions underlying the translation engine:
     <td>Spanish--English</td>
     <td>phrase</td>
     <td>1.9 GB</td>
-    <td>Built on Europarl and the Fisher and CALLHOME parallel dataset.</td>
+    <td>Built on <a href="http://www.statmt.org/europarl/">Europarl</a> and the <a href="https://catalog.ldc.upenn.edu/LDC2014T23">Fisher and CALLHOME parallel dataset</a>.</td>
     <td><a href="es-en-phrase/">Download</a></td>
   </tr>
   <tr>
@@ -39,11 +39,9 @@ It is important to note the assumptions underlying the translation engine:
     <td>phrase</td>
     <td>2.4 GB</td>
     <td>Built from
-  [the LDC Arabic-Dialect/English parallel text](https://catalog.ldc.upenn.edu/LDC2012T09),
-  [the ISI Arabic--English automatically extracted parallel text](https://catalog.ldc.upenn.edu/LDC20
-07T08), and
-  [translations of the Arabic CALLHOME transcripts](https://catalog.ldc.upenn.edu/LDC97T19),
-  and with an English Gigaword language model.
+  <a href="https://catalog.ldc.upenn.edu/LDC2012T09">the LDC Arabic-Dialect/English parallel text</a>,
+  <a href="https://catalog.ldc.upenn.edu/LDC2007T08">the ISI Arabic--English automatically extracted parallel text</a>, 
+  and <a href="https://catalog.ldc.upenn.edu/LDC97T19">translations of the Arabic CALLHOME transcripts</a>, and with an English Gigaword language model.
     </td>
     <td><a href="ar-en-phrase/">Download</a></td>
   </tr>
