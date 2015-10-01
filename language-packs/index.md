@@ -19,13 +19,34 @@ It is important to note the assumptions underlying the translation engine:
 
 ## Available language packs
 
-- [Spanish--English phrase-based model](es-en-phrase/) [1.9 GB], built on Europarl and the Fisher
-  and CALLHOME parallel dataset.
-
-- [Arabic--English phrase-based model](ar-en-phrase/) [2.4 GB], built from
+<table>
+  <tr>
+    <th>Language pair</th>
+    <th>Type</th>
+    <th>Size</th>
+    <th>Details</th>
+    <th>Link</th>
+  </tr>
+  <tr>
+    <td>Spanish--English</td>
+    <td>phrase</td>
+    <td>1.9 GB</td>
+    <td>Built on Europarl and the Fisher and CALLHOME parallel dataset.</td>
+    <td><a href="es-en-phrase/">Download</a></td>
+  </tr>
+  <tr>
+    <td>Arabic--English</td>
+    <td>phrase</td>
+    <td>2.4 GB</td>
+    <td>Built from
   [the LDC Arabic-Dialect/English parallel text](https://catalog.ldc.upenn.edu/LDC2012T09),
-  [the ISI Arabic--English automatically extracted parallel text](https://catalog.ldc.upenn.edu/LDC2007T08), and
+  [the ISI Arabic--English automatically extracted parallel text](https://catalog.ldc.upenn.edu/LDC20
+07T08), and
   [translations of the Arabic CALLHOME transcripts](https://catalog.ldc.upenn.edu/LDC97T19),
   and with an English Gigaword language model.
+    </td>
+    <td><a href="ar-en-phrase/">Download</a></td>
+  </tr>
+</table>
 
 Have a request? Please email [Matt Post](http://cs.jhu.edu/~post/).
