@@ -24,9 +24,9 @@ First, download the dataset:
    
     mkdir -p ~/models/bn-en/
     cd ~/models/bn-en
-    curl -L https://github.com/joshua-decoder/indian-parallel-corpora/tarball/master > indian-languages.tgz
-    tar xf indian-languages.tgz
-    ln -s joshua-decoder-indian-parallel-corpora-* input
+    wget -q https://github.com/joshua-decoder/indian-parallel-corpora/archive/1.0.tar.gz
+    tar xzf indian-parallel-corpora-1.0.tar.gz
+    ln -s indian-parallel-corpora-1.0 input
 
 Then, train and test a model
 
