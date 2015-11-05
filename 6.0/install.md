@@ -23,12 +23,12 @@ install the decoder. There are no external dependencies.
  
 1. Download Joshua
 
-       wget -q http://cs.jhu.edu/~post/files/joshua-v{{ site.data.joshua.release_version }}.tgz
+       wget -q http://cs.jhu.edu/~post/files/joshua-{{ site.data.joshua.release_version }}.tgz
 
 1. Next, unpack it and compile everything. 
 
-       tar xzf joshua-v{{ site.data.joshua.release_version }}.tgz
-       cd joshua-v{{ site.data.joshua.release_version }}
+       tar xzf joshua-{{ site.data.joshua.release_version }}.tgz
+       cd joshua-{{ site.data.joshua.release_version }}
 
        # Add this to your init files
        export JOSHUA=$(pwd)
