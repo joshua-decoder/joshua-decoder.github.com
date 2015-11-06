@@ -12,46 +12,46 @@ See the instructions below.
 1.  Set up some basic environment variables. 
     You need to define `$JAVA_HOME`
 
-       export JAVA_HOME=/path/to/java
+        export JAVA_HOME=/path/to/java
 
-       # JAVA_HOME is not very standardized. Here are some places to look:
-       # OS X:  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home
-       # Linux: export JAVA_HOME=/usr/java/default
+        # JAVA_HOME is not very standardized. Here are some places to look:
+        # OS X:  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home
+        # Linux: export JAVA_HOME=/usr/java/default
 
 1.  If you are installing the full version of Joshua, you also need to define `$HADOOP` to point to your Hadoop installation.
     (Joshua looks for the Hadoop executuble in `$HADOOP/bin/hadoop`)
 
-       export HADOOP=/usr
+        export HADOOP=/usr
 
     If you don't have a Hadoop installation, [Joshua's pipeline](pipeline.html) can install a standalone version for you.
     
 1.  To install just the runtime version of Joshua, type
 
-       wget -q http://cs.jhu.edu/~post/files/joshua-runtime-{{ site.data.joshua.release_version }}.tgz
+        wget -q http://cs.jhu.edu/~post/files/joshua-runtime-{{ site.data.joshua.release_version }}.tgz
 
     Then build everything
 
-       tar xzf joshua-runtime-{{ site.data.joshua.release_version }}.tgz
-       cd joshua-runtime-{{ site.data.joshua.release_version }}
+        tar xzf joshua-runtime-{{ site.data.joshua.release_version }}.tgz
+        cd joshua-runtime-{{ site.data.joshua.release_version }}
 
-       # Add this to your init files
-       export JOSHUA=$(pwd)
+        # Add this to your init files
+        export JOSHUA=$(pwd)
        
-       # build everything
-       ant
+        # build everything
+        ant
 
 1.  To instead install the full version, type
 
-       wget -q http://cs.jhu.edu/~post/files/joshua-{{ site.data.joshua.release_version }}.tgz
+        wget -q http://cs.jhu.edu/~post/files/joshua-{{ site.data.joshua.release_version }}.tgz
 
-       tar xzf joshua-{{ site.data.joshua.release_version }}.tgz
-       cd joshua-{{ site.data.joshua.release_version }}
+        tar xzf joshua-{{ site.data.joshua.release_version }}.tgz
+        cd joshua-{{ site.data.joshua.release_version }}
 
-       # Add this to your init files
-       export JOSHUA=$(pwd)
+        # Add this to your init files
+        export JOSHUA=$(pwd)
        
-       # build everything
-       ant
+        # build everything
+        ant
 
 ### Building new models
 
