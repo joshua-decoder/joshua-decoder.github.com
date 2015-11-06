@@ -17,6 +17,14 @@ It is important to note the assumptions underlying the translation engine:
 - Additionally, the input must be tokenized. To tokenize your data, you can use the script provided
   in each language pack.
 
+## Runtime decoder
+
+The default release version of Joshua includes hundreds of megabytes of dependencies used
+for building models from your own language pairs. If you only wish to run language packs
+(effectively using Joshua as a black-box translation engine), you can install a "light" version
+of Joshua that includes only dependencies needed to run the translation piece. See the notes
+on [the installation page](../6/install.html).
+
 ## Available language packs
 
 <table class="table table-condensed">

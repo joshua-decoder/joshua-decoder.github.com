@@ -5,27 +5,44 @@ title: Installation
 
 ### Download and install
 
-To use Joshua as a standalone decoder (with
-[language packs](/language-packs/)), you only need to download and
-install the decoder. There are no external dependencies.
+To use Joshua as a standalone decoder (with [language packs](/language-packs/)), you only need to download and install the runtime version of the decoder. 
+If you also wish to build translation models from your own data, you will want to install the full version.
+See the instructions below.
 
-1. Set up some basic environment variables. You need to define `$JAVA_HOME` and
-   also `$HADOOP`, if you have a Hadoop installation (Joshua's pipeline looks
-   for `$HADOOP/bin/hadoop`.
+1.  Set up some basic environment variables. 
+    You need to define `$JAVA_HOME`
 
        export JAVA_HOME=/path/to/java
 
        # JAVA_HOME is not very standardized. Here are some places to look:
        # OS X:  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home
        # Linux: export JAVA_HOME=/usr/java/default
-      
+
+1.  If you are installing the full version of Joshua, you also need to define `$HADOOP` to point to your Hadoop installation.
+    (Joshua looks for the Hadoop executuble in `$HADOOP/bin/hadoop`)
+
        export HADOOP=/usr
- 
-1. Download Joshua
+
+    If you don't have a Hadoop installation, [Joshua's pipeline](pipeline.html) can install a standalone version for you.
+    
+1.  To install just the runtime version of Joshua, type
+
+       wget -q http://cs.jhu.edu/~post/files/joshua-runtime-{{ site.data.joshua.release_version }}.tgz
+
+    Then build everything
+
+       tar xzf joshua-runtime-{{ site.data.joshua.release_version }}.tgz
+       cd joshua-runtime-{{ site.data.joshua.release_version }}
+
+       # Add this to your init files
+       export JOSHUA=$(pwd)
+       
+       # build everything
+       ant
+
+1.  To instead install the full version, type
 
        wget -q http://cs.jhu.edu/~post/files/joshua-{{ site.data.joshua.release_version }}.tgz
-
-1. Next, unpack it and compile everything. 
 
        tar xzf joshua-{{ site.data.joshua.release_version }}.tgz
        cd joshua-{{ site.data.joshua.release_version }}
@@ -36,15 +53,9 @@ install the decoder. There are no external dependencies.
        # build everything
        ant
 
-   This compiles Joshua and also a number of support tools, such as KenLM and GIZA++.
-
-1. [Download a model](/language-packes/) and start translating!
-
 ### Building new models
 
-If you wish to build models for new language pairs from existing data
-(such as the [WMT data](http://statmt.org/wmt14/)), you need to
-install some additional dependencies.
+If you wish to build models for new language pairs from existing data (such as the [WMT data](http://statmt.org/wmt14/)), you need to install some additional dependencies.
 
 1. For learning hierarchical models, Joshua includes a tool called [Thrax](thrax.html), which
 is built on Hadoop. If you have a Hadoop installation, make sure that the environment variable
