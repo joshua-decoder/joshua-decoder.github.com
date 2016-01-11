@@ -144,10 +144,10 @@ Running the pipeline requires two main steps: data preparation and invocation.
    extension to a language identified by the "en" extension, that the training data can be found at
    `input/train.en` and `input/train.ur`, and so on.
 
-*Don't* run the pipeline directly from `$JOSHUA`. We recommend creating a run directory somewhere
- else to contain all of your experiments in some other location. The advantage to this (apart from
- not clobbering part of the Joshua install) is that Joshua provides support scripts for visualizing
- the results of a series of experiments that only work if you
+*Don't* run the pipeline directly from `$JOSHUA`, or, for that matter, in any directory with lots of other files.
+This can cause problems because the pipeline creates lots of files under `--rundir` that can clobber existing files.
+You should run experiments in a clean directory.
+For example, if you have Joshua installed in `$HOME/code/joshua`, manage your runs in a different location, such as `$HOME/expts/joshua`.
 
 Assuming no problems arise, this command will run the complete pipeline in about 20 minutes,
 producing BLEU scores at the end.  As it runs, you will see output that looks like the following:
