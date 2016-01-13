@@ -45,13 +45,22 @@ on [the installation page](../6.0/install.html).
   <tr>
     <td>Arabic--English</td>
     <td>phrase</td>
-    <td>2.4 GB</td>
+    <td>2.1 GB</td>
     <td>Built from
   <a href="https://catalog.ldc.upenn.edu/LDC2012T09">the LDC Arabic-Dialect/English parallel text</a>,
   <a href="https://catalog.ldc.upenn.edu/LDC2007T08">the ISI Arabic--English automatically extracted parallel text</a>, 
   and <a href="https://catalog.ldc.upenn.edu/LDC97T19">translations of the Arabic CALLHOME transcripts</a>, and with an English Gigaword language model.
     </td>
     <td><a href="ar-en-phrase/">Download</a></td>
+  </tr>
+  <tr>
+    <td>Chinese--English</td>
+    <td>hiero</td>
+    <td>2.4 GB</td>
+    <td>Built from about 2 million sentences of parallel news. Contains the Joshua runtime,
+      so there are no external dependencies (including Joshua).
+    </td>
+    <td><a href="zh-en-hiero/">Download</a></td>
   </tr>
 </table>
 
