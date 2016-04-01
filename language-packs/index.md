@@ -27,6 +27,8 @@ on [the installation page](../6.0/install.html).
 
 ## Available language packs
 
+For information about English Paraphrase Language packs, please see [this page](paraphrase/).
+
 <table class="table table-condensed">
   <tr>
     <th>Language pair</th>
