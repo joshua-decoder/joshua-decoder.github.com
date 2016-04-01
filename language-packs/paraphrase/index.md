@@ -1,3 +1,0 @@
-# Joshua English Paraphrase Language Packs
-
-Coming soon...
