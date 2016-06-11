@@ -1,6 +1,6 @@
 ---
 redirect_to:
-  - http://joshua.incubator.apache.org/
+  - https://cwiki.apache.org/confluence/display/JOSHUA/
 ---
 Joshua has become an [Apache incubator project](http://incubator.apache.org) and the website has moved:
 
